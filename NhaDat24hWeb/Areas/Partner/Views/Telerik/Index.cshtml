@@ -1,0 +1,109 @@
+﻿@using Kendo.Mvc.UI;
+
+
+@{
+    ViewData["Title"] = "Editor";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <title>All tools</title>
+    <meta charset="utf-8">
+    @{
+        var kendoVersion = "2022.2.510";
+    }
+    <link href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.material-main.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.aspnetmvc.min.js"></script>
+    <link rel="stylesheet" href="~/kendoui/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/kendoui/css/site.css" />
+
+</head>
+<body>
+    <div>
+        
+        <style>
+            .dropZoneElement {
+                position: relative;
+                display: inline-block;
+                background-color: #f8f8f8;
+                border: 1px solid #c7c7c7;
+                width: 350px;
+                height: 200px;
+                text-align: center;
+            }
+
+            .textWrapper {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100%;
+                font-size: 18px;
+                line-height: 1.2em;
+                font-family: Arial,Helvetica,sans-serif;
+                color: #000;
+            }
+
+            .dropImageHereText {
+                color: #c7c7c7;
+                text-transform: uppercase;
+                font-size: 12px;
+            }
+
+            .wrapper:after {
+                content: ".";
+                display: inline-block;
+                height: 0;
+                clear: both;
+                visibility: hidden;
+            }
+
+            .or {
+                margin: auto;
+                text-align: center;
+                position: absolute;
+                top: 50%;
+                left: 45%;
+                transform: translate(-50%,-45%);
+            }
+        </style>
+        <script>
+            function onChange() {
+                $("form").submit();
+            }
+            $("#limitUploadSize").change(function () {
+                $("form").submit();
+            })
+        </script>
+    </div>
+</body>
+@section scripts{
+
+    <!--Following two scripts are for ajax begin form and other ajax calls-->
+    <script>
+
+        function Transit(id, obj) {
+
+            var editor = $("#kendoEditor").data("kendoEditor");
+            var editorContent = editor.value();
+
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    Id: id,
+                    Obj: obj,
+                    Content: editorContent,
+                },
+                url: "@Url.Action("TransitData", "Editor")",
+                success: function (data) {
+                    alert("Hoan thanh");
+                },
+            })
+        }
+
+
+    </script>
+}

@@ -1,0 +1,85 @@
+﻿html * {
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+}
+
+.u
+.upload {
+    &__box {
+        padding: 40px;
+    }
+
+    &__inputfile {
+        width: .1px;
+        height: .1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    &__btn {
+        display: inline-block;
+        text-align: center;
+        min-width: 130px;
+        transition: all .3s ease;
+        cursor: pointer;
+        border: 2px solid;
+        font-size: 14px;
+        background: #ebebeb;
+        border-radius: 5px;
+        padding: 2px 5px 2px 5px;
+        color: #666;
+        font-weight: 400;
+        font-size: 14px;
+
+        &-box {
+            margin-bottom: 10px;
+        }
+    }
+
+    &__img {
+        &-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            /*margin: 0 -10px;*/
+        }
+
+        &-box {
+            width: 200px;
+            padding: 0 10px;
+            margin-bottom: 12px;
+        }
+
+        &-close {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+            line-height: 24px;
+            z-index: 1;
+            cursor: pointer;
+
+            &:after {
+                content: '\2716';
+                font-size: 14px;
+                color: white;
+            }
+        }
+    }
+}
+
+.img-bg {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  padding-bottom: 100%;
+}

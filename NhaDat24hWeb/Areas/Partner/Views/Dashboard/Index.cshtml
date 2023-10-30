@@ -1,0 +1,432 @@
+﻿@using Newtonsoft.Json;
+@using NhaDat24h.Common.Configuration;
+@using NhaDat24h.DataAccess.Entities;
+@using NhaDat24h.DataDto.Common
+@using NhaDat24h.DataDto.RealEstates;
+@using NhaDat24h.DataDto.Users;
+@model ModelDashboard
+@inject IHttpContextAccessor sessonContext
+@{
+    TbUser user = null;
+    if (sessonContext != null && sessonContext.HttpContext != null)
+    {
+        var cookieValue = sessonContext.HttpContext.Session.GetString(AppConfigs.CurrentUserAdmin);
+        if (!string.IsNullOrEmpty(cookieValue))
+        {
+            user = JsonConvert.DeserializeObject<TbUser>(cookieValue);
+        }
+    }
+}
+
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-content">
+    <div class="mb-3">
+        <h4 class="text-bold">Xin chào mừng @user.Fullname, bạn đã quay trở lại!</h4>
+        <p></p>
+    </div>
+    <div class="row mt-10">
+        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12 position-relative mt-30">
+            <a class="dashboard_stats_wrap widget-4" href="@Url.Action("Index", "Users", new { area = "Partner"})">
+                <div class="dashboard_stats_wrap_content"><h4>@Model.TotalMember</h4> <span>Tổng thành viên đã đăng ký</span></div>
+            </a>
+            <div class="dashboard_stats_wrap-icon position-absolute">
+                <a href="@Url.Action("Index", "Users", new { area = "Partner"})">
+                    <img src="~/assets/img/dashboard-icon/011.jpg" />
+                </a>
+            </div>
+        </div>
+
+        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12 position-relative mt-30">
+            <a class="dashboard_stats_wrap widget-4" href="@Url.Action("Index", "Users", new { area = "Partner"})">
+                <div class="dashboard_stats_wrap_content"><h4>@Model.NumMemWaitingToAccept</h4> <span>Thành viên chưa duyệt</span></div>
+            </a>
+            <div class="dashboard_stats_wrap-icon position-absolute">
+                <a href="@Url.Action("Index", "Users", new { area = "Partner"})">
+                    <img src="~/assets/img/dashboard-icon/012.jpg" />
+                </a>
+            </div>
+        </div>
+
+        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12 position-relative mt-30">
+            <a class="dashboard_stats_wrap widget-4" href="@Url.Action("Index", "Users", new { area = "Partner"})">
+                <div class="dashboard_stats_wrap_content"><h4>@Model.NumMemWaitingToAppoint</h4> <span>Thành viên chưa bổ nhiệm</span></div>
+            </a>
+            <div class="dashboard_stats_wrap-icon position-absolute">
+                <a href="@Url.Action("Index", "Users", new { area = "Partner"})">
+                    <img src="~/assets/img/dashboard-icon/013.jpg" />
+                </a>
+            </div>
+        </div>
+        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12 position-relative mt-30">
+            <a class="dashboard_stats_wrap widget-2" href="@Url.Action("Index", "Company", new { area = "Partner"})">
+                <div class="dashboard_stats_wrap_content"><h4>@Model.TotalCompany</h4> <span>Công ty thành viên</span></div>
+            </a>
+            <div class="dashboard_stats_wrap-icon position-absolute">
+                <a href="@Url.Action("Index", "Company", new { area = "Partner"})">
+                    <img src="~/assets/img/dashboard-icon/014.jpg" />
+                </a>
+            </div>
+        </div>
+        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12 position-relative mt-30">
+            <a class="dashboard_stats_wrap widget-1" href="@Url.Action("Index", "Land", new { area = "Partner"})">
+                <div class="dashboard_stats_wrap_content"><h4>@Model.TotalREPj</h4><span>Kho hàng dự án</span></div>
+            </a>
+            <div class="dashboard_stats_wrap-icon position-absolute">
+                <a href="@Url.Action("Index", "Land", new { area = "Partner"})">
+                    <img src="~/assets/img/dashboard-icon/014.jpg" />
+                </a>
+            </div>
+        </div>
+
+        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12 position-relative mt-30">
+            <a class="dashboard_stats_wrap widget-1" href="@Url.Action("Index", "Properties", new { area = "Partner"})">
+                <div class="dashboard_stats_wrap_content"><h4>@Model.TotalRERe</h4> <span>Kho hàng thổ cư</span></div>
+            </a>
+            <div class="dashboard_stats_wrap-icon position-absolute">
+                <a href="@Url.Action("Index", "Properties", new { area = "Partner"})">
+                    <img src="~/assets/img/dashboard-icon/016.jpg" />
+                </a>
+            </div>
+        </div>
+
+        @* <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-sm-12">
+        <a class="dashboard_stats_wrap widget-2" href="#">
+        <div class="dashboard_stats_wrap_content"><h4>1008000</h4> <span>Tổng giá trị hợp đồng</span></div>
+        <div class="dashboard_stats_wrap-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+        </a>
+        </div>
+
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-sm-12">
+        <a class="dashboard_stats_wrap widget-4" href="#">
+        <div class="dashboard_stats_wrap_content"><h4>10</h4> <span>Số lượng hợp đồng</span></div>
+        <div class="dashboard_stats_wrap-icon"><i class="fa-solid fa-file-pen"></i></div>
+        </a>
+        </div>
+        *@
+    </div>
+    <div class="love-project">
+        <div class="d-flex gap-10 align-items-center img22 mb-20">
+            <img src="~/assets/img/flame.png">
+            <h4 class="text-bold m-0">Top yêu thích</h4>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-4">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Dashboard/showlisttop.cshtml",Model.ListSaveRE)
+        </div>
+    </div>
+    <div class="new-project">
+        <div class="d-flex justify-between align-items-center mb-20">
+            <div class="d-flex gap-10 align-items-center img22">
+                <img src="~/assets/img/flame.png">
+                <h4 class="text-bold m-0">Top Hà Nội</h4>
+            </div>
+            <div class="btn-view-all">
+                <a href="@Url.Action("Index", "Land", new { area = "Partner"})">
+                    Xem tất cả
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-3">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Dashboard/showlisttopTinhThanh.cshtml", Model.ListTopHN)
+        </div>
+    </div>
+    <div class="new-project">
+        <div class="d-flex justify-between align-items-center mb-20">
+            <div class="d-flex gap-10 align-items-center img22">
+                <img src="~/assets/img/flame.png">
+                <h4 class="text-bold m-0">Top Phú Yên</h4>
+            </div>
+            <div class="btn-view-all">
+                <a href="@Url.Action("Index", "Land", new { area = "Partner"})">
+                    Xem tất cả
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-3">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Dashboard/showlisttopTinhThanh.cshtml", Model.ListTopPY)
+        </div>
+    </div>
+    <div class="new-project">
+        <div class="d-flex justify-between align-items-center mb-20">
+            <div class="d-flex gap-10 align-items-center img22">
+                <img src="~/assets/img/flame.png">
+                <h4 class="text-bold m-0">Top Quảng Ninh</h4>
+            </div>
+            <div class="btn-view-all">
+                <a href="@Url.Action("Index", "Land", new { area = "Partner"})">
+                    Xem tất cả
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-3">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Dashboard/showlisttopTinhThanh.cshtml", Model.ListTopQN)
+        </div>
+    </div>
+    <div class="new-project">
+        <div class="d-flex justify-between align-items-center mb-20">
+            <div class="d-flex gap-10 align-items-center img22">
+                <img src="~/assets/img/flame.png">
+                <h4 class="text-bold m-0">Top Hải Phòng</h4>
+            </div>
+            <div class="btn-view-all">
+                <a href="@Url.Action("Index", "Land", new { area = "Partner"})">
+                    Xem tất cả
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-3">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Dashboard/showlisttopTinhThanh.cshtml", Model.ListTopHP)
+        </div>
+    </div>
+    <div class="new-project">
+        <div class="d-flex justify-between align-items-center mb-20">
+            <div class="d-flex gap-10 align-items-center img22">
+                <img src="~/assets/img/flame.png">
+                <h4 class="text-bold m-0">Top Bình Định</h4>
+            </div>
+            <div class="btn-view-all">
+                <a href="@Url.Action("Index", "Land", new { area = "Partner"})">
+                    Xem tất cả
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-3">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Dashboard/showlisttopTinhThanh.cshtml", Model.ListTopBD)
+        </div>
+    </div>
+    <div class="popular-project">
+        <div class="d-flex justify-between align-items-center mb-20">
+            <div class="d-flex gap-10 align-items-center img22">
+                <img src="~/assets/img/flame.png">
+                <h4 class="text-bold m-0">Top dự án nổi bật</h4>
+            </div>
+            <div class="btn-view-all">
+                <a href="@Url.Action("Index", "Land", new { area = "Partner"})">
+                    Xem tất cả
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-4 row-cols-xxl-4">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Dashboard/showlisttop.cshtml", Model.ListTopREPj)
+        </div>
+    </div>
+
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="list_media_from_land" aria-labelledby="list_media_from_land">
+    <div class="offcanvas-header">
+        <h4>Link bảng hàng</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="modal-divider"></div>
+    <div class="offcanvas-body" id="list_media_from_land_data">
+    </div>
+</div>
+<div class="modal fade" id="view-user-chat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Thành viên nhóm</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="user-1 mb-10">
+                    <div class="d-flex justify-between align-items-center">
+                        <div class="d-flex gap-10 align-items-center">
+                            <div class="toast-admin-avatar">
+                                <img src="~/assets/img/testimonial/nguyenduchung.jpg" />
+                            </div>
+                            <div class="d-flex flex-column gap-0">
+                                <span class="text-14 text-bold">Nguyễn Hồng Đức</span>
+                                <span class="text-12 color-gray">SGO Miền Bắc - Phòng kinh doanh 01 - Trưởng phòng</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-toggle dropdown-toggle-custom" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="f-30 fas fa-ellipsis-h"></i>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Xóa thành viên</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="user-2 mb-10">
+                    <div class="d-flex justify-between align-items-center">
+                        <div class="d-flex gap-10 align-items-center">
+                            <div class="toast-admin-avatar">
+                                <img src="~/assets/img/testimonial/trananhtuan.jpg" />
+                            </div>
+                            <div class="d-flex flex-column gap-0">
+                                <span class="text-14 text-bold">Trần Hồng Huy</span>
+                                <span class="text-12 color-gray">SGO Miền Bắc - Phòng kinh doanh 01 - Nhân viên kinh doanh</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-toggle dropdown-toggle-custom" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="f-30 fas fa-ellipsis-h"></i>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Xóa thành viên</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="view-user-chat-add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Thêm thành viên</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm" aria-label="Tìm kiếm" aria-describedby="basic-addon1">
+                </div>
+                <div class="mt-10 mb-10">
+                    Gợi ý
+                </div>
+                <div class="user-1 mb-10">
+                    <div class="d-flex justify-between align-items-center">
+                        <div class="d-flex gap-10 align-items-center">
+                            <div class="toast-admin-avatar">
+                                <img src="~/assets/img/testimonial/nguyenduchung.jpg" />
+                            </div>
+                            <div class="d-flex flex-column gap-0">
+                                <span class="text-14 text-bold">Đào Thu Thủy</span>
+                                <span class="text-12 color-gray">SGO Miền Bắc - Phòng kinh doanh 01 - Nhân viên kinh doanh</span>
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script>
+    const toastTrigger = document.getElementById('liveToastBtn')
+    const toastLiveExample = document.getElementById('toast-chat-wellcome')
+    if (toastTrigger) {
+        toastTrigger.addEventListener('click', () => {
+            const toast = new bootstrap.Toast(toastLiveExample)
+            toast.show()
+        })
+    }
+</script>
+*@
+<script>
+
+
+    function showchat(_idtopic, title, pic){
+        $("#IDtopicthumbnai").attr('src', pic);
+        $("#IDtopicname").text(title);
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("showChat", "Dashboard",new { area="Partner"})",
+            data: {
+                idtopic: _idtopic,
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+            },
+            success: function (data) {
+                $('#bodychat').html(data);
+                const toastLiveExample = document.getElementById('toast-chat-wellcome');
+                const toast = new bootstrap.Toast(toastLiveExample);
+                toast.show();
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+
+        
+    }
+    window.localStorage.setItem("menu-active", "Dashboard-item");
+    function showListFiles(_idType, IdRE) {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("showlistFiles", "Land",new { area="Partner"})",
+            data: {
+                idR: IdRE,
+                idType: _idType
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#list_media_from_land_data').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    function LikeRE(idRe) {
+        debugger
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("SaveReSubmit", "Land")",
+            data: {
+                IdRE: idRe,
+            },
+            cache: false,
+            async: false,
+            success: function (data) {
+                swal("Thông báo!", "Thêm mới bất động sản yêu thích thành công.", "success");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+            }
+        })
+
+    }
+
+    function UnLikeRE(idCtv, idRe) {
+        debugger
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("UnSaveReSubmit", "Land")",
+            data: {
+                IdCtv: idCtv,
+                IdRE: idRe,
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+            },
+            success: function (result) {
+                swal("Thông báo!", "Xóa khỏi danh sách bất động sản yêu thích thành công.", "success");
+                $("#bds-" + idRe).fadeOut();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+            }
+        })
+
+    }
+</script>
+

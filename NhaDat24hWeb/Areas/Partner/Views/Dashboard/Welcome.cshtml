@@ -1,0 +1,63 @@
+﻿@using Newtonsoft.Json;
+@using NhaDat24h.Common.Configuration;
+@using NhaDat24h.DataAccess.Entities;
+@inject IHttpContextAccessor sessonContext
+@{
+    TbUser user = null;
+    if (sessonContext != null && sessonContext.HttpContext != null)
+    {
+        var cookieValue = sessonContext.HttpContext.Session.GetString(AppConfigs.CurrentUserAdmin);
+        if (!string.IsNullOrEmpty(cookieValue))
+        {
+            user = JsonConvert.DeserializeObject<TbUser>(cookieValue);
+        }
+    }
+}
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+<div class="dashboard-content" id="welcome_user">
+    <div class="container">
+            <div class="mb-3 text-center">
+        <h4 class="text-bold">Xin chào @user.Fullname, tài khoản của bạn
+            <span class="text-red">đang chờ phê duyệt!</span>
+        </h4>
+        <p>Để được phê duyệt tài khoản bạn vui lòng liên hệ với cấp quản lý để được phê duyệt.</p>
+        <img src="~/assets/img/welcome-user.png"/>
+        <div class="d-flex gap-10 align-items-center justify-center mt-30">
+            <a class="save-contact" href="#">
+                <i class="fa-regular fa-address-book"></i>
+                Liên hệ ngay
+            </a>
+            <a class="save-contact" href="#">
+                <i class="fas fa-phone-square-alt"></i>
+                Hotline: 0963.165.165
+            </a>
+        </div>
+    </div>
+    </div>
+</div>
+
+@*<div class="dashboard-content" id="welcome_user">
+    <div class="container">
+        <div class="mb-3 text-center">
+            <h4 class="text-bold">Xin chào @user.Fullname, tài khoản của bạn <span class="text-red">đã bị khóa!</span></h4>
+            <p>Vui lòng liên hệ với cấp quản lý để được mở khóa tài khoản.</p>
+            <img src="~/assets/img/user_lock.png" />
+            <div class="d-flex gap-10 align-items-center justify-center mt-30">
+                <a class="save-contact" href="#">
+                    <i class="fa-regular fa-address-book"></i>
+                    Liên hệ ngay
+                </a>
+                <a class="save-contact" href="#">
+                    <i class="fas fa-phone-square-alt"></i>
+                    Hotline: 0963.165.165
+                </a>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<script>
+    window.localStorage.setItem("menu-active", "Welcome-item");
+</script>

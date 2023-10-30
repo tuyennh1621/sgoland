@@ -1,0 +1,558 @@
+﻿@using NhaDat24h.DataDto.RealEstates;
+
+@addTagHelper *, Kendo.Mvc
+
+@model DocFileUpload
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+    var kendoVersion = "2022.2.510";
+}
+
+<link href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.material-main.min.css" rel="stylesheet" type="text/css" />
+   
+<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jszip.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.aspnetmvc.min.js"></script>
+<link rel="stylesheet" href="~/kendoui/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/kendoui/css/site.css" />
+<style>
+    .dropZoneElement {
+        position: relative;
+        display: inline-block;
+        background-color: #f8f8f8;
+        border: 1px solid #c7c7c7;
+        width: 350px;
+        height: 200px;
+        text-align: center;
+    }
+
+    .textWrapper {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        font-size: 18px;
+        line-height: 1.2em;
+        font-family: Arial,Helvetica,sans-serif;
+        color: #000;
+    }
+
+    .dropImageHereText {
+        color: #c7c7c7;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+
+    .wrapper:after {
+        content: ".";
+        display: inline-block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+
+    .or {
+        margin: auto;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 45%;
+        transform: translate(-50%,-45%);
+    }
+</style>
+<div class="dashboard-content dashboard-content-0">
+    <h4 class="mb-3 text-bold">Thêm thư viện Ảnh / File bất động sản</h4>
+    <div class="col-lg-12 col-md-12" id="form-register-partner">
+        <div class="frm_submit_block" style="border-radius:0 !important;">
+            <div class="frm_submit_wrap form-simple form-group">
+                <div class="row">
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Ảnh BĐS<span class="text-danger">*</span></label>
+                            <span class="text-12 color-gray f-w-400 text-italic">Files ảnh (max: 4M/file)</span>
+                        </div>
+                        <kendo-upload id="anhbds" name="files" on-success="onSuccess" data-type="16">
+                            <async auto-upload="true" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="AnhBDS",IdType = 16})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 16})" chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="4096000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Hợp đồng môi giới</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">Files ảnh/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="hopdongmoigioi" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="1">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Hopdongmoigioi",IdType = 1})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 1})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Giấy chứng nhận phân phối</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">Files ảnh/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="giaychungnhanphanphoi" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="3">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Giaychungnhanphanphoi",IdType = 3})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 3})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Pháp lý dự án<span class="text-danger">*</span></label>
+                            <span class="text-12 color-gray f-w-400 text-italic">Files ảnh/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="phaplyduan" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="4">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Phaplyduan",IdType = 4})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 4})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                </div>
+                <div class="row mt-10">
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Mặt bằng dự án<span class="text-danger">*</span></label>
+                            <span class="text-12 color-gray f-w-400 text-italic">Files ảnh/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="matbangduan" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="5">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Matbangduan",IdType = 5})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 5})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Tài liệu MKT</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">Nhiều file ảnh/PDF/Videos (max:600M/file)</span>
+                        </div>
+                        <kendo-upload id="tailieumkt" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="6">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Tailieumkt",IdType = 6})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 6})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="614400000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">File Tranning</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">File ảnh/PDF/PPT (max:600M/file)</span>
+                        </div>
+                        <kendo-upload id="filetraining" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="7">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Filetraining",IdType = 7})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 7})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="614400000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">TVC dự án</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">Videos (max:500M/file)</span>
+                        </div>
+                        <kendo-upload id="tvcduan" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="8">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Tvcduan",IdType = 8})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 8})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="512000000" />
+                        </kendo-upload>
+                    </div>
+                </div>
+                <div class="row mt-10">
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Q & A</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">Files Word/Excel/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="qanda" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="9">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Qanda",IdType = 9})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 9})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Quy trình giao dịch</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">File Word/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="quytrinhgiaodich" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="10">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Quytrinhgiaodich",IdType = 10})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 10})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Mẫu hợp đồng đặt cọc</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">File Word/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="mauhopdongdatcoc" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="11">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Mauhopdongdatcoc",IdType = 11})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 11})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Mẫu HĐ CDT ký với khách hàng</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">File Word/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="mauhdcdtkyvoikhachhang" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="12">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                        new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Mauhdcdtkyvoikhachhang",IdType = 12})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 12})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                </div>
+                <div class="row mt-10">
+                    <div class="col-xl-6 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Mẫu TT khách hàng book ký</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">File Word/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="mauthongtinkhachangbookky" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="13">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                            new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Mauthongtinkhachangbookky",IdType = 13})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 13})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Phiếu tính giá</label>
+                            <span class="text-12 color-gray f-w-400 text-italic">File Excel/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="phieutinhgia" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="14">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                            new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="Phieutinhgia",IdType = 14})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 14})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                    <div class="col-xl-3 col-12">
+                        <div class="d-flex flex-column">
+                            <label class="mb-0">Chính sách bán hàng<span class="text-danger">*</span></label>
+                            <span class="text-12 color-gray f-w-400 text-italic">File Word/Excel/PDF (max: 200M/file)</span>
+                        </div>
+                        <kendo-upload id="chinhsachbanhang" drop-zone=".dropZoneElement" name="files" on-success="onSuccess" data-type="17">
+                            <async auto-upload="false" save-url="@Url.Action("UploadFile", "Upload",
+                            new {IdUser = Model.IdUser, IdRE = Model.IdRE, NamePj = Model.NamePj,NameType ="chinhsachbanhang",IdType = 17})"
+                                   remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser, IdRE = Model.IdRE,IdType = 17})"
+                                   chunk-size="110000" />
+                            <validation allowed-extensions="@Model.AllowedExtensions" max-file-size="204800000" />
+                        </kendo-upload>
+                    </div>
+                </div>
+                <div class="row mt-10 align-items-center">
+                    <form id="addnewlinkbanghang" class="col-xl-6 col-12">
+                            <div class="d-flex flex-column">
+                                <label class="mb-0">Bảng hàng</label>
+                                <span class="text-12 color-gray f-w-400 text-italic">Nhiều bảng hàng</span>
+                            </div>
+                        <input id="tenbanghang" class="form-control select2" type="text" placeholder="Tên bảng hàng" required data-msg-required ="Vui lòng nhập tên bảng hàng"/>
+                            <textarea id="linkbanghang" class="form-control select2 mt-10" required data-msg-required="Vui lòng nhập link bảng hàng" placeholder="Link bảng hàng (Link google drive)" rows="4"></textarea>
+                            <button id="btnaddbanghang" type="submit" value="Thêm bảng hàng">
+                                <i class="fas fa-plus-circle"></i>
+                                Thêm bảng hàng
+                            </button>
+
+                            <div id="showlistbanghang">
+                                @await Html.PartialAsync("~/Areas/Partner/Views/Shared/showlistFiles.cshtml", Model.listLinkbanghang)
+                            </div>
+                    </form>
+                </div>
+                <div class="form-group btn-register2" id="btn-important">
+                    <button class="btn bg-primary2" onclick="guiyeucaupheduyet()" id="btnGuiPheDuyet">Gửi yêu cầu phê duyệt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="list_media_from_land" aria-labelledby="list_media_from_land">
+    <div class="offcanvas-header">
+        <h4>Thư viện ảnh / file đã upload</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="modal-divider"></div>
+    <div class="offcanvas-body" id="list_media_from_land_data">
+
+    </div>
+</div>
+
+
+
+<script>
+    const container = document.getElementById('input-cont');
+    var maxInputAllowed = 5;
+    const myListCount = [];
+
+    var inputCount = 0;
+        myListCount[16] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 16)?.CountType ?? 0);
+        myListCount[1] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 1)?.CountType ?? 0);
+        myListCount[3] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 3)?.CountType ?? 0);
+        
+        myListCount[4] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 4)?.CountType ?? 0);
+        myListCount[5] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 5)?.CountType ?? 0);
+        myListCount[6] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 6)?.CountType ?? 0);
+        myListCount[7] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 7)?.CountType ?? 0)
+
+        myListCount[8] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 8)?.CountType ?? 0);
+        myListCount[9] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 9)?.CountType ?? 0);
+        myListCount[10] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 10)?.CountType ?? 0);
+        myListCount[11] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 11)?.CountType ?? 0)
+
+        myListCount[12] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 12)?.CountType ?? 0);
+        myListCount[13] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 13)?.CountType ?? 0);
+        myListCount[14] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 14)?.CountType ?? 0);
+        myListCount[17] = @Html.Raw(@Model.listDoc.FirstOrDefault(x => x.IdType == 17)?.CountType ?? 0);
+
+        var IdRE = @Html.Raw(@Model.IdRE);
+        
+    // Call addInput() function on button click
+    function addInput() {
+        inputCount++; // Increment input count by one
+        if (inputCount > 5) {
+            alert('Bạn có thể nhập tối đa 5 bảng hàng.');
+            return;
+        }
+        let input = document.createElement('input');
+        input.placeholder = 'Thêm link bảng hàng';
+        input.classList.add('form-control', 'select2', 'mt-10');
+        container.appendChild(input);
+    }
+
+    $(document).ready(function () {
+        //$("#anhbds").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file ảnh / PDF</span>');
+        //$("#hopdongmoigioi").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file ảnh / PDF</span>');
+        //$("#phaplyduan").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file ảnh / PDF</span>');
+        //$("#matbangduan").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file ảnh / PDF</span>');
+        //$("#tailieumkt").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file ảnh / PDF</span>');
+        //$("#giaychungnhanphanphoi").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">File ảnh / PDF</span>');
+        //$("#filetraining").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file PDF</span>');
+        //$("#tvcduan").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều video</span>');
+        //$("#qanda").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file Word/Excel/PDF</span>');
+        //$("#quytrinhgiaodich").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file Word/PDF</span>');
+        //$("#mauhopdongdatcoc").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file Word/PDF</span>');
+        //$("#mauhdcdtkyvoikhachhang").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">Nhiều file Word/PDF</span>');
+        //$("#mauthongtinkhachangbookky").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">1 file Word/PDF</span>');
+        //$("#phieutinhgia").closest('.k-dropzone').prepend('<span class="text-12 color-gray f-w-400">1 file Excel/PDF</span>');
+
+        // Khi edit BĐS
+
+
+        binValueCount('anhbds', myListCount[16], 16);
+        binValueCount('hopdongmoigioi', myListCount[1], 1);
+        binValueCount('giaychungnhanphanphoi', myListCount[3], 3);
+        binValueCount('phaplyduan', myListCount[4], 4);
+        binValueCount('matbangduan', myListCount[5], 5);
+        binValueCount('tailieumkt', myListCount[6], 6);
+        binValueCount('filetraining', myListCount[7], 7);
+        binValueCount('tvcduan', myListCount[8], 8);
+        binValueCount('qanda', myListCount[9], 9);
+        binValueCount('quytrinhgiaodich', myListCount[10], 10);
+        binValueCount('mauhopdongdatcoc', myListCount[11], 11);
+        binValueCount('mauhdcdtkyvoikhachhang', myListCount[12], 12);
+        binValueCount('mauthongtinkhachangbookky', myListCount[13], 13);
+        binValueCount('phieutinhgia', myListCount[14], 14);
+        binValueCount('chinhsachbanhang', myListCount[17], 17);
+
+       
+        
+        //$("#anhbds").closest('.k-dropzone').prepend('<p class="text-12 text-danger" onclick=\"showListFiles(16)\" data-bs-target="#list_media_from_land" data-bs-toggle="modal"><i class= "fas fa-eye"></i> ' + numanhbds + ' Files đã up</p>');
+        //$("#hopdongmoigioi").closest('.k-dropzone').prepend('<p class="text-12 text-danger" onclick=\"showListFiles(1)\" data-bs-target="#list_media_from_land" data-bs-toggle="modal"><i class= "fas fa-eye"></i> ' + hopdongmoigioi + ' Files đã up</p>');
+
+    });
+
+    function guiyeucaupheduyet(){
+        if (myListCount[16] == '0') {
+            swal("Thông báo!", "Bạn cần hoàn thiện Ảnh dự án trước khi gửi yêu cầu phê duyệt.", "error");
+            return
+        }
+        if (myListCount[4] == '0') {
+            swal("Thông báo!", "Bạn cần hoàn thiện hồ sơ Pháp lý dự án trước khi gửi yêu cầu phê duyệt.", "error");
+            return
+        }
+        if (myListCount[5] == '0') {
+            swal("Thông báo!", "Bạn cần hoàn thiện Mặt bằng dự án trước khi gửi yêu cầu phê duyệt.", "error");
+            return
+        }
+        if (myListCount[17] == '0') {
+            swal("Thông báo!", "Bạn cần hoàn thiện Chính sách bán hàng trước khi gửi yêu cầu phê duyệt.", "error");
+            return
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("updateStatusRE", "Land",new { area="Partner"})",
+            data: {
+                idR: IdRE
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+            },
+            success: function (result) {
+                if (result == "0") {
+                    //window.location.href = '/land'
+                    swal("Thông báo!", "Gửi yêu cầu phê duyệt dự án thành công.", "success").then(function () {
+                        window.location = "/land";
+                    });
+                }
+                else {
+                    swal("Thông báo!", "Lỗi: " + result, "error");
+                }
+
+            },
+            error: function () {
+                // alert('Failed to receive the Data');
+            }
+        })
+    }
+
+
+    function showListFiles(_idType) {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("showlistFiles", "Land",new { area="Partner"})",
+            data: {
+                idR: IdRE,
+                idType: _idType
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#list_media_from_land_data').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    function onChange() {
+        $("form").submit();
+    }
+    $("#limitUploadSize").change(function () {
+        $("form").submit();
+    })
+
+
+    $("#addnewlinkbanghang").submit(function (e) {
+        e.preventDefault();
+        
+        $('#addnewlinkbanghang').validate();
+
+        if ($('#addnewlinkbanghang').valid()) {
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("addlinkbanghang", "Land",new { area="Partner"})",
+                data: {
+                    idR: IdRE,
+                    name: $("#tenbanghang").val(),
+                    link: $("#linkbanghang").val()
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                },
+                success: function (result) {
+                    if (result=="0")
+                    {
+                        swal("Thông báo!", "Link bảng hàng đã tồn tại. Vui lòng kiểm tra lại.", "error");
+                    }
+                    else{
+                        $('#showlistbanghang').html(result);
+                        $("#tenbanghang").val('');
+                        $("#linkbanghang").val('');
+                        swal("Thông báo!", "Thành công", "success");
+                    }
+                    
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                }
+            })
+
+        }
+    });
+
+    function binValueCount(id, count, idtype) {
+        
+        var css="text-danger";
+        if(count> 0)
+        {
+            css = "text-green"
+        }
+        $("#" + id).closest('.k-dropzone').prepend('<p class="text-12 ' + css + '" onclick=\"showListFiles(' + idtype + ')\" data-bs-target="#list_media_from_land" data-bs-toggle="offcanvas"><i class= "fas fa-eye"></i> <span id=count-' + id + '-' + idtype + '>' + count + '</span> Files đã up</p>');
+    
+    }
+
+    function onSuccess(e) {
+        var id = e.sender.element[0].getAttribute("id");
+        var type = e.sender.element[0].getAttribute("data-type");
+        if (e.operation == 'upload'){
+            myListCount[type] += 1;
+        }
+        else if (e.operation == 'remove') {
+            myListCount[type] -= 1;
+        }
+        $('#count-' + id + '-' + type).text(myListCount[type]);
+    }
+    function getFileInfo(e) {
+        return $.map(e.files, function (file) {
+            var info = file.name;
+
+            // File size is not available in all browsers
+            if (file.size > 0) {
+                info += " (" + Math.ceil(file.size / 1024) + " KB)";
+            }
+            return info;
+        }).join(", ");
+    }
+
+    $(document).ready(function () {
+        $("#anhbds").closest(".k-upload").find("span").text("Chọn file");
+        $("#matbangduan").closest(".k-upload").find("span").text("Chọn file");
+        $("#tailieumkt").closest(".k-upload").find("span").text("Chọn file");
+        $("#filetraining").closest(".k-upload").find("span").text("Chọn file");
+        $("#tvcduan").closest(".k-upload").find("span").text("Chọn file");
+        $("#qanda").closest(".k-upload").find("span").text("Chọn file");
+        $("#quytrinhgiaodich").closest(".k-upload").find("span").text("Chọn file");
+        $("#mauhopdongdatcoc").closest(".k-upload").find("span").text("Chọn file");
+        $("#mauhdcdtkyvoikhachhang").closest(".k-upload").find("span").text("Chọn file");
+        $("#mauthongtinkhachangbookky").closest(".k-upload").find("span").text("Chọn file");
+        $("#phieutinhgia").closest(".k-upload").find("span").text("Chọn file");
+        $("#chinhsachbanhang").closest(".k-upload").find("span").text("Chọn file");
+        $("#phaplyduan").closest(".k-upload").find("span").text("Chọn file");
+        $("#giaychungnhanphanphoi").closest(".k-upload").find("span").text("Chọn file");
+        $("#hopdongmoigioi").closest(".k-upload").find("span").text("Chọn file");
+    });
+</script>

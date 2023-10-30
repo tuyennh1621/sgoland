@@ -1,0 +1,268 @@
+﻿@using NhaDat24h.Common.Configuration
+@using NhaDat24h.DataAccess.Entities
+@using NhaDat24h.DataDto.RealEstates
+@model ModelDeposit;
+@{
+    int totalPage = (Model != null && Model.ListDeposit.Count > 0 && Model.ListDeposit.FirstOrDefault().Total > 0) ? ((Model.ListDeposit.FirstOrDefault().Total - 1) / Model.PageSize + 1) : 0;
+    int pageNumber = Model.PageIndex;
+    int pageSize = Model.PageSize;
+    int FromIndex = pageNumber == 1 ? 1 : (pageNumber - 1) * pageSize + 1;
+    int totalCount = (Model.ListDeposit.Count > 0) ? Model.ListDeposit.FirstOrDefault().Total : 0;
+    int EndIndex = pageNumber == totalPage ? totalCount : pageNumber * pageSize;
+
+}
+
+<style>
+    .status-1 {
+        background: var(--bs-yellow);
+        border: var(--bs-yellow);
+        color: white;
+    }
+
+    .status-2 {
+        background-color: var(--bs-primary);
+        border: 1px solid var(--bs-primary);
+        color: white;
+    }
+</style>
+
+
+<div class="d-flex flex-sm-row align-items-center gap-10 mb-10">
+    <span>Hiển thị </span>
+    <div class="dropdown dropdown-showpage">
+        <a class="btn dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @pageSize
+        </a>
+
+        <ul class="dropdown-menu">
+            <li><button class="dropdown-item" onclick="SubmitSearchDeposit('1', '10')">10</button></li>
+            <li><button class="dropdown-item" onclick="SubmitSearchDeposit('1', '20')">20</button></li>
+            <li><button class="dropdown-item" onclick="SubmitSearchDeposit('1', '50')">50</button></li>
+        </ul>
+    </div>
+    <span>bản ghi</span>
+</div>
+
+<div>
+    <table class="property-table-wrap table-2">
+        <thead>
+            <tr style="white-space: nowrap;">
+                <th>Thông tin dự án</th>
+                <th></th>
+                <th>Ngày thanh toán</th>
+                <th>Số tiền</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (@Model != null && Model.ListDeposit != null)
+            {
+                @foreach (var item in Model.ListDeposit)
+                {
+                    <tr style="white-space: nowrap;" class="dashboard_property_list" id="item-@item.Id">
+                        <td class="dashboard_property_list_thumb">
+                            <a>
+                                <img src="https://cdn.realtech.com.vn/@item.REImg" id="Avt_@item.Id" alt="">
+                            </a>
+                        </td>
+                        <td>
+                            <div class="dashboard_property_list_content">
+                                <h5 class="text-bold">@item.NameRE</h5>
+                                <div class="text-12 color-gray">Tiêu đề: <span class="text-black">@item.Name</span></div>
+                                <div class="text-12 color-gray">ID: <span class="text-black">@item.Id</span></div>
+                                <div class="text-12 color-gray">Loại: <span class="text-black">@item.TypeRE</span></div>
+                                <div class="text-12 color-gray">Ngày đặt cọc: <span class="text-black">@item.DepositDate.ToString("dd/MM/yyyy")</span></div>
+                                <div class="text-12 color-gray">Hạn thanh toán: <span class="text-red">@item.PaymentDeadline.ToString("dd/MM/yyyy")</span></div>
+                            </div>
+                        </td>
+                        <td style="width:350px;">
+                            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                @if (item.Percen <= 50)
+                                {
+                                    <div style="width: @item.Percen%; background:green"></div>
+                                }
+                                else if (item.Percen > 50 && item.Percen <= 75)
+                                {
+                                    <div style="width: @item.Percen%; background: #ffc107"></div>
+                                }
+                                else
+                                {
+                                    <div style="width: @item.Percen%; background: red"></div>
+                                }
+                            </div>
+                            @if (@item.HetHan_curent > 0)
+                            {
+                                <label class="text-12"><span class="text-red">Chỉ còn @item.HetHan_curent/@item.Ngayhethan ngày!</span> Bạn đừng bỏ lỡ nhé </label>
+                            }
+                            else
+                            {
+                                <label class="text-12"><span class="text-red">Đã quá hạn thanh toán</span></label>
+                            }
+                        </td>
+                        <td>@AppConfigs.FormatCurrency("VND", Math.Round((decimal)(item.DepositValue*1000000),0))</td>
+                        <td style="text-align:left;">
+                            <select class="border-solid btn-rounded p-x-10 p-y-5 status-deposit-@item.Status" id="status_@item.Id" name="Status" data-idctv="@item.Id" onchange="ChangeStatusDeposit(@item.Id)">
+                                <option selected="@item.Selected(1)" value="1">Chờ thanh toán</option>
+                                <option selected="@item.Selected(2)" value="2">Đã thanh toán</option>
+                                <option selected="@item.Selected(3)" value="3">Đã hủy</option>
+                            </select>
+                        </td>
+                        <td class="action action333">
+                            <div class="dropdown dropdown33">
+                                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="f-30 fas fa-ellipsis-h"></i>
+                                </button>
+                                <ul class="dropdown-menu action_btn">
+                                    @if (item.Status == 2)
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#detail_deposit_@item.Id" role="button">
+                                                <i class="fa-solid fa-up-right-from-square"></i>
+                                                Chi tiết đặt cọc
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" data-bs-toggle="offcanvas" onclick="EditDeposit(@item.Id)" href="#upload-contract" role="button" aria-controls="edit-deposit">
+                                                <i class="fas fa-pencil-alt"></i>
+                                                Sửa thông tin
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#detail_deposit_@item.Id" role="button">
+                                                <i class="fa-solid fa-up-right-from-square"></i>
+                                                Chi tiết đặt cọc
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" onclick="DeleteDepositRE(@item.Id)">
+                                                <i class="fas fa-times"></i>
+                                                Xóa
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="modal-divider"></tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+@if (Model != null && Model.ListDeposit.Count > 0 && Model.ListDeposit.FirstOrDefault().Total > 0)
+{
+    <div class="row">
+        <div class="pagintion-table mt-30">
+            <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row">
+                <p class="mb-sm-0">
+                    Hiển thị từ
+                    <span>@FromIndex</span>
+                    đến
+                    <span>@EndIndex</span>
+                    của @Model.ListDeposit.FirstOrDefault().Total bản ghi
+                </p>
+                <div class="pagination1">
+                    <ul class="pagination text-center m-0">
+                        <li class="page-item ">
+                            <button class="page-link" onclick="SubmitSearchDeposit( '1',@Model.PageSize.ToString())" aria-label="Previous">
+                                <span><i class="fa-solid fa-arrow-left"></i></span>
+                                <span class="sr-only">Previous</span>
+                            </button>
+                        </li>
+
+                        @for (int i = 1; i <= totalPage; i++)
+                        {
+                            string active = "";
+                            if (i == pageNumber) active = "active";
+                            if (pageNumber <= 3 && i <= 5)
+                            {
+                                <li class="page-item "><button onclick="SubmitSearchDeposit(@i.ToString(),@Model.PageSize.ToString())" class="page-link @active"> @i </button></li>
+
+                            }
+                            else if (pageNumber > 3 && i >= pageNumber - 2 && i <= pageNumber + 2)
+                            {
+                                <li class="page-item "><button onclick="SubmitSearchDeposit(@i.ToString(), @Model.PageSize.ToString())" class="page-link @active"> @i </button></li>
+
+                            }
+
+                        }
+                        <li class="page-item ">
+                            <button class="page-link" onclick="SubmitSearchDeposit(@totalPage.ToString(), @Model.PageSize.ToString())" tabindex="-1" aria-label="Next">
+                                <span><i class="fa-solid fa-arrow-right"></i></span>
+                                <span class="sr-only">Next</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@foreach (var item in Model.ListDeposit)
+{
+    <div class="modal" id="detail_deposit_@item.Id" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xxl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Đặt cọc dự án @item.NameRE</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xxl-6 col-12">
+                            <div class="left-media">
+                                @if (item.Imgs.Count > 0)
+                                {
+                                    <iframe id="mainIframe" src="https://cdn.realtech.com.vn/@item.Imgs[0]" style="width:100%;  height:100%; min-height:700px;">
+                                    </iframe>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-12">
+                            <div class="right-media">
+                                @foreach (var img in item.Imgs)
+                                {
+                                    if (img.Contains(".pdf"))
+                                    {
+                                        <div class="table-file-236">
+                                            <i onclick="changecontract('@img')" class="fa fa-file-pdf"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="table-file-236">
+                                            <img onclick="changecontract('@img')" src="https://cdn.realtech.com.vn/@img" id="Avt_@item.Id" alt="">
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div>
+                                <div class="text-16 color-gray">Tiêu đề: <span class="text-black">@item.Name</span></div>
+                                <div class="text-16 color-gray">ID: <span class="text-black">@item.Id</span></div>
+                                <div class="text-16 color-gray">Loại: <span class="text-black">@item.TypeRE</span></div>
+                                <div class="text-16 color-gray">Ngày đặt cọc: <span class="text-black">@item.DepositDate.ToString("dd/MM/yyyy")</span></div>
+                                <div class="text-16 color-gray">Hạn thanh toán: <span class="text-red">@item.PaymentDeadline.ToString("dd/MM/yyyy")</span></div>
+                                <div class="text-16 color-gray">Đã đặt cọc: <span class="text-red">@AppConfigs.FormatCurrency("VND", Math.Round((decimal)(item.DepositValue*1000000),0))</span></div>
+                                <div class="text-16 color-gray">Tổng đặt cọc: <span class="text-red">@AppConfigs.FormatCurrency("VND", Math.Round((decimal)(item.TotalValue*1000000),0))</span></div>
+                                <div class="text-16 color-gray">Trạng thái: <span class="text-red">@item.Status</span></div>
+                                <div class="text-16 color-gray">Tin nhắn: <span class="text-red">@item.Detail</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function changecontract(img) {
+        document.getElementById('mainIframe').src = 'https://cdn.realtech.com.vn' + img;
+    }
+</script>

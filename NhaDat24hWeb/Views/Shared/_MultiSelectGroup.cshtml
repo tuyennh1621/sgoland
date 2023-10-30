@@ -1,0 +1,19 @@
+﻿@using NhaDat24h.DataDto.Users;
+@{
+    Layout = null;
+}
+@model List<MultiSelectGroup>
+@if (Model == null)
+    return;
+    @foreach(var group in Model)
+    {
+        <optgroup label="@group.Label">
+        @if (@group.Options != null)
+        {
+            @foreach (var item in @group.Options)
+            {
+                <option value="@item.Id">@item.Title</option>
+            }
+        }
+        </optgroup>
+    }

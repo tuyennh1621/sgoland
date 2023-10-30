@@ -1,0 +1,157 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using NhaDat24h.DataDto.Users;
+@model ModelFormPheDuyet; 
+<div class="modal-header">
+    <h5 class="modal-title">Duyệt vị trí cho ID: @Model.IdCtv</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="d-flex flex-column gap-10 form-approve">
+        <input type="hidden" asp-for="IdCtv" />
+        <div class="d-flex align-items-center gap-10">
+            <select multiple onchange="changeCompany()" class="form-select" asp-for="ListIDCongTySelected">
+                <option disabled value="0">Chọn công ty</option>
+                @if (Model.ListCongTy != null)
+                {
+                    foreach (var item in Model.ListCongTy)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+            <label><span class="text-danger f-20">*</span></label>
+
+        </div>
+        <div class="d-flex align-items-center gap-10">
+            <select multiple onchange="changePhongBan()" class="form-select" asp-for="ListIDPhongBanSelected">
+                <option disabled value="0">Chọn phòng ban</option>
+                @if (Model.ListPhongBan != null)
+                {
+                    @foreach (var group in Model.ListPhongBan)
+                    {
+                        <optgroup label="@group.Label">
+                            @if (@group.Options != null)
+                            {
+                                @foreach (var item in @group.Options)
+                                {
+                                    <option value="@item.Id">@item.Title</option>
+                                }
+                            }
+                        </optgroup>
+                    }
+                }
+            </select>
+            <label><span class="text-danger f-20">*</span></label>
+
+        </div>
+        <div class="d-flex align-items-center gap-10">
+            <select multiple class="form-select" asp-for="ListIDViTriSelected">
+                <option disabled value="0">Chọn vị trí</option>
+                @if (Model.ListVitri != null)
+                {
+                    @foreach (var group in Model.ListVitri)
+                    {
+                        <optgroup label="@group.Label">
+                            @if (@group.Options != null)
+                            {
+                                @foreach (var item in @group.Options)
+                                {
+                                    <option value="@item.Id">@item.Title</option>
+                                }
+                            }
+                        </optgroup>
+                    }
+                }
+            </select>
+            <label><span class="text-danger f-20">*</span></label>
+        </div>
+        <div class="d-flex align-items-center gap-10">
+            <button class="primary-bg p-10 border-none text-white round-5" style="width:97%;" onclick="DuyetViTri()">
+                Duyệt vị trí
+            </button>
+            <label><span class="text-danger f-20"></span></label>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+        $('#ListIDCongTySelected').select2({
+            placeholder: "Chọn công ty",
+            dropdownParent: $('#Modelduyetvitri'),
+            allowClear: true
+        });
+        $('#ListIDPhongBanSelected').select2({
+            placeholder: "Chọn phòng ban",
+            dropdownParent: $('#Modelduyetvitri'),
+            allowClear: true
+        });
+        $('#ListIDViTriSelected').select2({
+            placeholder: "Chọn vị trí",
+            dropdownParent: $('#Modelduyetvitri'),
+            allowClear: true
+        });
+        //$('.select22').select2().on('select2:open', function (e) {
+        //    $('.select2-search__field').attr('placeholder', 'Nhập vào tên công ty');
+        //})
+    });
+    function changeCompany() {
+        var Url = '@Url.Action("binDropdownAjax","Users", new { area="Partner"})';
+        var _listIDCongtySelected = $('#ListIDCongTySelected').val();
+       // console.log(_listIDCongtySelected.join(','));
+        $.ajax({
+            type: "GET",
+            url: Url,
+            data: { obj: _listIDCongtySelected.join(','), style: 5 },
+            cache: false,
+            async: false,
+            success: function (data) {
+                $('#ListIDPhongBanSelected').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        })
+    }
+    function changePhongBan() {
+        var Url = '@Url.Action("binDropdownAjax","Users", new { area="Partner"})';
+        var _ListIDPhongBanSelected = $('#ListIDPhongBanSelected').val();
+        $.ajax({
+            type: "GET",
+            url: Url,
+            data: { obj: _ListIDPhongBanSelected.join(','), style: 6 },
+            cache: false,
+            async: true,
+            success: function (data) {
+                $('#ListIDViTriSelected').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        })
+    }
+
+    function DuyetViTri() {
+        var Url = '@Url.Action("binduyetvitri","Users", new { area="Partner"})';
+        var _ListIDViTri = $('#ListIDViTriSelected').val();
+        if (_ListIDViTri==''){
+            alert('Bạn cần chọn vị trí trước khi duyệt.');
+        }
+        else{
+            var _IdCtv = $('#IdCtv').val();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { listID: _ListIDViTri.join(','), idCTV: _IdCtv },
+                cache: false,
+                async: true,
+                success: function (data) {
+                    alert(data)
+                    $('.modal').modal('hide');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            })
+        }
+    }
+</script>

@@ -1,0 +1,909 @@
+﻿@using NhaDat24h.Common.Configuration;
+@using NhaDat24h.DataDto.Users;
+@model FormCTV
+@*<form id="emailForm" enctype="multipart/form-data">
+    <div class="row clearfix">
+        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+            <input type="file" asp-for="filesAvatar" tabindex="1">
+            <input type="file" asp-for="filesCMT1" tabindex="2">
+            <input type="file" asp-for="filesCMT2" tabindex="3">
+            <input type="text" asp-for="Fullname">
+        </div>
+        <div class="form-group text-left col-md-12 col-sm-12 col-xs-12">
+            <button type="submit" class="theme-btn btn-style-one">test</button>
+        </div>
+    </div>
+
+</form>
+*@
+<div>
+    <!-- Top header  -->
+    <!-- ============================================================== -->
+    <!-- ============================ Hero Banner  Start================================== -->
+    <div class="d-flex text-center m-0-auto justify-content-center">
+        <div class="container absolute slider-text round-10">
+            <div class="row">
+                <h1 class="big-header-capt mb-0 uppercase">SGO Land</h1>
+                <h5 class="mb-0 text-center text-bold uppercase">Môi Trường Làm Việc Bất Động Sản Chuyên Nghiệp Nhất Việt Nam</h5>
+                <p class="text-center mt-10 mb-20 mb-hidden">
+                    SGO LAND tự hào là đơn vị tiên phong phát triển hệ sinh thái bất động sản đồng bộ và khép
+                    kín đầu tiên tại Việt Nam với đầy đủ các loại hình hướng đến giải đáp tất cả các vấn đề liên quan
+                    đến toàn bộ đối tượng của ngành bất động sản. Luôn vững vàng với mục tiêu mang lại cho khách hàng những sản phẩm bất động sản tốt nhất bằng dịch vụ chuyên nghiệp nhất, thông qua đội ngũ nhân sự chất lượng và có kinh nghiệm cao, được đào tạo thực chiến bài bản.
+                </p>
+                <div class="align-items-center justify-content-center d-flex gap-10 mt-m-10">
+                    <div class="buttons">
+                        <button class="btnnnn">Đăng ký ứng tuyển</button>
+                    </div>
+                    <div class="buttons1">
+                        <button class="btnnnn2">Ký gửi nhà đất</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main-carousel-promotionIndex" class="owl-carousel animate__fadeInLeft wow" data-wow-delay="0.5s">
+        <div class="item">
+            <div class="pr-image">
+                <a href="#">
+                    <img src="~/assets/img/B1.JPG" alt="#">
+                </a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="pr-image">
+                <a href="#">
+                    <img src="~/assets/img/B2.jpg" alt="#">
+                </a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="pr-image">
+                <a href="#">
+                    <img src="~/assets/img/B4.jpg" alt="#">
+                </a>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="pr-image">
+                <a href="#">
+                    <img src="~/assets/img/B5.jpg" alt="#">
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- ============================ Hero Banner End ================================== -->
+    <!-- ============================ Recent Properties Start ================================== -->
+    <section>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="partner-right col-12 wow animate__lightSpeedInLeft" data-wow-delay="0.5s">
+                    <div class="row title-form-register">
+                        <div class="col-xxl-5 d-flex col-12">
+                            <div class="bg-primary-2">
+                                <h4 class="text-white uppercase">Đăng ký ứng tuyển</h4>
+                            </div>
+                            <img class="mb-hidden" src="~/assets/img/bggggg.png" />
+                        </div>
+
+                    </div>
+                    <div class="property_block_wrap p_b_w2">
+                        <div class="block-body" id="form-register-partner">
+                            <form id="AddUser" class="form-simple needs-validation" enctype="multipart/form-data" novalidate>
+                                <div class="row">
+                                    <div class="col-xxl-6 col-lg-6 col-12">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-12">
+                                                <div class="form-group">
+                                                    <label>Mã giới thiệu</label>
+                                                    <input type="number" placeholder="Mã giới thiệu" asp-for="Refid" value="" class="form-control simple Num_Home">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-12">
+                                                <div class="form-group">
+                                                    <label>Họ tên <span class="text-danger">*</span></label>
+                                                    <input type="text" asp-for="Fullname" placeholder="Vui lòng nhập họ tên" class="form-control simple" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="add_element_parent16">
+                                            <div class="col-lg-6 col-md-12" id="add_element_parent4">
+                                                <div class="form-group">
+                                                    <label>Ngày sinh<span class="text-danger">*</span></label>
+                                                    <div class="d-flex gap-10 align-items-center date-of-time">
+                                                        <select class="form-select" asp-for="Day" required>
+                                                            <option selected disabled value="">Ngày</option>
+                                                            @for (int i = 1; i <= 31; i++)
+                                                            {
+                                                                <option value="@i">@i</option>
+                                                            }
+                                                        </select>
+                                                        <select class="form-select" asp-for="Month" required>
+                                                            <option selected disabled value="">Tháng</option>
+                                                            @for (int i = 1; i <= 12; i++)
+                                                            {
+                                                                <option value="@i">@i</option>
+                                                            }
+                                                        </select>
+                                                        <select class="form-select" asp-for="Year" required>
+                                                            <option selected disabled value="">Năm</option>
+                                                            @for (int i = 1943; i <= 2008; i++)
+                                                            {
+                                                                <option value="@i">@i</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-12" id="add_element_parent3">
+                                                <div class="form-group">
+                                                    <label>CMTND/CCCD <span class="text-danger">*</span></label>
+                                                    <input type="number" placeholder="Nhập đầy đủ CMTND/CCCD" asp-for="CCCD" class="form-control simple hide-number-arrows Num_Home" value="" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-12">
+                                                <div class="form-group">
+                                                    <label>Email <span class="text-danger">*</span></label>
+                                                    <input type="email" placeholder="Vui lòng nhập địa chỉ email" asp-for="Email" class="form-control simple" required data-msg-email="Email chưa hợp lệ">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-12">
+                                                <div class="form-group">
+                                                    <label>Điện thoại <span class="text-danger">*</span></label>
+                                                    <input type="number" asp-for="Mobile" placeholder="Số điện thoại liên lạc" class="form-control simple hide-number-arrows Num_Home" required data-msg-number="Số điện thoại chưa hợp lệ">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-12 sexy" id="add_element_parent2">
+                                                <div class="form-group select-gender">
+                                                    <label for="sex">Giới tính <span class="text-danger">*</span></label>
+                                                    <select class="form-select select2" onchange="changeSex()" asp-for="GioiTinh" required>
+                                                        <option selected disabled value="">Chọn giới tính</option>
+                                                        <option value="1">Nam</option>
+                                                        <option value="2">Nữ</option>
+                                                        <option value="3">Unisex</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6 col-md-12" id="add_element_parent1">
+                                                <div class="form-group select-gender">
+                                                    <label for="company">Công ty quản lý <span class="text-danger">*</span></label>
+                                                    <select class="form-select select2" asp-for="IdCongty" onchange="changeCompany(this)" required>
+                                                        <option selected disabled value="">Chọn công ty</option>
+                                                        @foreach (var item in Model.ListCongty)
+                                                        {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                        }
+                                                        <option value="0">Theo sự sắp xếp của công ty</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12" id="add_element_parent">
+                                                <div class="form-group select-gender">
+                                                    <label for="company">Vị trí ứng tuyển <span class="text-danger">*</span></label>
+                                                    <select class="form-select select2" asp-for="DepartmentId" required>
+                                                        <option selected disabled value="">Chọn vị trí</option>
+                                                        if(@Model.ListPhongBan!=null && @Model.ListPhongBan.Count>0){
+                                                        @foreach (var item in Model.ListPhongBan)
+                                                        {
+                                                            @* <option value="@item.Id">@item.Description</option> *@
+                                                        }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="form-group">
+                                                    <label>Địa chỉ <span class="text-danger">*</span></label>
+                                                    <input type="text" asp-for="Address" placeholder="Tên đường phố, phường xã, quận huyện, tỉnh thành" class="form-control simple" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row partner-avatar-parent align-items-center">
+                                            <div class="col-xxl-6 col-lg-6 col-12">
+                                                <div class="partner-avatar form-group">
+                                                    <label>Ảnh đại diện <span class="text-danger">*</span></label>
+                                                    <div class="partner-av">
+                                                        <img id="img-filesAvatar1" class="upload__img-wrap" src="~/assets/img/1232435434.jpg">
+                                                        <div class="form-group btn-upload-img">
+                                                            <label for="filesAvatar1" data-id="filesAvatar1" class="change-image">Upload ảnh</label>
+                                                            <input class="upload__inputfile" id="filesAvatar1" style="visibility:hidden;" data-id="filesAvatar1" type="file" asp-for="filesAvatar1" required">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-lg-6 col-12">
+                                                <div class="partner-avatar form-group">
+                                                    <label>Ảnh chân dung <span class="text-danger">*</span></label>
+                                                    <div class="partner-av">
+                                                        <img id="img-filesAvatar2" class="upload__img-wrap" src="~/assets/img/et54y6565.jpg">
+                                                        <div class="form-group btn-upload-img">
+                                                            <label for="filesAvatar2" data-id="filesAvatar2" class="change-image">Upload ảnh</label>
+                                                            <input class="upload__inputfile" id="filesAvatar2" style="visibility:hidden;" data-id="filesAvatar2" type="file" asp-for="filesAvatar2" required">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6 col-lg-6 col-12">
+                                        <div class="row">
+                                            <div class="col-xxl-6 col-lg-6 col-12">
+                                                <div class="partner-id form-group">
+                                                    <label>Ảnh CMT/CCCD Mặt trước <span class="text-danger">*</span></label>
+                                                    <img id="img-filesCMT1" class="upload__img-wrap" src="~/assets/img/214356.png">
+                                                    <div class="mt-10">
+                                                        <label for="filesCMT1" class="change-image">Upload ảnh</label>
+                                                        <input class="upload__inputfile" style="visibility:hidden;" type="file" asp-for="filesCMT1" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-lg-6 col-12">
+                                                <div class="partner-id form-group" id="partner-id22">
+                                                    <label>Ảnh CMT/CCCD Mặt sau <span class="text-danger">*</span></label>
+                                                    <img id="img-filesCMT2" class="upload__img-wrap" src="~/assets/img/242442342.png">
+                                                    <div class="mt-10">
+                                                        <label for="filesCMT2" class="change-image">Upload ảnh</label>
+                                                        <input class="upload__inputfile" style="visibility:hidden;" type="file" asp-for="filesCMT2" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-12 col-12 note-avatar">
+                                                <p>Lưu ý: Ảnh chọn up lên không vượt quá 3M mỗi ảnh.</p>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="upload-cv">
+                                            <div class="col-lg-12 col-md-12 form-group">
+                                                <label>Upload CV</label>
+                                                <div class="form-group btn-upload2">
+                                                    <div class="d-flex flex-column">
+                                                        <label for="filesCV" data-id="filesCV" class="change-image w-60">Upload file CV định dạng .pdf hoặc file ảnh scan</label>
+                                                        <label id="linkfile"></label>
+                                                    </div>
+                                                    <input class="upload__cv" placeholder="Chọn file .pdf" id="filesCV" style="display:none;" data-id="filesCV" type="file" asp-for="filesCV">
+                                                </div>
+                                                <textarea asp-for="GIOITHIEU" required placeholder="Giới thiệu sơ qua về bản thân: Đã có hoặc chưa kinh nghiệm, năm kinh nghiệm, đã từng bán các dự án nào, công tác tại đơn vị nào, câu nói mà bạn thích nhất là gì? Dùng một từ mô tả đúng nhất về bản thân vv..." style="width:100%;font-size:14px" rows="4"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="buttons1 col-xxl-4 col-12" id="btn-register">
+                                            <button class="btnnnn2" type="submit" onclick="myFunction2()">Đăng ký ngay</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="partner-left col-12" id="partner-left">
+                    <div class="row">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 sec-heading wow animate__backInLeft" data-wow-delay="0.5s">
+                            <p>
+                                <strong class="uppercase">SGO Land</strong> là đơn vị kinh doanh và phân phối bất động sản tốt nhất Việt Nam, với môi trường làm việc chuyên nghiệp, năng động, sáng tạo, tạo điều kiện tốt nhất để mỗi cá nhân phát triển, hoàn thiện năng lực và tiến xa trong ngành bất động sản.
+                                Trở thành Chuyên viên tư vấn bất động sản tại SGO Land
+                            </p>
+                            <span id="dots">...</span>
+                            <div id="more">
+
+                                <div class="mt-10">
+                                    <span class="text-bold uppercase">Mô Tả Công Việc: </span>
+                                    <ul>
+                                        <li>Tìm kiếm, mở rộng danh sách khách hàng.</li>
+                                        <li>Chăm sóc những khách hàng đã có và những khách hàng phát sinh</li>
+                                        <li>Là người đại diện cho SGO Land trong việc hỗ trợ, tư vấn cho khách hàng.</li>
+                                        <li>Cập nhật hồ sơ khách hàng và báo cáo Trưởng bộ phận định kì hoặc khi có yêu cầu</li>
+                                        <li>Lập kế hoạch kinh doanh theo Tuần, tháng, quý để đáp ứng được yêu cầu của công ty</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-10">
+                                    <span class="text-bold uppercase">Yêu Cầu Công Việc: </span>
+                                    <ul>
+                                        <li>Giới tính: Nam/Nữ</li>
+                                        <li>Độ tuổi: 22 - 33 tuổi</li>
+                                        <li>Trình độ: Trung cấp trở lên</li>
+                                        <li>Kinh nghiệm: KHÔNG YÊU CẦU KINH NGHIỆM</li>
+                                        <li>Đam mê kinh doanh.</li>
+                                        <li>Yêu thích lĩnh vực bất động sản</li>
+                                        <li>Năng động, nhiệt huyết</li>
+                                        <li>Khả năng giao tiếp, đàm phán tốt</li>
+                                        <li>Có khả năng làm việc theo nhóm và độc lập.</li>
+                                        <li>Có laptop, phương tiện di chuyển</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-10">
+                                    <span class="text-bold uppercase"> Chế Độ Đãi Ngộ:</span>
+                                    <ul>
+                                        <li>Chính sách lương + thưởng minh bạch</li>
+                                        <li>Lương thưởng lên đến 75.000.000 ++/tháng </li>
+                                        <li>Hoa hồng chi trả ngay 100% sau khi ký kết thỏa thuận cọc/ phát sinh giao dịch.</li>
+                                        <li>Thưởng nóng lên đến 100.000.000++ /sản phẩm </li>
+                                        <li>Hỗ trợ chi phí Marketing & cung cấp data cực chất lượng</li>
+                                        <li>Giỏ hàng lớn, đa dạng loại hình sản phẩm: đất nền, nhà phố, căn hộ, bất động sản nghỉ dưỡng, villas, thổ cư...</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-10">
+                                    <span class="text-bold uppercase">
+                                        Chính Sách Đãi Ngộ Cực Hấp Dẫn :
+                                    </span>
+                                    <ul>
+                                        <li>Thưởng Tháng/Quý/Năm/Lễ, Tết/Tháng 13 và Sinh nhật</li>
+                                        <li>Team Building hằng năm trong nước, nước ngoài </li>
+                                        <li>Cơ hội thăng tiến không phụ thuộc thâm niên</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-10">
+                                    <span class="text-bold uppercase">
+                                        Được Đào Tạo Chuyên Sâu :
+                                    </span>
+                                    <ul>
+                                        <li>Được cung cấp thông tin thị trường thường xuyên</li>
+                                        <li>Được đào tạo kiến thức và kỹ năng bán hàng HOÀN TOÀN MIỄN PHÍ </li>
+                                        <li>
+                                            Hoạt động marketing dự án chuyên nghiệp hàng đầu ngành BĐS
+                                        </li>
+                                    </ul>
+                                </div>
+                                 <div class="mt-10">
+                                    Mọi thắc mắc xin gọi <span class="text-bold uppercase">Hotline: @AppConfigs.Hotline</span>
+                                </div>
+
+                            </div>
+                            <button class="mb-show mb-20" onclick="myFunction()" id="myBtn">
+                                Xem thêm
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 about-img wow animate__backInRight" data-wow-delay="0.5s">
+                            <img src="~/assets/img/partner/asian-business-woman-in-office-free-photo.jpg" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <div class="clearfix"></div>
+    <!-- ============================ Recent Properties End ================================== -->
+    <section class="gray-simple min">
+        <div class="container" id="project-66">
+            <div class="sec-heading col-12 text-center mb-20 wow animate__lightSpeedInRight" data-wow-delay="0.5s">
+                <h2 class="uppercase">Lĩnh Vực Hoạt Động </h2>
+                <p>
+                    SGO Land sở hữu hệ sinh thái bất động sản toàn
+                    diện với vòng tròn dịch vụ đầy đủ loại hình, giải quyết toàn bộ vấn đề
+                    của khách hàng liên quan tới bất động sản.
+                <p>
+            </div>
+            <!-- Choose img -->
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-12 wow animate__fadeInDown" data-wow-delay="0.5s">
+                    <div class="property_location activity">
+                        <a href="#">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/Dautu1.jpg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1 text-center">
+                                <div class="property_location__first">
+                                    <h4>Đầu Tư Bất Động Sản</h4>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12 wow animate__fadeInDown" data-wow-delay="0.5s">
+                    <div class="property_location activity">
+                        <a href="#">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/Phanphoi1.jpg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1 text-center">
+                                <div class="property_location__first">
+                                    <h4>Phân Phối Bất Động Sản</h4>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12 wow animate__fadeInDown" data-wow-delay="0.5s">
+                    <div class="property_location activity">
+                        <a href="#">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/Tuvan1.jpg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1 text-center">
+                                <div class="property_location__first">
+                                    <h4>Tư Vấn</h4>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12 wow animate__fadeInDown" data-wow-delay="0.5s">
+                    <div class="property_location activity">
+                        <a href="#">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/Marketing1.png" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1 text-center">
+                                <div class="property_location__first">
+                                    <h4>Marketing</h4>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12 wow animate__fadeInDown" data-wow-delay="0.5s">
+                    <div class="property_location activity">
+                        <a href="#">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/QuanlyTTTM1.jpg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1 text-center">
+                                <div class="property_location__first">
+                                    <h4>Quản Lý Trung Tâm Thương Mại</h4>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12 wow animate__fadeInDown" data-wow-delay="0.5s">
+                    <div class="property_location activity mobile-mb-0">
+                        <a href="#">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/Daotao.jpg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1 text-center">
+                                <div class="property_location__first">
+                                    <h4>Đào Tạo</h4>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="clearfix"></div>
+    <!-- ============================ Explore By Top Places ================================== -->
+    <section>
+        <div class="container">
+            <div class="sec-heading col-12 text-center mb-20 wow animate__zoomIn" data-wow-delay="0.5s">
+                <h2 class="uppercase">Về Chúng Tôi</h2>
+                <p>
+                    Với tầm nhìn dài hạn và chiến lược kinh doanh bền vững, SGO Land luôn nỗ lực
+                    hành động, nghiên cứu, triển khai các phương thức tiếp cận mới,
+                    mang đến cho quý chủ đầu tư, đối tác, khách hàng, cộng đồng những giải pháp ưu việt,
+                    sản phẩm dịch vụ tốt, chất lượng cao. Nhờ những nỗ lực không ngừng nghỉ,
+                    SGO Land đạt danh hiệu Sàn giao dịch Bất động sản xuất sắc 2022,
+                    ghi dấu ấn sâu sắc trên thị trường.
+                </p>
+            </div>
+            <!-- Choose img -->
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 wow animate__lightSpeedInLeft" data-wow-delay="0.5s">
+                    <div class="choose_img">
+                        <img src="~/assets/img/B6.jpg" class="img-fluid" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 wow animate__lightSpeedInRight" data-wow-delay="0.5s">
+                    <div class="choose_cat_clicks">
+                        <!-- Choose Cat Single -->
+                        <div class="choose_cat_singles">
+                            <div class="choose_cat_singles_icon"><i class="fas fa-building"></i></div>
+                            <div class="choose_cat_singles_caption">
+                                <h4 class="uppercase">Giỏ hàng đa dạng</h4>
+                                <p>Với hơn 150 dự án trải dài khắp cả nước, tương đương với hơn 20.000 sản phẩm ở mọi phân khúc</p>
+                            </div>
+                        </div>
+                        <!-- Choose Cat Single -->
+                        <div class="choose_cat_singles">
+                            <div class="choose_cat_singles_icon"><i class="fas fa-user-shield"></i></div>
+                            <div class="choose_cat_singles_caption">
+                                <h4 class="uppercase">Đội ngũ chuyên nghiệp</h4>
+                                <p>Nhân sự SGO Land được đào tạo chất lượng, bài bản, có trình độ cao, luôn làm việc với tinh thần đặt lợi ích của khách hàng lên trên hết</p>
+                            </div>
+                        </div>
+
+                        <!-- Choose Cat Single -->
+                        <div class="choose_cat_singles">
+                            <div class="choose_cat_singles_icon"><i class="fas fa-sitemap"></i></div>
+                            <div class="choose_cat_singles_caption">
+                                <h4 class="uppercase">Mạng lưới rộng khắp</h4>
+                                <p>SGO Land sở hữu mạng lưới chi nhánh, văn phòng đại diện trên khắp cả nước, cùng hệ thống các đơn vị liên kết uy tín trong mọi lĩnh vực</p>
+                            </div>
+                        </div>
+                        <div class="d-flex text-align-center gap-10 buttons">
+                            <button class="btnnnn">Hotline: 0866.560.388</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="clearfix"></div>
+    <!-- ============================ Explore By Top Places End ================================== -->
+    <!-- ============================ Featured Property Start ================================== -->
+    <section class="gray-simple min">
+        <div class="container">
+
+            <div class="row justify-content-center wow animate__fadeInDown" data-wow-delay="0.5s">
+                <div class="col-lg-12 col-12">
+                    <div class="sec-heading center">
+                        <h2 class="uppercase">Dự án nổi bật</h2>
+                        <p>
+                            Với giỏ hàng phong phú, SGO Land đang phân phối hơn 20.000 sản phẩm bất động sản chất lượng, uy tín trên khắp cả nước ở mọi phân khúc từ bất nhà ở, đất nền, chung cư tới nghỉ dưỡng, thấp tầng, căn hộ siêu sang…
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Single Places -->
+                <div class="col-lg-6 col-md-6 wow animate__backInLeft" data-wow-delay="0.5s">
+                    <div class="property_location activity">
+                        <a href="project-detail.html">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/sgo-la-emera-phu-yen-01a.jpg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1">
+                                <div class="property_location__first">
+                                    <h4>SGO La Emera Phú Yên</h4>
+                                    <div class="d-flex gap-10 mt-10">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Đại Lộ Hùng Vương, Xã Kiến Bình – TP.Tuy Hòa – Tỉnh Phú Yên</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- Single Places -->
+                <div class="col-lg-6 col-md-6 wow animate__backInLeft" data-wow-delay="0.5s">
+                    <div class="property_location activity">
+                        <a href="project-detail.html">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/royal-riverside-city1.jpg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1">
+                                <div class="property_location__first">
+                                    <h4>Royal Riverside City</h4>
+                                    <div class="d-flex gap-10 mt-10">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Sông Ka Long, Phường Hải Yên, Móng Cái, Quảng Ninh</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- Single Places -->
+                <div class="col-lg-6 col-md-6 wow animate__backInRight" data-wow-delay="0.5s">
+                    <div class="property_location activity">
+                        <a href="project-detail.html">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/tong-quan-sgo-la-emera-ha-long.jpeg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1">
+                                <div class="property_location__first">
+                                    <h4>SGO La Emera Hạ Long</h4>
+                                    <div class="d-flex gap-10 mt-10">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>KĐT Khe Cá GĐ 2, phường Hà Phong, TP Hạ Long, tỉnh Quảng Ninh</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- Single Places -->
+                <div class="col-lg-6 col-md-6 wow animate__backInRight" data-wow-delay="0.5s">
+                    <div class="property_location activity mobile-mb-0">
+                        <a href="project-detail.html">
+                            <div class="property_location_thumb">
+                                <img src="~/assets/img/phoi-canh-tien-hai-star-city1.jpg" class="img-fluid" alt="" />
+                            </div>
+                            <div class="property_location_caption1">
+                                <div class="property_location__first">
+                                    <h4>Tiền Hải Star City</h4>
+                                    <div class="d-flex gap-10 mt-10">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Xã Tây Sơn, Thị trấn Tiền Hải, Huyện Tiền Hải, Thái Bình</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- Single Places -->
+            </div>
+        </div>
+
+    </section>
+    <div class="clearfix"></div>
+    <!-- ============================ Featured Property End ================================== -->
+    <!-- ============================ Smart Testimonials ================================== -->
+    <section>
+        <div class="container">
+            <div class="row justify-content-center wow animate__bounceInUp" data-wow-delay="0.5s">
+                <div class="col-lg-12 col-12">
+                    <div class="sec-heading center">
+                        <h2 class="uppercase">Khách Hàng Nói Về Chúng Tôi</h2>
+                        <p>
+                            Mời quý anh chị khách hàng và đối tác xem qua một số nhận xét, phản hồi của khách hàng về chúng tôi cũng như dịch vụ và sản phẩm mà chúng tôi cung cấp
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row wow animate__bounceInRight" data-wow-delay="0.5s">
+                <div id="main-carousel-testimonialsIndex" class="owl-carousel">
+                    <div class="item">
+                        <div class="testimonial-wraps">
+                            <div class="testimonial-icon">
+                                <img src="~/assets/img/testimonial/nguyenduchung.jpg" class="img-fluid" alt="">
+                                <h5>Anh Nguyễn Đức Hưng </h5>
+                                <span class="tst_post">Chủ sở hữu căn hộ tại dự án Roman Plaza </span>
+                            </div>
+                            <div class="facts-detail">
+                                <p data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Inset Data">
+                                    Trong lúc đang loay hoay không biết mua căn hộ giá tốt ở đâu, tôi đã được chuyên viên tư vấn của SGO Land giới thiệu và hướng dẫn tận tình để có được chốn an cư như ý, phù hợp với khả năng tài chính gia đình.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-wraps">
+                            <div class="testimonial-icon">
+                                <img src="~/assets/img/testimonial/trananhtuan.jpg" class="img-fluid" alt="">
+                                <h5>Anh Trần Anh Tuấn</h5>
+                                <span class="tst_post">Nhà đầu tư dự án SGO La Emera Hạ Long</span>
+                            </div>
+                            <div class="facts-detail">
+                                <p data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inset Data">Tham khảo nhiều đơn vị tư vấn, tôi lựa chọn SGO Land vì doanh nghiệp uy tín, đội ngũ tận tâm, có chuyên môn và tầm nhìn. Nhờ SGO Land, nhiều sản phẩm đầu tư của tôi đã thu trái ngọt. </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-wraps">
+                            <div class="testimonial-icon">
+                                <img src="~/assets/img/testimonial/truonghoaithu.jpg" class="img-fluid" alt="">
+                                <h5>Chị Trương Hoài Thu </h5>
+                                <span class="tst_post">Nhà đầu tư dự án Royal Riverside City </span>
+                            </div>
+                            <div class="facts-detail">
+                                <p data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inset Data">Nếu có điều kiện, tôi sẽ đầu tư thêm các sản phẩm khác do SGO Land phân phối, vì đội ngũ làm việc chuyên nghiệp, có kiến thức tốt và chuyên tâm.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-wraps">
+                            <div class="testimonial-icon">
+                                <img src="~/assets/img/testimonial/truongthimai.jpg" class="img-fluid" alt="">
+                                <h5>Cô Trương Thị Mai</h5>
+                                <span class="tst_post">Chủ sở hữu căn hộ dự án TNR Goldmark City </span>
+                            </div>
+                            <div class="facts-detail">
+                                <p data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inset Data">Nhờ được một người bạn giới thiệu, tôi biết đến SGO Land. Liên hệ để mua căn hộ cho con trai thì rất ấn tượng với phong cách làm việc nhanh nhẹn và có tâm của chuyên viên tư vấn SGO Land. </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ============================ Smart Testimonials End ================================== -->
+    <!-- ============================ Partner Us ================================== -->
+    <section class="gray-simple min">
+        <div class="container">
+            <div class="row justify-content-center wow animate__lightSpeedInLeft" data-wow-delay="0.5s">
+                <div class="col-lg-12 col-md-12">
+                    <div class="sec-heading center">
+                        <h2 class="uppercase">Đối Tác</h2>
+                        <p>Sở hữu nhiều năm kinh nghiệm phân phối các dự án uy tín trên khắp cả nước, cùng nội lực vững vàng, SGO Land đã và đang trở thành đối tác tin cậy của nhiều chủ đầu tư, đơn vị chuyên hoạt động trong lĩnh vực bất động sản cả trong và ngoài nước.</p>
+                    </div>
+                </div>
+            </div>
+            <div id="main-carousel-partnerIndex" class="owl-carousel mb-30 wow animate__fadeInDown" data-wow-delay="0.5s">
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac1.png">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac2.jpg ">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac3.png">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac4.png">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac5.png">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac6.png">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac7.png">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac8.png">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="partner-us">
+                        <img src="~/assets/img/doitac9.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ============================ Packages End ================================== -->
+    <!-- ============================ Blog ================================== -->
+    <section class="mb-0">
+        <div class="container">
+            <div class="row justify-content-center animate__fadeInDown wow" data-wow-delay="0.5s">
+                <div class="col-lg-12 col-12">
+                    <div class="sec-heading center">
+                        <h2 class="uppercase">Tin tức - sự kiện</h2>
+                        <p>Cùng điểm qua một số tin tức nóng hổi về thị trường bất động sản trong thời gian vừa qua.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 animate__fadeInDown wow" data-wow-delay="0.5s">
+                    <div class="property_location">
+                        <div class="property_location_thumb">
+                            <a href="#"><img src="https://sgogroup.net/wp-content/uploads/2023/04/khoi-cong-sgo-la-emera-phu-yen-1.jpg" class="img-fluid" alt="" /></a>
+                        </div>
+                        <div class="property_location_caption">
+                            <div class="property_location__first">
+                                <h4><a href="#">Khởi công dự án SGO La Emera Phú Yên hạng sang tại Tuy Hòa</a></h4>
+                                <div class="d-flex gap-10 mt-10">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                    <span>20/06/2023</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 animate__fadeInDown wow" data-wow-delay="0.5s">
+                    <div class="property_location">
+                        <div class="property_location_thumb">
+                            <a href="#"><img src="https://uploads.nguoidothi.net.vn/content/bdf3bc67-e9b5-4bb7-8997-c9213661a829.jpg" class="img-fluid" alt="" /></a>
+                        </div>
+                        <div class="property_location_caption">
+                            <div class="property_location__first">
+                                <h4><a href="#">Thị trường căn hộ khu Đông Sài Gòn: Chờ đợi dự án “mới tinh”</a></h4>
+                                <div class="d-flex gap-10 mt-10">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                    <span>20/06/2023</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 animate__fadeInDown wow" data-wow-delay="0.5s">
+                    <div class="property_location">
+                        <div class="property_location_thumb">
+                            <a href="#"><img src="https://znews-photo.zingcdn.me/w960/Uploaded/Wagtrb/2016_09_13/vin_hom_tan_cang.jpg" class="img-fluid" alt="" /></a>
+                        </div>
+                        <div class="property_location_caption">
+                            <div class="property_location__first">
+                                <h4><a href="#">Thăng hoa và viên mãn với cuộc sống tại Opal Boulevard</a></h4>
+                                <div class="d-flex gap-10 mt-10">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                    <span>20/06/2023</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ============================ Blog End ================================== -->
+    <!-- Send Message -->
+</div>
+<script>
+    window.localStorage.setItem("menu-active", "home-item");
+
+    function changeCompany(selectOS) {
+        var Url = '@Url.Action("binDropdownAjax","Users", new { area="Partner"})';
+        var _idCompany = $('#IdCongty').val();
+        $.ajax({
+            type: "GET",
+            url: Url,
+            data: { obj: _idCompany, style: 2 },
+            cache: false,
+            async: false,
+            success: function (data) {
+
+                //  hideSearchLoader();
+
+                $('#DepartmentId').html(data);
+                $('#IdCongty-error').remove();
+                $('#DepartmentId-error').remove();
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                // hideSearchLoader();
+                alert(xhr + ajaxOptions + thrownError);
+            }
+        })
+    }
+    function changeSex() {
+        var _Adward = $('#GioiTinh').val();
+        if (_Adward != '') {
+            $('#GioiTinh-error').remove();
+        }
+    }
+    function myFunction() {
+        var dots = document.getElementById("dots");
+        var moreText = document.getElementById("more");
+        var btnText = document.getElementById("myBtn");
+
+        if (dots.style.display === "none") {
+            dots.style.display = "inline";
+            btnText.innerHTML = "Xem thêm";
+            moreText.style.display = "none";
+        } else {
+            dots.style.display = "none";
+            btnText.innerHTML = "Ẩn bớt";
+            moreText.style.display = "inline";
+        }
+    }
+
+    function myFunction2() {
+        var element = document.getElementById("add_element_parent");
+        element.classList.add("mb-30");
+
+        var element = document.getElementById("add_element_parent1");
+        element.classList.add("mb-30");
+
+        var element = document.getElementById("add_element_parent2");
+        element.classList.add("mb-30");
+
+        var element = document.getElementById("add_element_parent3");
+        element.classList.add("mt-15");
+
+        var element = document.getElementById("add_element_parent4");
+        element.classList.add("mt-15");
+
+        var element = document.getElementById("add_element_parent16");
+        element.classList.add("mb-10");
+    }
+
+    var Num_Home = document.querySelectorAll(".Num_Home");
+    for (let i = 0; i < Num_Home.length; i++) {
+        Num_Home[i].addEventListener("keypress", function (evt) {
+            if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
+                evt.preventDefault();
+            }
+        });
+    };
+</script>
+
+<script>new WOW().init();</script>

@@ -1,0 +1,295 @@
+﻿@using NhaDat24h.DataDto.Company
+@model StructureDepartmentDto
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="dashboard-content dashboard-content-0">
+    <!-- Bookmark Property -->
+    <div class="mb-3 d-flex align-items-center justify-between">
+        <h4 class="text-bold">Thêm phòng / ban</h4>
+    </div>
+    <!-- Submit Form -->
+    <div class="col-lg-12 col-md-12">
+
+        <div class="submit-page form-simple">
+
+            <!-- Basic Information -->
+            <div class="frm_submit_block">
+                <div class="frm_submit_wrap">
+                    <div class="row">
+                        <div class="col-xxl-6 col-12">
+                            <form id="addnewlinkphongban" class="d-flex flex-column">
+                                <div>
+                                    <label class="mb-0">Tên phòng / ban</label>
+                                    <input id="departmentname" class="form-control select2" type="text"
+                                           value="@Model.DepartmentName" name="DepartmentName" placeholder="Tên phòng ban" />
+                                </div>
+
+                                <div>
+                                    <label class="mb-0">Chọn phòng ban trực thuộc</label>
+                                    <select id="IdSuperiors" class="form-select">
+                                        @foreach (var dep in Model.ListDepartment)
+                                        {
+                                            <option value="@dep.Id">@dep.Name</option>
+                                        }
+
+                                    </select>
+                                </div>
+
+                                <textarea id="description" value="@Model.Description" class="form-control select2 mt-10 mb-20" name="Description" placeholder="Nhập mô tả" rows="4"></textarea>
+                                @if (Model.IdDepartment > 0)
+                                {
+                                    <label>ID Phòng ban: @Model.IdDepartment</label>
+                                    <hr />
+                                    <a onclick="EditDepartment(@Model.IdDepartment)" class="border-none primary-bg text-white round-5 p-10">
+                                        <i class="fas fa-plus-circle"></i>
+                                        Cập nhật
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button type="button" onclick="AddDepartment(@Model.IdCompany)" class="border-none primary-bg text-white round-5 p-10">
+                                        <i class="fas fa-plus-circle"></i>
+                                        Thêm mới phòng ban
+                                    </button>
+                                }
+                            </form>
+                            <div id="addphongban">
+                                <h5 class="text-bold mt-20">Danh sách phòng / ban</h5>
+                                @foreach (var department in Model.ListDepartment)
+                                {
+                                    <div class="d-flex gap-10 align-items-center justify-between mb-10" id="list_room">
+                                        <div class="d-flex gap-10 align-items-center text-bold">
+                                            <i class="fas fa-briefcase"></i>
+                                            <span>ID:@department.Id - @department.Name</span>
+                                        </div>
+
+                                        <div class="d-flex gap-10 align-items-center text-bold">
+                                            <div data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Sửa phòng ban" class="btn-edit-land">
+                                                <a href="@Url.Action("StructureCompany", "Company", new { area = "Partner", IdCompany=Model.IdCompany,IdDepartment=department.Id})" class="border-none bg-none btn-action-hover color-black">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </div>
+                                            <button value="Xóa" onclick="DeleteDepartment(@department.Id)" class="border-none bg-none btn-action-hover" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Xóa phòng ban">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                            <div data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Thêm / sửa vị trí">
+                                                <button value="Thêm" data-bs-toggle="offcanvas" onclick="ShowListPosition(@department.Id)" data-bs-target="#addposition" class="border-none round-5 primary-bg text-white p-x-5 p-y-5">
+                                                    <i class="fas fa-plus-circle"></i>
+                                                    Thêm / sửa vị trí
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="addposition" aria-labelledby="addposition">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="addposition">Thêm vị trí</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" id="list_manager_data">
+    </div>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script>
+    window.localStorage.setItem("menu-active", "Company-item");
+
+    $("#addnewlinkphongban").validate({
+        rules: {
+            DepartmentName: "required",
+            Description: "required",
+        },
+        messages: {
+            DepartmentName: "Vui lòng nhập tên phòng ban",
+            Description: "Vui lòng nhập mô tả",
+        },
+        errorElement: "label",
+        errorPlacement: function (error, element) {
+            // Add the `help-block` class to the error element
+            error.addClass("help-block");
+
+            if (element.prop("type") === "checkbox") {
+                error.insertAfter(element.parent("label"));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+    });
+    function AddDepartment(_idCompany) {
+        debugger
+        var depname = document.getElementById("departmentname").value;
+        var description = document.getElementById("description").value;
+        var iSuperior = document.getElementById("IdSuperiors").value;
+
+        $("#addnewlinkphongban").validate();
+        if ($("#addnewlinkphongban").valid()) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("AddDepartment", "Company")",
+                data: {
+                    IdCompany: _idCompany,
+                    DepartmentName: depname,
+                    Description: description,
+                    IdSuperior: iSuperior
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+
+                    if(data=='0')
+                    {
+                        swal("Fail", "Thêm Thất Bại!", "error");
+                    }
+                    if (data == '1') {
+                        swal("Success", "Thêm Thành công! ấn F5 để tải lại kết quả.", "success");
+                    }
+                    if (data == '2') {
+                        swal("No permission", "Bạn không có quyền thực hiện!", "error");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    swal("Fail", "Thêm thất bại. Vui lòng thử lại!", "error");
+                }
+            })
+        }
+    }
+
+    function EditDepartment(_idDepartment) {
+        debugger
+        var depname = document.getElementById("departmentname").value;
+        var description = document.getElementById("description").value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("EditDepartment", "Company")",
+            data: {
+                IdDepartment: _idDepartment,
+                DepartmentName: depname,
+                Description: description
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                swal("Success", "Cập nhật phòng ban thành công. Ấn F5 để tải lại trang.","success");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Fail","Sửa thất bại. Vui lòng thử lại!","error");
+            }
+        })
+    }
+    function DeleteDepartment(_idDepartment) {
+        if (confirm("Xóa phòng ban này thì các nhân viên thuộc phòng ban này sẽ bị xóa vị trí. Bạn thực sự muốn xóa phòng ban này?") == true) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("DeleteDepartment", "Company")",
+                data: {
+                    IdDepartment: _idDepartment
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    swal("Success", "Xóa thành công! " + data, "success");
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    swal("Fail", "Xóa thất bại. Vui lòng thử lại!", "error");
+                }
+            });
+        }
+    }
+
+    function ShowListPosition(_idDepartment) {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetListPosition", "Company",new { area="Partner"})",
+            data: {
+                IdDepartment: _idDepartment,
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#list_manager_data').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    function AddPositionDep(_idDepartment) {
+        debugger
+        var idposition = document.getElementById("idposition").value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("AddPositionDep", "Company")",
+            data: {
+                IdPosition: idposition,
+                IdDepartment: _idDepartment,
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                if (data == "0") {
+                    swal("Success", "Thêm chức vụ thành công. Ấn F5 để tải lại trang.","success");
+                }
+                else {
+                    swal("Fail", "Thêm thất bại. Vui lòng thử lại!", "error");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Thêm thất bại. Vui lòng thử lại!");
+            }
+        })
+    }
+    function DeletePositionDep(_idPositionDep) {
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("DeletePositionDep", "Company")",
+            data: {
+                IdPositionDep: _idPositionDep
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                swal("Success", "Xóa chức vụ thành công. Ấn F5 để tải lại trang.", "success");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Fail", "Xóa thất bại. Vui lòng thử lại!", "error");
+            }
+        })
+    }
+</script>

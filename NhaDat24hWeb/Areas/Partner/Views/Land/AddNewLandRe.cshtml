@@ -1,0 +1,529 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using NhaDat24h.DataAccess.Entities
+@using NhaDat24h.DataDto.RealEstates
+@model AddNewLandDto
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .upload_image {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+</style>
+
+<div class="dashboard-content dashboard-content-0">
+    <h4 class="mb-3 text-bold">Thêm mới bất động sản</h4>
+    <div class="col-lg-12 col-md-12" id="form-register-partner">
+        <form id="addLandRE" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="IdR" />
+            <div class="submit-page form-simple">
+                <!-- Basic Information -->
+                <div class="frm_submit_block" style="border-radius:0 !important;">
+
+                    <div class="frm_submit_wrap form-simple form-group">
+                        <div class="row">
+                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 render_img add_element_parent" id="render_img_BDS">
+                                <label>Ảnh BĐS<span class="text-danger">*</span></label>
+                                <div id="banner-image" class="mt-10">
+                                    <div class="upload__box">
+                                        <div class="upload__btn-box d-flex align-items-center gap-10">
+                                            <div class="upload__btn-box">
+                                                <label class="upload__btn">
+                                                    <span>Tải ảnh lên</span>
+                                                    @if (Model.IdR > 0)
+                                                    {
+                                                        <input type="file" asp-for="AnhBDS" data-max_length="20" multiple="" class="upload_image" id="uploadBDS">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="file" asp-for="AnhBDS" data-max_length="20" multiple="" class="upload_image" id="uploadBDS" required>
+                                                    }
+                                                </label>
+                                            </div>
+                                            <span class="text-12">Nhiều file ảnh / PDF (tối đa 20 file/ 1 lần upload)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="oldImageList">
+                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 mt-10">
+                                        @if (Model.listAnhBDS != null)
+                                        {
+                                            @foreach (var item in Model.listAnhBDS)
+                                            {
+                                                <div class="col-auto">
+                                                    <div class="position-relative" id="item-@item.Id">
+                                                        <img style="width:100%; height:100%; object-fit:cover;" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,height=400,quality=80/@item.Url" alt="@item.Name">
+                                                        <a onclick="removeDoc(@item.Id,'@item.Url','@item.FileType')" class="text-gray del_img_btn">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div class="upload__img-wrap" id="anhBDS">
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 render_img add_element_parent" id="render_img_SD">
+                                <label>Ảnh sổ đỏ<span class="text-danger">*</span></label>
+                                <div id="banner-image" class="mt-10" style="overflow:hidden;">
+                                    <div class="upload__box">
+                                        <div class="upload__btn-box d-flex align-items-center gap-10">
+                                            <div class="upload__btn-box">
+                                                <label class="upload__btn">
+                                                    <span>Tải ảnh lên</span>
+                                                    @if (Model.IdR > 0)
+                                                    {
+                                                        <input type="file" asp-for="AnhSD" data-max_length="20" multiple="" class="upload_image" id="uploadSD">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="file" asp-for="AnhSD" data-max_length="20" multiple="" class="upload_image" id="uploadSD" required>
+                                                    }
+                                                </label>
+                                            </div>
+                                            <span class="text-12">Nhiều file ảnh / PDF (tối đa 20 file/ 1 lần upload)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="oldImageList2">
+                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 mt-10">
+                                        @if (Model.listAnhSD != null)
+                                        {
+                                            @foreach (var item in Model.listAnhSD)
+                                            {
+                                                <div class="col-auto">
+                                                    <div class="position-relative" id="item-@item.Id">
+                                                        <img style="width:100%; height:100%; object-fit:cover;" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,height=400,quality=80/@item.Url" alt="@item.Name">
+                                                        <a onclick="removeDoc(@item.Id,'@item.Url','@item.FileType')" class="text-gray del_img_btn">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div class="upload__img-wrap" id="anhSD">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Tên BĐS <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="Name" placeholder="Tiêu đề bất động sản" class="form-control" required>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent element_select">
+                                <label>Loại BĐS <span class="text-danger">*</span></label>
+                                <select class="form-select select2" id="IdType" onchange="changeIdType()" asp-for="IdType" required>
+                                    <option value="">&nbsp;</option>
+                                    <option value="1">Căn hộ chung cư</option>
+                                    <option value="26">Chung cư mini (BĐS dòng tiền)</option>
+                                    <option value="5">Nhà riêng</option>
+                                    <option value="2">Nhà biệt thự, Liền kề</option>
+                                    <option value="10">Nhà mặt phố</option>
+                                    <option value="21">Shophouse, Nhà phố thương mại</option>
+                                    <option value="6">Đất nền dự án</option>
+                                    <option value="8">Bán đất</option>
+                                    <option value="16">Trang trại, Khu nghỉ dưỡng</option>
+                                    <option value="22">Condotel</option>
+                                    <option value="17">Kho nhà xưởng</option>
+                                    <option value="99">Nhà tập thể</option>
+
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Tỉnh thành <span class="text-danger">*</span></label>
+                                <select class="form-select select2" onchange="changeTinhThanh(this)" asp-for="IdProvince" required>
+                                    @foreach (var retype in ViewBag.ListProvince as List<TbTinhthanh>)
+                                    {
+                                        <option value="">&nbsp;</option>
+                                        <option value="@retype.IdTt">@retype.TenTt</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Quận / Huyện <span class="text-danger">*</span></label>
+                                <select class="form-select select2" onchange="changeQuanHuyen(this)" asp-for="IdDistrict" required>
+                                    @foreach (var retype in ViewBag.ListDistrict as List<TbQuan>)
+                                    {
+                                        <option value="">&nbsp;</option>
+                                        <option value="@retype.IdQ">@retype.Tenquan</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Xã / Phường <span class="text-danger">*</span></label>
+                                <select class="form-select select2" onchange="changeAdward()" asp-for="IdWard" required>
+                                    @if (ViewBag.ListWard != null)
+                                    {
+                                        foreach (var retype in ViewBag.ListWard as List<TbPhuong>)
+                                        {
+                                            <option value="">&nbsp;</option>
+                                            <option value="@retype.Id">@retype.Tenphuong</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Địa chỉ chi tiết <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="Address" placeholder="Tên đường phố, phường xã, quận huyện, tỉnh thành" class="form-control" required>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Diện tích (m2) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="S" placeholder="Diện tích là một số, VD: 50.5" required>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Mặt tiền (m)<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="FrontLenght" placeholder="Mặt tiền là một số, VD: 4.5" required>
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Chiều dài (m)<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="Lenght" placeholder="Chiều dài là một số, VD: 20.5" required>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Ngõ vào (m)<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Đường vào là một số, VD: 5.5" asp-for="EntranceLenght" class="form-control" required>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent element_select">
+                                <label>Số tầng</label>
+                                <select class="form-select" onchange="changeNumberFloor()" asp-for="NumberFloor">
+                                    <option value="">&nbsp;</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent element_select">
+                                <label>Số phòng ngủ</label>
+                                <select class="form-select" onchange="changeNumberBedRoom()" asp-for="NumberBedRoom">
+                                    <option value="">&nbsp;</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent element_select">
+                                <label>Số phòng WC</label>
+                                <select class="form-select" onchange="changeNumberWc()" asp-for="NumberWc">
+                                    <option value="">&nbsp;</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent element_select">
+                                <label>Số ban công</label>
+                                <select class="form-select" asp-for="NumberBalcony">
+                                    <option value="">&nbsp;</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Giá chào hợp đồng(Triệu VNĐ) <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="OfferPrice" placeholder="Tổng giá chào là một số, VD: 1550 là (1.55 tỷ)" class="form-control" required>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>Giá chốt(Triệu VNĐ) <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="LastPrice" placeholder="Tổng giá chốt là một số, VD: 1500 là (1.5 tỷ)" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent">
+                                <label>% Hoa hồng <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="BonusPercent" placeholder="Hoa hồng là một số, VD: 3.5" class="form-control" required>
+                            </div>
+                            @*							<div class="col-xxl-3 col-12">
+                            <label>Tiền hoa hồng(Triệu VNĐ) <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="" class="form-control" required>
+                            </div>*@
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent element_select">
+                                <label>Hướng nhà</label>
+                                <select class="form-select select2" onchange="changeDirectionHouse()" asp-for="DirectionHouse">
+                                    <option value="">&nbsp;</option>
+                                    <option value="4">Bắc</option>
+                                    <option value="1">Đông</option>
+                                    <option value="6">Đông bắc</option>
+                                    <option value="7">Đông nam</option>
+                                    <option value="3">Nam</option>
+                                    <option value="2">Tây</option>
+                                    <option value="10">Tây bắc</option>
+                                    <option value="9">Tây Nam</option>
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-6 col-lg-6 col-12 add_element_parent element_select">
+                                <label>Nguồn đầu chủ</label>
+                                <select class="form-select select2" onchange="changeSource()" asp-for="Source">
+                                    <option value="">&nbsp;</option>
+                                    <option value="1">ĐC1</option>
+                                    <option value="2">ĐC1A</option>
+                                    <option value="3">ĐC1B</option>
+                                    <option value="4">ĐC1C</option>
+                                    <option value="5">ĐC2</option>
+                                    <option value="6">ĐC3</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-3 col-12">
+                                <label>Điện thoại đầu chủ <span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Số điện thoại người đăng" asp-for="Phone" class="form-control" data-msg-number="Số điện thoại không hợp lệ" required>
+                            </div>
+                            <div class="col-xxl-3 col-12">
+                                <label>Người tạo<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Tên người đăng" asp-for="Manager" class="form-control" required>
+                            </div>
+
+                        </div>
+                        <div class="col-xxl-12 col-12">
+                            <div class="mt-10">
+                                <label>Nội dung</label>
+                                <textarea id="editor" class="form-control" name="Detail">@Model.Detail</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-divider mt-30"></div>
+                    <div class="frm_submit_wrap pt-20">
+                        <h5>Thông tin chủ đất / nhà</h5>
+                        <div class="frm_submit_wrap">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label>Tên chủ nhà <span class="text-danger">*</span></label>
+                                    <input type="text" asp-for="OwnerName" class="form-control select2" required>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label>Số điện thoại <span class="text-danger">*</span></label>
+                                    <input type="text" asp-for="SourcePhone" class="form-control" required data-msg-number="Số điện thoại không hợp lệ">
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label>CCCD <span class="text-danger">*</span></label>
+                                    <input type="text" asp-for="OwnerCCCD" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group btn-register" id="btn-important">
+                    <button class="btn bg-primary2" type="submit" onclick="myFunction2()">Hoàn thành</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Submit Form -->
+</div>
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+
+<script>
+    jQuery(document).ready(function () {
+        ImgUploadBDS();
+    });
+    jQuery(document).ready(function () {
+        ImgUploadSD();
+    });
+    function myFunction2() {
+        var element = document.getElementsByClassName("add_element_parent");
+        element[0].classList.add("mb-15");
+        element[1].classList.add("mb-15");
+        element[2].classList.add("mb-15");
+        element[3].classList.add("mb-15");
+        element[4].classList.add("mb-15");
+        element[5].classList.add("mb-15");
+        element[6].classList.add("mb-15");
+        element[7].classList.add("mb-15");
+        element[8].classList.add("mb-15");
+        element[9].classList.add("mb-15");
+        element[10].classList.add("mb-15");
+        element[11].classList.add("mb-15");
+        element[12].classList.add("mb-15");
+        element[13].classList.add("mb-15");
+        element[14].classList.add("mb-15");
+        element[15].classList.add("mb-15");
+        element[16].classList.add("mb-15");
+        element[17].classList.add("mb-15");
+        element[18].classList.add("mb-15");
+        element[19].classList.add("mb-15");
+        element[20].classList.add("mb-15");
+
+    }
+
+</script>
+<script>
+    window.localStorage.setItem("menu-active", "Properties-item");
+    const container = document.getElementById('input-cont');
+    var maxInputAllowed = 5;
+    var inputCount = 0;
+
+    // Call addInput() function on button click
+    function addInput() {
+        inputCount++; // Increment input count by one
+        if (inputCount > 5) {
+            alert('Bạn có thể nhập tối đa 5 bảng hàng.');
+            return;
+        }
+        let input = document.createElement('input');
+        input.placeholder = 'Thêm link bảng hàng';
+        input.classList.add('form-control', 'select2', 'mt-10');
+        container.appendChild(input);
+    }
+
+    var UrlrequestCombodata = '@Url.Action("binDropdownAjax","Users", new { area="Partner"})';
+
+
+    //$('#IdProvince').val('@Model.IdProvince');
+    //$('#district').val('@Model.IdDistrict');
+    //$('#adward').val('@Model.IdWard');
+    //$('#idtype').val('@Model.IdType');
+    //$('#floor').val('@Model.NumberFloor');
+    //$('#bedroom').val('@Model.NumberBedRoom');
+    //$('#wc').val('@Model.NumberWc');
+    //$('#bacoly').val('@Model.NumberBalcony');
+    //$('#source').val('@Model.Source');
+    function changeTinhThanh(selectOS) {
+        var _IdProvince = $('#IdProvince').val();
+        $.ajax({
+            type: "GET",
+            url: UrlrequestCombodata,
+            data: { obj: _IdProvince, style: 3 },
+            cache: false,
+            async: false,
+            success: function (data) {
+                $('#IdDistrict').html(data);
+                $('#IdProvince-error').remove();
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                // hideSearchLoader();
+                alert(xhr + ajaxOptions + thrownError);
+            }
+        })
+    }
+    function changeQuanHuyen(selectOS) {
+        var _IdProvince = $('#IdDistrict').val();
+        $.ajax({
+            type: "GET",
+            url: UrlrequestCombodata,
+            data: { obj: _IdProvince, style: 4 },
+            cache: false,
+            async: false,
+            success: function (data) {
+                $('#IdWard').html(data);
+                $('#IdDistrict-error').remove();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                // hideSearchLoader();
+                alert(xhr + ajaxOptions + thrownError);
+            }
+        })
+    }
+
+    function removeDoc(id, link, type) {
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("ClientDeleteFiles", "Upload",new { area="Partner"})",
+            data: {
+                fileID: id,
+                fileType: type,
+                url: link,
+
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+            },
+            success: function (result) {
+
+                $("#item-" + id).fadeOut();
+                var _count = $("#countFile").text();
+                _count -= 1;
+                $("#countFile").text(_count)
+
+            },
+            error: function () {
+                // alert('Failed to receive the Data');
+            }
+        })
+    }
+    function changeIdType() {
+        var _Adward = $('#IdType').val();
+        if (_Adward != '') {
+            $('#IdType-error').remove();
+        }
+    }
+    function changeAdward() {
+        var _Adward = $('#adward').val();
+        if (_Adward != '') {
+            $('#IdWard-error').remove();
+        }
+    }
+    function changeNumberFloor() {
+        var _Adward = $('#NumberFloor').val();
+        if (_Adward != '') {
+            $('#NumberFloor-error').remove();
+        }
+    }
+    function changeNumberBedRoom() {
+        var _Adward = $('#NumberBedRoom').val();
+        if (_Adward != '') {
+            $('#NumberBedRoom-error').remove();
+        }
+    }
+    function changeNumberWc() {
+        var _Adward = $('#NumberWc').val();
+        if (_Adward != '') {
+            $('#NumberWc-error').remove();
+        }
+    }
+    function NumberBalcony() {
+        var _Adward = $('#Balcony').val();
+        if (_Adward != '') {
+            $('#Balcony-error').remove();
+        }
+    }
+    function changeDirectionHouse() {
+        var _Adward = $('#DirectionHouse').val();
+        if (_Adward != '') {
+            $('#DirectionHouse-error').remove();
+        }
+    }
+    function changeSource() {
+        var _Adward = $('#Source').val();
+        if (_Adward != '') {
+            $('#Source-error').remove();
+        }
+    }
+</script>
+

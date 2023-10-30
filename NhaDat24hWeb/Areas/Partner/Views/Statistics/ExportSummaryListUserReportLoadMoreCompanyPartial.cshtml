@@ -1,0 +1,47 @@
+﻿@using NhaDat24h.DataDto.User;
+@model GetHrReportSynthesisData;
+
+@if (Model != null && Model.Value.Count>0)
+{
+        int i = Model.i;
+
+        @foreach (var item in Model.Value)
+        {
+        <tr style="white-space: nowrap;">
+            <td style="text-align:center;">@i</td>
+            <td>@item.Company</td>
+            <td>@item.Department</td>
+            <td style="text-align:center;">@item.CurrentNumberHr</td>
+            <td style="text-align:center;">@item.NumberHrNewIncreased</td>
+            <td style="text-align:center;">@item.NumberHrDecreased</td>
+            <td>@item.Note</td>
+        </tr>
+            i++;
+        }
+    if (i<Model.Value.FirstOrDefault().TotalRow)
+    {
+        <tr>
+            <th colspan="12" class="text-center">
+                <input type="hidden" value="2" id="curentIndex_@Model.Key.IdCompany">
+                <button id="btnloadmore_@Model.Key.IdCompany" onclick="LoadmoreNhansu('@Model.Key.IdCompany')"
+                class="border-none primary-bg p-x-15 p-y-10 round-10 text-white">
+                    Xem thêm
+                </button>
+            </th>
+        </tr>
+    }
+    else
+    {
+        <tr style="white-space: nowrap;">
+            <td style="text-align:center;">Tổng</td>
+            <td></td>
+            <td></td>
+            <td style="text-align:center;">@Model.Value.FirstOrDefault().SumCurrentNumberHr</td>
+            <td style="text-align:center;">@Model.Value.FirstOrDefault().SumNumberHrNewIncreased</td>
+            <td style="text-align:center;">@Model.Value.FirstOrDefault().SumNumberHrDecreased</td>
+            <td></td>
+
+        </tr>
+    }
+}
+

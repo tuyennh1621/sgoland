@@ -1,0 +1,29 @@
+﻿@using NhaDat24h.DataDto.Company;
+@using NhaDat24h.DataDto.Ctv;
+@using System.Globalization;
+@model CtvEditDto
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #mobile::-webkit-outer-spin-button,
+    #mobile::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+<div class="dashboard-content dashboard-content-0">
+    <!-- Basic Information -->
+    <h4 class="text-bold">Thông tin tài khoản</h4>
+    @await Html.PartialAsync("~/Areas/Partner/Views/Users/SubmitEditUser.cshtml", Model)
+</div>
+<script>
+      let rotation = 0;
+    const angle = 90;
+    function rotateImage(rotated) {
+        rotation = (rotation + angle) % 360;
+        rotated.style.transform = `rotate(${rotation}deg)`;
+	}
+    window.localStorage.setItem("menu-active", "Users-item", "Manager-item");
+</script>

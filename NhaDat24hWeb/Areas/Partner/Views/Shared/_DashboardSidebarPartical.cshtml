@@ -1,0 +1,270 @@
+﻿@using Newtonsoft.Json;
+@using NhaDat24h.Common.Configuration;
+@using NhaDat24h.DataAccess.Entities;
+@inject IHttpContextAccessor sessonContext
+@{
+    TbUser user = null;
+    string position = "";
+    if (sessonContext != null && sessonContext.HttpContext != null)
+    {
+        var cookieValue = sessonContext.HttpContext.Session.GetString(AppConfigs.CurrentUserAdmin);
+        var positionValue = sessonContext.HttpContext.Session.GetString("Position");
+
+        if (!string.IsNullOrEmpty(cookieValue))
+        {
+            user = JsonConvert.DeserializeObject<TbUser>(cookieValue);
+            position = JsonConvert.DeserializeObject<string>(positionValue);
+        }
+    }
+}
+<style>
+    #output canvas {
+        height: 150px !important;
+        width: 150px !important;
+        margin-top: 10px;
+    }
+</style>
+
+<script type="text/javascript" defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<div class="dashboard-sidebar">
+    <div class="sidebar-dashboard">
+        <div class="user-info-sidebar">
+            <div class="account-drop">
+                @{
+                    @if (user != null && user.Id > 0)
+                    {
+                        <div class="qr-code-parent">
+                            <a class="qr-code-user" target="_blank" href="@Url.Action("Index", "CardUser", new {IdCtv=@user.Id})">
+                                <div id="output"></div>
+                                <script>
+                                    $(function () {
+                                        $('#output').qrcode("https://sgoland.vn/CardUser?IdCtv=@user.Id");
+
+                                        // the lib generate a canvas under target, you should get that canvas, not #output
+                                        // And put the code here would ensure that you can get the canvas, and canvas has the image.
+                                        var canvas = document.querySelector("#output canvas");
+                                        var img = canvas.toDataURL("image/png");
+                                        $(canvas).on('click', function () {
+                                            // Create an anchor, and set its href and download.
+                                            var dl = document.createElement('a');
+                                            dl.setAttribute('href', img);
+                                            dl.setAttribute('download', 'qrcode.png');
+                                            // simulate a click will start download the image, and name is qrcode.png.
+                                            dl.click();
+                                        });
+
+                                        // Note this will overwrite any current content.
+                                        // document.write('<img src="'+img+'"/>');
+                                    })
+
+                                </script>
+
+                            </a>
+                            <p>@user.Fullname - ID: @user.Id</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="sidebar-item mt-30">
+            <a href="@Url.Action("Index", "Dashboard", new { area = "Partner"})" id="Dashboard-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Trang chủ">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Trang chủ</span>
+            </a>
+        </div>
+        <div class="sidebar-item mt-5px">
+            <div data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Quản trị dự án">
+                <div id="Manager-item" class="manager-item sidebar-button23 round-5" data-bs-toggle="collapse" data-bs-target="#project_manager" aria-expanded="false">
+                    <a class="dropdown-toggle3678">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Quản trị dự án</span>
+                    </a>
+                </div>
+            </div>
+            <div class="collapse" id="project_manager">
+                <div class="card card-body border-none">
+                    <ul class="manager-item-child">
+                        <li>
+                            <a data-parent="Manager-item" href="@Url.Action("Index", "Land", new { area = "Partner"})" id="Land-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Kho hàng dự án">
+                                <i class="fas fa-building"></i>
+                                <span>Kho hàng dự án</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-parent="Manager-item" href="@Url.Action("Properties", "Land", new { area = "Partner"})" id="Properties-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Kho hàng thổ cư">
+                                <i class="fas fa-home"></i>
+                                <span>Kho hàng thổ cư</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-parent="Manager-item" href="@Url.Action("Index", "Deposit", new { area = "Partner"})" id="Deposit-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Danh sách đặt cọc">
+                                <i class="fa-solid fa-database"></i>
+                                <span>Danh sách đặt cọc</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-item mt-5px">
+            <div id="learn-admin" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Tuyển dụng đào tạo">
+                <div id="Learn-item" class="manager-item sidebar-button23 round-5" data-bs-toggle="collapse" data-bs-target="#learn-admin-parent" aria-expanded="false">
+                    <a class="dropdown-toggle3678">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Tuyển dụng đào tạo</span>
+                    </a>
+                </div>
+            </div>
+            <div class="collapse" id="learn-admin-parent">
+                <div class="card card-body border-none">
+                    <ul class="manager-item-child">
+                        <li>
+                            <a data-parent="Learn-item" href="@Url.Action("landvideoedu", "Video", new { area = "Partner"})" id="videoedu-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Video đào tạo">
+                                <i class="fas fa-book-reader"></i>
+                                <span>Video đào tạo</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-parent="Learn-item" href="@Url.Action("Index", "Video", new { area = "Partner"})" id="Video-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Quán lý video">
+                                <i class="fas fa-video"></i>
+                                <span>Quản lý video</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-item mt-5px">
+            <div id="user-manager-admin" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Quản trị nhân sự">
+                <div id="User-Manager-item" class="manager-item sidebar-button23 round-5" data-bs-toggle="collapse" data-bs-target="#user-manager-admin-parent" aria-expanded="false">
+                    <a class="dropdown-toggle3678">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Quản trị nhân sự</span>
+                    </a>
+                </div>
+            </div>
+            <div class="collapse" id="user-manager-admin-parent">
+                <div class="card card-body border-none">
+                    <ul class="manager-item-child">
+                        <li>
+                            <a data-parent="User-Manager-item" href="@Url.Action("Index", "Users", new { area = "Partner"})" id="Users-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Nhân sự">
+                                <i class="fa-solid fa-users"></i>
+                                <span>Danh sách nhân sự</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-parent="User-Manager-item" href="@Url.Action("Index", "Company", new { area = "Partner"})" id="Company-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Công ty thành viên">
+                                <i class="fa-solid fa-briefcase"></i>
+                                <span>Công ty thành viên</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-item mt-5px">
+            <div id="learn-admin" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Quản lý tin tức">
+                <a class="sidebar-button d-flex align-items-center">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Quản lý tin tức</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar-item mt-5px">
+            <div id="report-admin" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Báo cáo tổng hợp">
+                <div id="Report-item" class="manager-item sidebar-button23 round-5" data-bs-toggle="collapse" data-bs-target="#report-admin-parent" aria-expanded="false">
+                    <a class="dropdown-toggle3678">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Báo cáo tổng hợp</span>
+                    </a>
+                </div>
+            </div>
+            <div class="collapse" id="report-admin-parent">
+                <div class="card card-body border-none">
+                    <ul class="manager-item-child">
+                        <li>
+                            <a data-parent="Report-item" href="@Url.Action("Index", "Statistics", new { area = "Partner",StartDate = DateTime.Now.AddMonths(-6),EndDate=DateTime.Now})" id="Statistics-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Báo cáo nhân sự">
+                                <i class="fa-solid fa-users"></i>
+                                <span>Báo cáo nhân sự</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-parent="Report-item" href="@Url.Action("Index", "Company", new { area = "Partner"})" id="Report-Business-item" class="sidebar-button" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Báo cáo kinh doanh">
+                                <i class="fa-solid fa-briefcase"></i>
+                                <span>Báo cáo kinh doanh</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-item">
+            <a id="User-Manual-item" onclick="SetActiveHDSD()" href="/viewiframe?a=https://cdn.realtech.com.vn//uploads/SGOland/huong-dan-su-dung-sgoland.pdf" class="sidebar-button d-flex align-items-center text-red">
+                <i class="fa-solid fa-circle-info"></i>
+                Hướng dẫn sử dụng
+            </a>
+        </div>
+        @* <div class="sidebar-item">
+        <a href="role-user.html" id="Role-item" class="sidebar-button d-flex align-items-center">
+        <i class="fa-solid fa-folder-tree"></i>
+        Phân quyền
+        </a>
+        </div>*@
+        @*  <div class="sidebar-item">
+        <a href="@Url.Action("Welcome", "Dashboard", new { area = "Partner"})" id="Welcome-item" class="sidebar-button d-flex align-items-center">
+        <i class="fa-regular fa-user"></i>
+        Welcome
+        </a>
+        </div>*@
+    </div>
+</div>
+<ul class="dropdown-menu z-100">
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+</ul>
+
+
+<script>
+    //document.addEventListener("DOMContentLoaded", function () {
+    //    // make it as accordion for smaller screens
+    //    if (window.innerWidth > 992) {
+
+    //        document.querySelectorAll('#Manager-item').forEach(function (everyitem) {
+
+    //            everyitem.addEventListener('mouseover', function (e) {
+
+    //                let el_link = this.querySelector('a[data-bs-toggle]');
+
+    //                if (el_link != null) {
+    //                    let nextEl = el_link.nextElementSibling;
+    //                    el_link.classList.add('show');
+    //                    nextEl.classList.add('show');
+    //                }
+
+    //            });
+    //            everyitem.addEventListener('mouseleave', function (e) {
+    //                let el_link = this.querySelector('a[data-bs-toggle]');
+
+    //                if (el_link != null) {
+    //                    let nextEl = el_link.nextElementSibling;
+    //                    el_link.classList.remove('show');
+    //                    nextEl.classList.remove('show');
+    //                }
+
+
+    //            })
+    //        });
+
+    //    }
+    //    // end if innerWidth
+    //});
+
+    function SetActiveHDSD() {
+        window.localStorage.setItem("menu-active", "User-Manual-item");
+    }
+</script> 

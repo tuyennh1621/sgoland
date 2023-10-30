@@ -1,0 +1,93 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using NhaDat24h.DataDto.Company;
+@model CompanyDto
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="dashboard-content dashboard-content-0">
+    <!-- Bookmark Property -->
+    <h4 class="text-bold mb-3">Thêm mới công ty</h4>
+    <!-- Submit Form -->
+    <div class="col-lg-12 col-md-12">
+        <form id="addCompany" enctype="multipart/form-data" novalidate>
+
+            <div class="submit-page form-simple">
+                <!-- Basic Information -->
+                <div class="frm_submit_block">
+                    <h5>Thông tin cơ bản</h5>
+                    <div class="frm_submit_wrap">
+                        <div class="row">
+                            <div class="col-xxl-6 col-12">
+                                <label>Ảnh công ty</label>
+                                <div class="upload__box">
+                                    <div class="upload__btn-box d-flex align-items-center gap-10">
+                                        <div class="dashboard_property_list_thumb23 m-0">
+                                            <img src="@Model.Avatar"
+                                                 class="img-fluid" alt="" id="img-fileAvt" />
+                                        </div>
+                                        <label class="upload__btn">
+                                            <span>Tải ảnh lên</span>
+                                            <input type="file" asp-for="fileAvt" class="upload__inputfile">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-12">
+                                <label>Tên công ty</label>
+                                <input hidden asp-for="Id" />
+                                <input hidden asp-for="Avatar" />
+                                <input type="text" class="form-control select2" asp-for="Name">
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-6 col-12">
+                                <label>Số điện thoại</label>
+                                <input type="text" class="form-control" asp-for="Mobile">
+                            </div>
+                            <div class="col-xxl-6 col-12">
+                                <label>Địa chỉ</label>
+                                <input type="text" class="form-control" asp-for="Address">
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-6 col-12">
+                                <label>Email</label>
+                                <input type="text" class="form-control" asp-for="Email">
+                            </div>
+                            <div class="col-xxl-6 col-12">
+                                <label>Hotline</label>
+                                <input type="text" class="form-control" asp-for="Phone">
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-xxl-12 col-12">
+                                <label>Thông tin mô tả</label>
+                                <textarea id="editor" class="form-control" name="Detail" Detailrows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group p-m-10">
+                    <div class="col-lg-12 col-md-12">
+                        <button class="btn bg-primary2 text-white p-10" type="submit">
+                            Đăng ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    window.localStorage.setItem("menu-active", "Company-item");
+
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>

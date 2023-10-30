@@ -1,0 +1,164 @@
+﻿@using NhaDat24h.DataDto.RealEstates
+@using NhaDat24h.DataDto.Video
+@model ListVideoModel;
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="dashboard-content dashboard-content-0">
+    <div>
+        <!-- Bookmark Property -->
+        <div class="frm_submit_block2 mb-3 d-flex align-items-center justify-between">
+            <h5 class="text-bold">Danh sách video</h5>
+            <a class="primary-bg p-10 text-white round-5" href="@Url.Action("AddVideo", "Video", new { area = "Partner"})">
+                <i class="fa-solid fa-circle-plus"></i>
+                Thêm mới Video
+            </a>
+        </div>
+        <div class="search-box">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Video/FormSearchVideo.cshtml",new SearchForm(){
+            Style=1
+            })
+        </div>
+        <div class="list-partner mb-30">
+            <div id="MainDataSection">
+                @await Html.PartialAsync("~/Areas/Partner/Views/Video/ListVideoPartial.cshtml", Model)
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.localStorage.setItem("menu-active", "Video-item");
+    function playvideo(_title, _urlvideo, _urlimage) {
+        debugger
+        var xxx = "";
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Player", "Video",new { area="Partner"})",
+            data: {
+                Title: _title,
+                Source: _urlvideo,
+                Poster: _urlimage
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#bodyPlayer').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+    function SubmitSearchVideo(_pageIndex, _pageSize) {
+        debugger
+        var hashtag = document.getElementById("hashtag").value;
+        var status = document.getElementById("status").value;
+        var type = document.getElementById("type").value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("SearchListVideo", "Video")",
+            data: {
+                hashtag: hashtag,
+                status: status,
+                type: type,
+                pageSize: _pageSize,
+                pageIndex: _pageIndex
+            },
+            cache: false,
+            async: true,
+            beforeSend: function () {
+                $('.preloader').show();
+            },
+            success: function (data) {
+                $('.preloader').hide();
+                $('#MainDataSection').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    function DeleteVideo(Id) {
+        debugger
+        if (confirm("Bạn thực sự muốn xóa video ID: " + Id) == true) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("DeleteVideo", "Video")",
+                data: {
+                    Id: Id
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data == '0') {
+                        swal("Thông báo", "Bạn không có quyền thay đổi tài khoản này", "fail");
+                    }
+                    else {
+                        swal("Thông báo", "Xóa thành công", "success");
+
+
+                        setTimeout(() => {
+                            document.location.reload();
+                        }, 3000);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("An error occured. Please try again!");
+                }
+            })
+        } else {
+
+        }
+    }
+
+    function ChangeStatusVideo(_id) {
+        debugger
+        var status = document.getElementById("status_" + _id).value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ChangeVideoStatus", "Video")",
+            data: {
+                Id: _id,
+                Status: status
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                if (data == '0') {
+                    swal("Thông báo", "Bạn không có quyền thay đổi tài khoản này", "fail");
+                }
+                else {
+                    if (status == '3') {
+                        swal("Thông báo", "Phê duyệt thành công!", "success");
+                    }
+                    else {
+                        swal("Thông báo", "Hủy phê duyệt thành công!", "success");
+                    }
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+
+   
+
+
+</script>
+

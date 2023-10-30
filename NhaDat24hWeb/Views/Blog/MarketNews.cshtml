@@ -1,0 +1,124 @@
+﻿@using NhaDat24h.Common.Configuration;
+<div>
+    <!-- ============================ Page Title Start================================== -->
+    <div class="page-title" style="background:#f4f4f4 url(https://images.unsplash.com/photo-1565402170291-8491f14678db?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2017&q=80);" data-overlay="5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="breadcrumbs-wrap">
+                        <h2 class="breadcrumb-title text-center uppercase">Tin Thị Trường</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-60">
+        <div class="row">
+            <div class="col-lg-8 col-12">
+                <div class="row">
+                    <div class="col-lg-6 col-12">
+                        <div class="property_location">
+                            <div class="property_location_thumb">
+                                <a href="#"><img src="~/assets/img/blog/citylandcenter.jpg" class="img-fluid" alt="" /></a>
+                            </div>
+                            <div class="property_location_caption">
+                                <div class="property_location__first">
+                                    <h4><a href="#">Đề xuất bỏ nhiều tiêu chí ‘đánh đố’ người mua nhà ở xã hộI</a></h4>
+                                    <div class="d-flex gap-10 mt-10">
+                                        <i class="fa-regular fa-calendar-days"></i>
+                                        <span>10/3/2023</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12">
+                        <div class="property_location">
+                            <div class="property_location_thumb">
+                                <a href="#"><img src="~/assets/img/blog/muongkhen.png" class="img-fluid" alt="" /></a>
+                            </div>
+                            <div class="property_location_caption">
+                                <div class="property_location__first">
+                                    <h4><a href="#">Ts. Đinh thế hiển: “các công ty bất động sản đừng nghĩ mình phảI mang sứ mệnh mở mang thị trường”</a></h4>
+                                    <div class="d-flex gap-10 mt-10">
+                                        <i class="fa-regular fa-calendar-days"></i>
+                                        <span>1/2/2023</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-60">
+                    <ul class="pagination text-center">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span><i class="fa-solid fa-arrow-left"></i></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">18</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span><i class="fa-solid fa-arrow-right"></i></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-12">
+                <div class="sidebar pb-30">
+                    <div class="line-horizontal-4"></div>
+                    <div class="widget categories-widget">
+                        <div class="widget-title">Danh mục<span></span></div>
+                        <ul class="custom mt-10">
+                            <li>
+                                <a href="@Url.Action("InterNews", "Blog", new { area = ""})">Tin nội bộ<span>7</span></a>
+                                <a href="@Url.Action("MarketNews", "Blog", new { area = ""})">Tin thị trường<span>9</span></a>
+                                <a href="@Url.Action("ProjectNews", "Blog", new { area = ""})">Tin dự án<span>2</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="widget popular-feeds">
+                        <div class="widget-title">Tin tức<span></span></div>
+                        <div class="popular-feed-loop">
+                            <div class="single-popular-feed">
+                                <div class="feed-desc">
+                                    <div class="feed-image">
+                                        <img style="width:100%;" src="https://sgogroup.net/wp-content/uploads/2023/04/khoi-cong-sgo-la-emera-phu-yen-1.jpg">
+                                    </div>
+                                    <div class="feed-text">
+                                        <h6 class="post-title">
+                                            <a href="#">
+                                                Title Block
+                                            </a>
+                                        </h6>
+                                        <span class="time"><i class="fa fa-calendar"></i> 22/12/2023 </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget popular-tag-widget">
+                        <div class="widget-title">Popular Tag<span></span></div>
+                        <div class="tags mt-10">
+                            <a href="">Đào tạo chuyên viên</a>
+                            <a href="">Giới thiệu dự án</a>
+                            <a href="">Công ty</a>
+                            <a href="">ABCD</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.localStorage.setItem("menu-active", "blog-item");
+</script>

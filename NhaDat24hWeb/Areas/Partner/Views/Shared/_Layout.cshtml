@@ -1,0 +1,349 @@
+﻿@using NhaDat24h.Common.Configuration;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+
+    <title>SGO Land - SGO Group - Kết nối bất động sản</title>
+    <meta name="resource-type" content="document" />
+    <meta name="abstract" content="Sàn giao dịch bất động sản tại Việt Nam" />
+    <meta name="classification" content="Bất động sản Việt Nam" />
+    <meta name="area" content="Nhà đất và bất động sản" />
+    <meta name="placename" content="Việt Nam" />
+    <meta name="author" content="sgoland.vn" />
+    <meta name="copyright" content="©2020 sgoland.vn" />
+    <meta name="owner" content="sgoland.vn" />
+    <meta name="generator" content="Công Ty Cổ Phần Đầu Tư Và Kinh Doanh Bất Động Sản SGO - SGO Land" />
+    <meta name="distribution" content="Global" />
+    <meta name='revisit-after' content='1 days' />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <meta property="og:url" content="https://sgoland.vn/" />
+    <meta property="og:title" content="SGO Land - SGO Group - Kết nối bất động sản" />
+    <meta property="og:description" content="SGO Land thuộc SGO Group là công ty chuyên kinh doanh, môi giới bất động sản từ các Chủ đầu tư lớn trên thị trường bất động sản Việt Nam." />
+    <meta property="og:image" content="https://sgoland.vn/assets/img/sgo-land-iconfull.jpg" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="315" />
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/sgo-land-icon.png">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/assets/css/styles.css?v=@AppConfigs.AppVersion">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/owlcarousel/css/owl.carousel.min.css?v=@AppConfigs.AppVersion" />
+    <link rel="stylesheet" href="~/assets/owlcarousel/css/owl.theme.default.min.css?v=@AppConfigs.AppVersion" />
+    <link rel="stylesheet" href="~/assets/css/default.css?v=@AppConfigs.AppVersion" />
+    <link rel="stylesheet" href="~/assets/css/default.date.css?v=@AppConfigs.AppVersion" />
+    <link rel="stylesheet" href="~/assets/css/all.css?v=@AppConfigs.AppVersion" />
+    <link rel="stylesheet" href="~/assets/css/swipebox.css?v=@AppConfigs.AppVersion">
+    <link rel="stylesheet" href="~/assets/css/UploadImage.css?v=@AppConfigs.AppVersion">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+    <!-- Custom Color Option -->
+    <link href="~/assets/css/colors.css?v=@AppConfigs.AppVersion" rel="stylesheet">
+</head>
+
+<body class="dashboard">
+
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader"></div>
+
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+
+        <!-- ============================================================== -->
+        <!-- Top header  -->
+        <!-- ============================================================== -->
+        <!-- Start Navigation -->
+        @await Html.PartialAsync("~/Areas/Partner/Views/Shared/_HeaderPartical.cshtml")
+        <!-- End Navigation -->
+        <div class="clearfix"></div>
+        <!-- ============================================================== -->
+        <!-- Top header  -->
+        <!-- ============================================================== -->
+        <!-- ============================ User Dashboard ================================== -->
+        <section class="p-0" style="background:var(--bs-f5-);">
+            <div class="container-fluid p-0">
+                <div class="dashboard" data-x="dashboard" data-x-toggle="-is-sidebar-open">
+                    <div class="dashboard-main mt-75">
+                        <div style="display:none;">
+                            <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+                                <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+                                    <div id="user-container">
+                                        <div hidden id="user-pic"></div>
+                                        <div hidden id="user-name"></div>
+                                        <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+                                            Sign-out
+                                        </button>
+                                        <button id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+                                            <i class="material-icons"></i>Sign-in with Google
+                                        </button>
+                                    </div>
+                                </div>
+                            </header>
+                        </div>
+                        @await Html.PartialAsync("~/Areas/Partner/Views/Shared/_DashboardSidebarPartical.cshtml")
+                        @RenderBody()
+                        <a id="back2Top" class="top-scroll" title="Back to top" href="#"><i class="fa-solid fa-arrow-up"></i></a>
+                        <footer class="footer-dashboard">
+                            <div class="footer_row text-center">
+                                Copyright 2023 ©. Development by Realtech Inc
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ============================ User Dashboard End ================================== -->
+    </div>
+
+    <div class="offcanvas offcanvas-end" id="toast-chat-wellcome" aria-labelledby="offcanvasExampleLabel" tabindex="-1">
+        <div class="toast-header offcanvas-header">
+            <div class="d-flex gap-10 align-items-center">
+                <div class="avatar-img-header">
+                    <img id="IDtopicthumbnai" src="" alt="Logo">
+                </div>
+                <div class="d-flex flex-column">
+                    <span id="IDtopicname">
+                    </span>
+                    <span class="text-12">
+                        Nhóm chát chung
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex gap-10 align-items-center">
+                <div class="dropdown-toggle dropdown-toggle-custom" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="f-30 fas fa-ellipsis-h"></i>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-user-chat">Xem thành viên</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-user-chat-add">Thêm thành viên</a></li>
+                        <li><a class="dropdown-item" href="#">Giải tán nhóm</a></li>
+                        <li><a class="dropdown-item" href="#">Rời khỏi nhóm</a></li>
+                    </ul>
+                </div>
+                <button type="button" data-bs-dismiss="offcanvas" class="btn-close text-reset" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+        <div class="offcanvas-body" id="bodychat">
+            <input id="idtopic" type="hidden" value="0" />
+            <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+                <main class="mdl-layout__content mdl-color--grey-100">
+                    <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
+                        <div id="messages-card">
+                            <div class="live-chat-parent-1">
+                                <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                                    <div class="date-time-chat text-center">
+                                        @* 22:26, 30 Tháng 09, 2023*@
+                                    </div>
+                                    <div id="messages">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-button-footer">
+                                <div class="ts-form-live-chat">
+                                    <div class="live-form-icon">
+                                        <div class="attact-file" data-bs-toggle="modal" data-bs-target="#policies_chat">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                        </div>
+                                        <form id="image-form" action="#">
+                                            <div class="attact-file">
+                                                <div style="height: 0px; width: 0px; overflow: hidden;">
+                                                    <input id="mediaCapture" type="file" accept="image/*" capture="camera">
+                                                </div>
+                                                <button class="border-none bg-none" id="submitImage" title="Add an image">
+                                                    <i class="fa-solid fa-image"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="live-chat-input">
+                                        <form id="message-form" action="#">
+                                            <div class="d-flex justify-between">
+                                                @* <input type="text" id="message" autocomplete="off" placeholder="Tin nhắn..."> *@
+                                                <input type="text" id="message" autocomplete="off" placeholder="Tin nhắn...">
+                                                <button class="live-form-send" id="submit" disabled type="submit">
+                                                    <i class="fa-regular fa-paper-plane"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="policies_chat" tabindex="-1" aria-labelledby="policies_chat" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Nội quy chát nhóm</h1>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li>
+                            Không tán gẫu, chat về các vấn đề không liên quan
+                        </li>
+                        <li>
+                            Chỉ chat về các nội dung liên quan đến chủ để của dự án liên quan
+                        </li>
+                        <li>
+                            Up ảnh dung lượng bé hơn 2M/ảnh
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/assets/js/jquery.swipebox.js?v=@AppConfigs.AppVersion"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <script src="~/assets/js/ion.rangeSlider.min.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/js/select2.min.js?v=@AppConfigs.AppVersion"></script>
+
+    <script src="~/assets/owlcarousel/owl.carousel.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/owlcarousel/owl-carousel-custom.js?v=@AppConfigs.AppVersion"></script>
+
+    <script src="~/assets/js/imagesloaded.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/js/daterangepicker.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/js/custom.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/js/dropzone-amd-module.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/js/dropzone.js?v=@AppConfigs.AppVersion"></script>
+
+    <script src="~/assets/js/common.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/js/dom-to-image.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/js/validate-input.js?v=@AppConfigs.AppVersion"></script>
+    <script src="~/assets/js/slick.js?v=@AppConfigs.AppVersion"></script>
+
+    <script src="~/firebase/public/scripts/main.js?v=@AppConfigs.AppVersion"></script>
+
+
+
+    @* 	<script src="~/assets/js/wow.min.js"></script>
+    *@
+    <script>
+        let myInterval;
+        let time = 0;
+
+        window.addEventListener('beforeunload', function (e) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("updateStatusOnline", "Users")",
+                data: {
+                    status: false,
+                },
+                cache: false,
+                async: true,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    console.log('up false')
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("An error occured. Please try again!");
+                }
+            });
+            if (time > 0) {
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("InsertCountertimeOnline", "Users")",
+                    data: {
+                        counter: time,
+                    },
+                    cache: false,
+                    async: true,
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        console.log('update: ' + time)
+                        time = 0;
+                        clearInterval(myInterval)
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("An error occured. Please try again!");
+                    }
+                });
+            }
+        });
+
+        const countTime = () => {
+            myInterval = setInterval(countTimeApi, 1000)
+        }
+        const countTimeApi = (status = true) => {
+            time++;
+            console.log(time);
+        }
+
+        $(window).on('focus', () => {
+            countTime()
+        });
+
+        $(window).on('blur', () => {
+
+            if (myInterval) {
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("InsertCountertimeOnline", "Users")",
+                    data: {
+                        counter: time,
+                    },
+                    cache: false,
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        console.log('update: ' + time)
+                        time = 0;
+                        clearInterval(myInterval)
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("An error occured. Please try again!");
+                    }
+                });
+
+            }
+            if (document.activeElement.tagName === "IFRAME") {
+                setTimeout(() => {
+                    countTime();
+                });
+            }
+
+        });
+
+        countTime();
+
+                                //$(".binchat").on('click', function (event) {
+                                //    if (!!getAuth().currentUser) {
+                                //        showchat($(this).data('topicid'), $(this).data('topicname'), $(this).data('topicthumbnai'));
+                                //    }
+                                //    else{
+                                //        alert('bạn cần đăng nhập trước khi chat')
+                                //    }
+                                //});
+
+    </script>
+</body>
+</html>

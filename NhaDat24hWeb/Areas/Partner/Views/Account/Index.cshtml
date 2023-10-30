@@ -1,0 +1,44 @@
+﻿@using NhaDat24h.DataDto.Company;
+@using NhaDat24h.DataDto.Ctv;
+@using NhaDat24h.DataDto.Users;
+@model CtvEditDto
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+    
+<div class="dashboard-content">
+    <div class="mb-3">
+        <h4 class="text-bold">Thông tin tài khoản</h4>
+    </div>
+    <div>
+        <!-- Basic Information -->
+            <div id="form-register-partner">
+                @await Html.PartialAsync("~/Areas/Partner/Views/Users/SubmitEditUser.cshtml", Model)
+            </div>
+    </div>
+</div>
+
+<script>
+    window.localStorage.setItem("menu-active", "Account-item");
+
+
+</script>
+@*<script>
+    function myAccountparent(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+
+    
+</script>*@

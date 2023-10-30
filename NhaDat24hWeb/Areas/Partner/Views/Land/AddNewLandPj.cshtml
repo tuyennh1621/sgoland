@@ -1,0 +1,309 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using NhaDat24h.DataAccess.Entities
+@using NhaDat24h.DataDto.Ctv;
+@using NhaDat24h.DataDto.RealEstates
+@model AddNewLandDto
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .ck-editor__editable[role="textbox"] {
+        /* editing area */
+        min-height: 200px;
+    }
+
+    .ck-content .image {
+        /* block images */
+        max-width: 80%;
+        margin: 20px auto;
+    }
+</style>
+<div class="dashboard-content dashboard-content-0">
+    <h4 class="mb-3 text-bold">Thêm mới dự án</h4>
+    <div id="form-register-partner">
+        @using (Html.BeginForm("AddNewLandPjSubmit", "Land", FormMethod.Post, new { area = "Partner", @id = "addLandPJ", enctype = "multipart/form-data" }))
+        {
+            <input type="hidden" id="IdR" name="IdR" value="@Model.IdR" />
+            <div class="submit-page form-simple">
+                <!-- Basic Information -->
+                <div class="frm_submit_block" style="border-radius:0 !important;">
+                    <div class="frm_submit_wrap form-simple form-group">
+                        <div class="row">
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label>Tên dự án <span class="text-danger">*</span></label>
+                                <input type="text" name="Name" value="@Model.Name" class="form-control select2" required>
+                            </div>
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label>Loại dự án <span class="text-danger">*</span></label>
+                                <select class="form-select select2" onchange="changeType()" asp-for="IdType" required>
+                                    <option selected disabled value="">Chọn</option>
+                                    <option value="1">Căn hộ chung cư</option>
+                                    <option value="2">Nhà biệt thự, liền kề</option>
+                                    <option value="20">Nhà hàng, khách sạn, resort</option>
+                                    <option value="21">ShopHouse</option>
+                                    <option value="22">Condotel</option>
+                                    <option value="24">Officetel</option>
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label>Tỉnh thành <span class="text-danger">*</span></label>
+                                <select class="form-select select2" onchange="changeTinhThanh(this)" asp-for="IdProvince" required>
+                                    @foreach (var retype in ViewBag.ListProvince as List<TbTinhthanh>)
+                                    {
+                                        <option selected="@Model.IdProvince" value="@retype.IdTt">@retype.TenTt</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label>Quận / Huyện <span class="text-danger">*</span></label>
+                                <select class="form-select select2" onchange="changeQuanHuyen(this)" asp-for="IdDistrict" required>
+                                    @foreach (var retype in ViewBag.ListDistrict as List<TbQuan>)
+                                    {
+                                        <option selected="@Model.IdDistrict" value="@retype.IdQ">@retype.Tenquan</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label>Xã / Phường <span class="text-danger">*</span></label>
+                                <select class="form-select select2" onchange="changeAdward()" asp-for="IdWard" required>
+                                    @if (ViewBag.ListWard != null)
+                                    {
+                                        foreach (var retype in ViewBag.ListWard as List<TbPhuong>)
+                                        {
+                                            <option value="@retype.Id">@retype.Tenphuong</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label>Địa chỉ chi tiết <span class="text-danger">*</span></label>
+                                <input type="text" value="@Model.Address" name="Address" placeholder="Tên đường phố, phường xã, quận huyện, tỉnh thành" class="form-control" required>
+                            </div>
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label>Diện tích bé nhất (m2) <span class="text-danger">*</span></label>
+                                <div class="d-flex">
+                                    <input type="number" maxlength="6" style="color:red" value="@Model.S" id="S" name="S" placeholder="Diện tích căn bé nhất" required class="form-control" onclick="show_cap_square()">
+                                    <select aria-invalid="false" id="cbodvdientich" style="padding: 5px;width: 100px;border-left: none;border-color: var(--bs-border-color);border-radius: 0 4px 4px 0;">
+                                        <option>m2</option>
+                                    </select>
+                                </div>
+                                <div id="cap_square" style="display:none;" class="text-12 color-gray"></div>
+                            </div>
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label for="check1">Tổng giá (Tỷ)</label>
+                                <div class="d-flex">
+                                    <input type="number" maxlength="6" value="@Model.OfferPrice" style="color:red" id="OfferPrice" name="OfferPrice" placeholder="Giá căn thấp nhất" class="form-control" onclick="show_cap_price()">
+                                    <select asp-for="cbodvGiaLo" style="padding: 5px;width: 100px;border-left: none;border-color: var(--bs-border-color);border-radius: 0 4px 4px 0;">
+                                        <option value="1">Triệu/Căn</option>
+                                        <option value="1000">Tỷ/Căn</option>
+                                    </select>
+                                </div>
+                                <div id="cap_total_price" class="text-12 color-gray" style="display:none;"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xxl-3 col-xl-3 col-lg-6 col-12 mt-10 add_element_parent">
+                                <label for="check2">Giá/m2 (Triệu)</label>
+                                <div class="d-flex">
+                                    <input type="number" maxlength="6" value="@Model.Priceperm2" name="Priceperm2" id="Priceperm2" style="color:red" placeholder="Giá /m2" class="form-control" onclick="show_cap_price_square()">
+                                    <select aria-invalid="false" id="cbodGiaM2" style="padding: 5px;width: 100px;border-left: none;border-color: var(--bs-border-color);border-radius: 0 4px 4px 0;">
+                                        <option value="1">Triệu/m2</option>
+                                    </select>
+                                </div>
+                                <div id="cap_price_square" class="text-12 color-gray" style="display:none;"></div>
+                            </div>
+                            <div class="col-xxl-12 col-12 mt-15 add_element_parent">
+                                <label>Mô tả</label>
+                                <textarea id="editor"  class="form-control" name="Detail" Detailrows="2">@Model.Detail</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-divider mt-30"></div>
+                    <div class="frm_submit_wrap pt-20">
+                        <h5>Thông tin liên hệ</h5>
+                        <div class="frm_submit_wrap">
+                            <div class="row">
+                                <div class="form-group col-xxl-3 col-xl-3 col-lg-6 col-12">
+                                    <label>Tên đơn vị triển khai dự án</label>
+                                    <input type="text" value="@Model.ImplementCompany" name="ImplementCompany" class="form-control select2" required>
+                                </div>
+                                <div class="form-group col-xxl-3 col-xl-3 col-lg-6 col-12">
+                                    <label>Họ và tên</label>
+                                    <input type="text" value="@Model.Manager" name="Manager" class="form-control" required>
+                                </div>
+
+                                <div class="form-group col-xxl-3 col-xl-3 col-lg-6 col-12">
+                                    <label>Email liên hệ</label>
+                                    <input type="text" value="@Model.Email" name="Email" class="form-control" required data-msg-email="Email không hợp lệ">
+                                </div>
+                                <div class="form-group col-xxl-3 col-xl-3 col-lg-6 col-12">
+                                    <label>Điện thoại liên hệ</label>
+                                    <input type="text" name="Phone" value="@Model.Phone" class="form-control" required data-msg-number="Số điện thoại không hợp lệ">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Thêm liên hệ</label>
+                                    <select class="form-control" asp-for="SelectedContactList" multiple="multiple">
+                                        <option value="">&nbsp;</option>
+                                        @if (@ViewBag.ListCTVInCompany != null)
+                                        {
+                                            @foreach (var item in ViewBag.ListCTVInCompany as List<CtvInCompanyDto>)
+                                            {
+                                                <option value="@item.Id">@item.FullName - (@item.Mobile- @item.Position)</option>
+                                            }
+                                        }
+
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group btn-register" id="btn-important">
+                    <button class="btn bg-primary2" type="submit" onclick="myFunction2()">Tiếp tục</button>
+                </div>
+            </div>
+        }
+    </div>
+    <!-- Submit Form -->
+</div>
+<script>
+    window.localStorage.setItem("menu-active", "Land-item");
+</script>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    function show_cap_square() {
+        document.getElementById('cap_square').style.display = "block";
+    }
+    function show_cap_price() {
+        document.getElementById('cap_total_price').style.display = "block";
+    }
+    function show_cap_price_square() {
+        document.getElementById('cap_price_square').style.display = "block";
+    }
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+
+    function myFunction2() {
+        var element = document.getElementsByClassName("add_element_parent");
+        element[0].classList.add("mb-15");
+        element[1].classList.add("mb-15");
+        element[2].classList.add("mb-15");
+        element[3].classList.add("mb-15");
+        element[4].classList.add("mb-15");
+        element[5].classList.add("mb-15");
+        element[6].classList.add("mb-15");
+        element[7].classList.add("mb-15");
+        element[8].classList.add("mb-15");
+        element[9].classList.add("mb-15");
+    }
+</script>
+<script>
+
+    var UrlrequestCombodata = '@Url.Action("binDropdownAjax","Users", new { area="Partner"})';
+    $('#IdProvince').val('@Model.IdProvince');
+    $('#IdDistrict').val('@Model.IdDistrict');
+    $('#IdWard').val('@Model.IdWard');
+    $('#status').val('@Model.IdType');
+
+    $('#cbodvGiaLo').val('@Model.outcbodvGiaLo');
+    $('#OfferPrice').val('@Model.outOfferPrice');
+
+    function changeTinhThanh(selectOS) {
+        var _IdProvince = $('#IdProvince').val();
+        $.ajax({
+            type: "GET",
+            url: UrlrequestCombodata,
+            data: { obj: _IdProvince, style: 3 },
+            cache: false,
+            async: false,
+            success: function (data) {
+                $('#IdDistrict').html(data);
+                $('#IdProvince-error').remove();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                // hideSearchLoader();
+                alert(xhr + ajaxOptions + thrownError);
+            }
+        })
+    }
+    function changeQuanHuyen(selectOS) {
+        var _IdProvince = $('#IdDistrict').val();
+        $.ajax({
+            type: "GET",
+            url: UrlrequestCombodata,
+            data: { obj: _IdProvince, style: 4 },
+            cache: false,
+            async: false,
+            success: function (data) {
+                $('#IdWard').html(data);
+                $('#IdDistrict-error').remove();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                // hideSearchLoader();
+                alert(xhr + ajaxOptions + thrownError);
+            }
+        })
+    }
+    function changeAdward() {
+        var _Adward = $('#IdWard').val();
+        if (_Adward != '') {
+            $('#IdWard-error').remove();
+        }
+    }
+    function changeType() {
+        var _IdType = $('#IdType').val();
+        if (_IdType != '') {
+            $('#IdType-error').remove();
+        }
+    }
+    $("#OfferPrice").on("keyup", function () {
+        var dvtonggia = $('#cbodvGiaLo').val();
+        var dientich = $("#S").val();
+        var gia = Math.round(dvtonggia * ($(this).val() / dientich));
+        $("#Priceperm2").val(gia);
+    });
+
+    $("#Priceperm2").on("keyup", function () {
+        var dientich = $("#S").val();
+        var gia = $(this).val() * dientich;
+        if(gia<1000){
+            $("#OfferPrice").val(gia);
+            $('#cbodvGiaLo').val(1)
+        }
+        else{
+            var dvtonggia = $('#cbodvGiaLo').val();
+            $("#OfferPrice").val(Math.round(gia / dvtonggia));
+            $('#cbodvGiaLo').val(1000)
+        }
+        
+    });
+
+    $("#S").on("keyup", function () {
+        var dvtonggia = $('#cbodvGiaLo').val();
+        var dientich = $("#S").val();
+        var tonggia = $("#OfferPrice").val();
+        var gia = Math.round(dvtonggia * (tonggia / dientich));
+        $("#Priceperm2").val(gia);
+    });
+
+    $(function () {
+        $('#SelectedContactList').select2({
+            placeholder: "Chọn",
+            allowClear: true
+        });
+
+    });
+
+    @*$("input").change(function () {
+        alert("The text has been changed.");
+        });*@
+</script>

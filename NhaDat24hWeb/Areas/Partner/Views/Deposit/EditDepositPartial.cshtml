@@ -1,0 +1,170 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using NhaDat24h.Common.Configuration;
+@using NhaDat24h.DataDto.RealEstates
+@using NhaDat24h.DataAccess.Entities
+
+
+@model EditDepositForm;
+
+<div class="overflow-scroll scroll-bar-1">
+    <div class="offcanvas-header">
+        <h1 class="modal-title fs-5" id="upload-contract">Thêm mới hợp đồng đặt cọc</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form id="EditDeposit" enctype="multipart/form-data" novalidate>
+            <input hidden asp-for="IdDeposit" value="@Model.IdDeposit" />
+            <div class="row">
+                <div class="col-lg-12 col-md-12 element_select">
+                    <label class="text-14 color-gray">Tên dự án</label>
+                    <select class="form-select select2" asp-for="IdRE" id="EditIdRE" required>
+                        <option selected disabled value="">Chọn dự án</option>
+                        @foreach (var re in Model.ListRE as List<REForDepositDto>)
+                        {
+                            <option value="@re.Id">@re.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-12 col-md-12 mt-10">
+                    <div class="form-group">
+                        <label class="text-14 color-gray">Tiêu đề</label>
+                        <div class="input-with-icon">
+                            <input type="text" class="form-control" asp-for="Name" placeholder="Nhập tiêu đề" required>
+                            <i class="fa-solid fa-landmark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <div class="form-group">
+                        <label class="text-14 color-gray">Ngày đặt cọc</label>
+                        <div class="input-with-icon">
+                            <input type="date" asp-for="DepositDate" class="form-control" required>
+                            <i class="fa-solid fa-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <div class="form-group">
+                        <label class="text-14 color-gray">Hạn thanh toán</label>
+                        <div class="input-with-icon">
+                            <input type="date" asp-for="PaymentDeadline" class="form-control" required>
+                            <i class="fa-solid fa-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <div class="form-group">
+                        <label class="text-14 color-gray">Số tiền cọc</label>
+                        <div class="input-with-icon">
+                            <input type="text" placeholder="Số tiền đặt cọc: VD: 50000000" class="form-control Deposit_Price hide-number-arrows" asp-for="DepositValue" required>
+                            <i class="fa-solid fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <div class="form-group">
+                        <label class="text-14 color-gray">Tổng giá trị bất động sản</label>
+                        <div class="input-with-icon">
+                            <input type="text" placeholder="Tổng giá trị bất động sản giao dịch: VD: 1000000000" class="form-control Deposit_Price hide-number-arrows" asp-for="TotalValue" required>
+                            <i class="fa-solid fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <div class="form-group">
+                        <label class="text-14 color-gray">Hoa Hồng (%)</label>
+                        <div class="input-with-icon">
+                            <input type="text" placeholder="Hoa hồng được hưởng (%), VD: 3" class="form-control Deposit_Price hide-number-arrows" asp-for="Bonus" required>
+                            <i class="fa-solid fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 mt-10">
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <label for="floatingTextarea2" class="text-14 color-gray">Nhập tin nhắn</label>
+                            <textarea class="form-control" asp-for="Detail" style="height: 70px"></textarea>
+                            <i class="fa-solid fa-pencil"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 mt-10" id="edit_img">
+                    <div class="form-group">
+                        <label class="mb-10 text-14 color-gray">Ảnh hợp đồng đặt cọc</label>
+                        <div id="banner-image">
+                            <div class="upload__box">
+                                <div class="upload__btn-box d-flex align-items-center gap-10">
+                                    <div class="upload__btn-box" style="max-height: 30px;">
+                                        <label class="upload__btn" style="max-height: 30px;max-width: 100px;padding: 4px !important;">
+                                            <span>Tải ảnh lên</span>
+                                            <input type="file" style="visibility:hidden;" data-max_length="20" multiple="" class="upload_image" asp-for="Contract" id="EditImg">
+                                        </label>
+                                    </div>
+                                    <span class="text-12">Nhiều file ảnh / PDF (tối đa 20 file/ 1 lần upload)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="oldImageList" class="d-flex">
+                            @if (Model.Imgs != null)
+                            {
+                                @foreach (var item in Model.Imgs)
+                                {
+                                    <div class="col-auto">
+                                        <div class="position-relative" id="item-@Model.IdDeposit">
+                                            <img id="Iframe" src="https://cdn.realtech.com.vn/@item" style="width:100px; height:100px" />
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                        <div class="upload__img-wrap" id="EditContract">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn bg-primary2 text-white p-10" type="submit">Đăng ngay</button>
+        </form>
+    </div>
+
+</div>
+
+<script src="~/assets/js/validate-input.js?v=@AppConfigs.AppVersion"></script>
+<script src="~/assets/js/custom.js?v=@AppConfigs.AppVersion"></script>
+<script>
+    window.localStorage.setItem("menu-active", "Deposit-item");
+
+    jQuery(document).ready(function () {
+    //    EditDepositImg();
+    });
+
+    $(function () {
+        $('#EditIdRE').select2({
+            placeholder: "Chọn dự án",
+            allowClear: true
+        });
+    });
+
+    var Deposit_Price = document.querySelectorAll(".Deposit_Price");
+    for (let i = 0; i < Deposit_Price.length; i++) {
+        Deposit_Price[i].addEventListener("keypress", function (evt) {
+            if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
+                evt.preventDefault();
+            }
+        });
+    };
+
+    var fnf = document.querySelectorAll(".Deposit_Price");
+    for (let i = 0; i < fnf.length; i++) {
+        fnf[i].addEventListener('keyup', function (evt) {
+            if (this.value.length > 0) {
+                var n = parseInt(this.value.replace(/\D/g, ''), 10);
+                fnf[i].value = n.toLocaleString();
+            }
+        }, false);
+    };
+
+</script>
+

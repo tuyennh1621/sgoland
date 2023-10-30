@@ -1,0 +1,100 @@
+﻿@using NhaDat24h.DataDto.Company;
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+@model List<CompanyDto>
+
+<div class="dashboard-content dashboard-content-0">
+    <!-- Bookmark Property -->
+    <div class="frm_submit_block2 mb-company mb-3">
+        <h4 class="text-bold">Danh sách công ty thành viên</h4>
+        <div class="d-flex gap-10 align-items-center btn-company">
+            <a class="primary-bg p-10 text-white round-5 text-align-center" href="/company/add-company">
+                <i class="fa-solid fa-circle-plus"></i>
+                Thêm mới công ty
+            </a>
+        </div>
+    </div>
+    <div class="row search-box mb-company-search align-items-end mb-10">
+        <div class="col-xxl-8 col-12">
+            <div class="form">
+                <label class="text-bold mb-10">
+                    Tên công ty
+                </label>
+                <input class="form-control select2" type="text" value="">
+            </div>
+        </div>
+        <div class="col-xxl-4 col-12">
+            <label></label>
+            <button class="primary-bg p-10 text-white round-5" href="#">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Tìm kiếm
+            </button>
+        </div>
+    </div>
+    <div class="list-partner mb-company-content">
+        <div class="table-user-primary">
+            <table class="property-table-wrap table-2">
+                <tbody>
+                    <tr style="white-space: nowrap;">
+                        <th>Ảnh công ty</th>
+                        <th>Thông tin</th>
+                        <th>Action</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="white-space: nowrap;" class="dashboard_property_list">
+                            <td class="dashboard_property_list_thumb23" style="width:170px;">
+                                <img src="@item.Avatar" class="img-fluid" alt="" />
+                            </td>
+                            <td>
+                                <div class="dashboard_property_list_content">
+                                    <h4 class="text-bold">@item.Name</h4>
+                                    @* <div style="white-space:normal;" class="mt-10">
+                                        <p class="text-16 color-primary font-bold">
+                                            Công ty Cổ phần Đầu tư và Kinh doanh Bất Động Sản SGO
+                                        </p>
+                                        <p class="text-14 color-gray">@item.description</p>
+                                    </div> *@
+                                    <div class="d-flex gap-10 mt-10">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>
+                                            @item.Address
+                                        </span>
+                                    </div>
+                                    <div class="d-flex gap-10 mt-10 com-des">
+                                        <i class="fa-solid fa-square-phone"></i>
+                                        <span>Điện thoại: @item.Mobile</span>
+                                        <span>/ Email: @item.Email</span>
+                                        <span>
+                                            / Website:
+                                            <a class="text-12 text-blue" href="https://sgogroup.com.vn/">https://sgogroup.com.vn/</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="action">
+                                <div class="dashboard_property_list_footer1">
+                                    <a href="@Url.Action("StructureCompany", "Company", new { area = "Partner", IdCompany =item.Id})" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Thêm phòng ban">
+                                        <i class="fa-solid fa-circle-plus"></i>
+                                    </a>
+                                    <a href="@Url.Action("AddCompany", "Company", new { area = "Partner", IdCty =item.Id})" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Sửa"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="@Url.Action("Index" , "AboutUs", new { area =""})" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Xem"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Xóa"><i class="fa-solid fa-xmark"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="modal-divider"></tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.localStorage.setItem("menu-active", "Company-item");
+</script>
+

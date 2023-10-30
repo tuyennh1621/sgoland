@@ -1,0 +1,25 @@
+﻿@using NhaDat24h.Common.Configuration;
+@using NhaDat24h.DataDto.Video
+@model ListByTypeVideoModel;
+@foreach (var tabvideo in Model.PlayList)
+{
+    <div class="row mb-10 mt-10">
+        <div class="col-5">
+            <div class="relate-video">
+                <a onclick="playvideoinModel(@tabvideo.Id)"><img src="https://cdn.realtech.com.vn/@tabvideo.UrlImage" alt="Logo"></a>
+            </div>
+        </div>
+        <div class="col-7">
+            <div class="relate-video-title text-white">
+                @tabvideo.Title
+            </div>
+            <div class="relate-video-user text-white text-12">
+                @tabvideo.FullName
+            </div>
+            <div class="relate-video-date text-12 text-white">
+                <i class="fa-regular fa-clock"></i>
+                @AppConfigs.replaceDate(Convert.ToDateTime(tabvideo.LastUpdate))
+            </div>
+        </div>
+    </div>
+}

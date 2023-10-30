@@ -1,0 +1,131 @@
+﻿@using NhaDat24h.DataDto.Video;
+@model ListVideoEdu;
+
+
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    .modal-content iframe {
+        margin: 0 auto;
+        display: block;
+    }
+</style>
+
+
+<div class="list-partner23">
+    <div class="table-user-primary" id="MainDataSection">
+        @await Html.PartialAsync("~/Areas/Partner/Views/Video/ListvideoeduPartial.cshtml", Model)
+    </div>
+</div>
+
+
+<div class="modal fade" data-bs-theme="dark" id="mainModelPlayVideo" tabindex="-1" aria-labelledby="watch_video" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="bodyModelVideos">
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    window.localStorage.setItem("menu-active", "videoedu-item");
+</script>
+
+<script>
+
+
+
+    function showModelVideo(id) {
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("showPlayModelVideos", "Video")",
+            data: {
+                IDVideos: id
+            },
+            cache: false,
+            async: true,
+            beforeSend: function () {
+                $('.preloader').show();
+            },
+            success: function (data) {
+                $('.preloader').hide();
+                $('#bodyModelVideos').html(data);
+                $('#mainModelPlayVideo').modal('show');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    function GetListVideoByType(_idType) {
+        debugger
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetListVideoByType", "Video")",
+            data: {
+                IdType: _idType
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $('#Tab_' + _idType).html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    function SubmitSearchVideo(_pageIndex, _pageSize) {
+        debugger
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Listvideoedu", "Video")",
+            data: {
+                pageSize: _pageSize,
+                pageIndex: _pageIndex
+            },
+            cache: false,
+            async: true,
+            beforeSend: function () {
+                $('.preloader').show();
+            },
+            success: function (data) {
+                $('.preloader').hide();
+                $('#MainDataSection').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+</script>
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        var url = $("#watch_video_modal").attr('src');
+
+        $("#watch_video").on('hide.bs.modal', function () {
+            $("#watch_video_modal").attr('src', '');
+        });
+
+        $("#watch_video").on('show.bs.modal', function () {
+            $("#watch_video_modal").attr('src', url);
+        });
+    });
+</script>*@
+

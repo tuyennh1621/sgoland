@@ -1,0 +1,41 @@
+﻿@using NhaDat24h.DataDto.RealEstates;
+@{
+    var ExtensionsIMG = new string[] { ".jpg", ".png", ".jpeg" };
+    Layout = null;
+}
+@model List<DocumentDto>;
+@if (Model!=null && Model.Count > 0)
+{
+    <div @* style="border-bottom: 1px #ebebeb solid; padding-bottom:10px;" *@>
+        @foreach (var item in Model)
+        {
+            <div class="mt-10">
+                <ul>
+                    <li class="linkbds d-flex align-items-center gap-10 mb-10">
+                        @if (ExtensionsIMG.Contains(@item.FileType))
+                        {
+                            <img style="width:40px; height:40px; object-fit:cover; border-radius:5px;" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=50,height=50,quality=80/@item.Url" alt="" />
+                            <div class="table-file-234">
+                                <a title="@item.Name" href="/viewimage?a=https://cdn.realtech.com.vn/@item.Url">@item.Name</a>
+                                <span class="text-12 color-gray">
+                                    - File size: @item.strFileSize | <button onclick="copyContent('https://cdn.realtech.com.vn/@item.Url')" class="bg-none bd-none"><i class="far fa-copy"></i> Copy link </button>
+                                </span>
+                            </div>
+                        }
+                        else
+                        {
+                            <i id="icon_list_modal" class="fa fa-file-@item.FileType?.Replace(".","")"></i>
+                            <div class="table-file-234">
+                                <a title="@item.Name" href="/viewiframe?a=https://cdn.realtech.com.vn/@item.Url">@item.Name</a>
+                                <span class="text-12 color-gray">
+                                    - File size: @item.strFileSize | <button onclick="copyContent('https://cdn.realtech.com.vn/@item.Url')" class="bg-none bd-none"><i class="far fa-copy"></i> Copy link </button>
+                                </span>
+                            </div>
+                        }
+                        
+                    </li>
+                </ul>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,42 @@
+﻿@using NhaDat24h.DataDto.Users;
+@model List<UserSearchOutputDto>;
+
+
+@if (Model == null || Model.Count==0)
+{
+    <div class="modal-body">
+        <h5>Tài khoản chưa giới thiệu được ai.</h5>
+    </div>
+}
+else
+{
+    <table class="property-table-wrap table-2">
+        <tbody>
+            <tr style="white-space: nowrap;">
+                <th>ID</th>
+                <th>Ảnh đại diện</th>
+                <th>Họ và tên</th>
+                <th>Số điện thoại</th>
+            </tr>
+            <!-- Item #1 -->
+            @foreach (var item in Model)
+            {
+                <tr style="white-space: nowrap;">
+                    <td>@item.Id</td>
+                    <td class="dashboard_propert_wrapper">
+                        <img src="https://cdn.realtech.com.vn/@item.Avatar" alt="">
+                    </td>
+                    <td>
+                        <div class="title">
+                            <h5><a href="#">@item.FullName</a></h5>
+                        </div>
+                    </td>
+                    <td>@item.Mobile</td>
+                </tr>
+                <tr class="modal-divider"></tr>
+            }
+
+        </tbody>
+    </table>
+
+}

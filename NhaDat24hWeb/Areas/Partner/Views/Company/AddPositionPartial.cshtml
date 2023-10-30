@@ -1,0 +1,44 @@
+﻿@using NhaDat24h.DataDto.Company
+@model StructurePositionDto;
+
+<div class="row">
+    <div class="col-xxl-12 col-12">
+        <form id="addnewlinkbanghang">
+            <div class="d-flex flex-column gap-10">
+                <label class="mb-0">Tên vị trí</label>
+                <select class="form-select select2" id="idposition">
+                        <option></option>
+                    @foreach(var position in Model.ListPosition)
+                    {
+                        <option value="@position.Id">@position.Name</option>
+                    }
+                </select>
+                @*<input id="positionname" value="@Model.Description" class="form-control select2" type="text" placeholder="Tên vị trí" required />*@
+                <a onclick="AddPositionDep(@Model.IdDepartment)" class="border-none primary-bg text-white round-5 p-10 w-30">
+                    <i class="fas fa-plus-circle"></i>
+                    Thêm vị trí
+                </a>
+            </div>
+        </form>
+        <div id="addposition">
+            <h5 class="text-bold mt-20">Danh sách vị trí trong phòng ban</h5>
+            @foreach (var positiondep in Model.ListPositionExiting)
+            {
+                <div class="d-flex flex-column gap-10 ">
+                    <div class="d-flex align-items-center justify-between">
+                        <div class="d-flex gap-10 align-items-center">
+                            <i class="fas fa-balance-scale"></i>
+                            <span>ID: @positiondep.Id</span>
+                        </div>
+                        <div data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Xóa vị trí">
+                            <button value="Xóa" onclick="DeletePositionDep(@positiondep.Id)" class="border-none bg-none btn-action-hover color-red">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="text-bold" id="nameposition-@positiondep.Id">@positiondep.Description</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>

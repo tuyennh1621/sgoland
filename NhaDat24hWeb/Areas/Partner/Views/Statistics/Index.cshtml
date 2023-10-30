@@ -1,0 +1,393 @@
+﻿@using NhaDat24h.DataDto.Company
+@using NhaDat24h.DataDto.Ctv
+@using NhaDat24h.DataDto.Statistics
+@model StatisticDto;
+@{
+
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-content dashboard-content-0">
+    <h4 class="text-bold text-center mb-20 f-30">Báo cáo B.I (Business Intelligence Report)</h4>
+    <div class="indexStatics">
+        <div class="">
+            <div class="row search-box align-items-end">
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-12 mb-10">
+                    <label class="text-bold mb-10">Đơn vị</label>
+                    <select class="form-select select2" id="IdCompany">
+                        @if(Model.ListCompany.Count()>4)
+                        {
+                            <option selected disabled value="">Chọn</option>
+                            <option value="0">Tất cả Sgo Group</option>
+                        }
+                        @foreach (var company in Model.ListCompany)
+                        {
+                            <option value="@company.Id">@company.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-12 mb-10">
+                    <label class="text-bold mb-10">Từ ngày</label>
+                    <input type="date" id="startdate" name="StartDate" value="@Model.HrReport.StartDate.ToString("yyyy-MM-dd")" class="form-control" placeholder="Ngày bắt đầu">
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-12 mb-10">
+                    <label class="text-bold mb-10">Đến ngày</label>
+                    <input type="date" id="enddate" name="EndDate" class="form-control" value="@Model.HrReport.EndDate.ToString("yyyy-MM-dd")" placeholder="Ngày kết thúc">
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-12 mb-10">
+                    <label></label>
+                    <button class="primary-bg p-10 text-white round-5" href="#" onclick="SubmitParam()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Tìm kiếm
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="statisticData">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Statistics/StatisticPartial.cshtml", Model)
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+        function binChartVolatilityByMonth(){
+
+            var ctx_lineChart_VolatilityByMonth = document.getElementById("divlineChart_VolatilityByMonth")
+
+            var _xValuesforlineChart_VolatilityByMonth = [];
+            var _y_xValuesforlineChart_VolatilityByMonthValuesIn = [];
+            var _y_xValuesforlineChart_VolatilityByMonthValuesOut = [];
+
+            _xValuesforlineChart_VolatilityByMonth = ctx_lineChart_VolatilityByMonth.dataset.key.split(',');
+            _y_xValuesforlineChart_VolatilityByMonthValuesIn = ctx_lineChart_VolatilityByMonth.dataset.valuein.split(',');
+            _y_xValuesforlineChart_VolatilityByMonthValuesOut = ctx_lineChart_VolatilityByMonth.dataset.valueout.split(',');
+
+
+            const data_lineChart_VolatilityByMonth = {
+                labels: _xValuesforlineChart_VolatilityByMonth,
+                datasets: [
+                    {
+                        label: "Tiếp nhận",
+                        data: _y_xValuesforlineChart_VolatilityByMonthValuesIn,
+                        backgroundColor: "#016938",
+                        borderColor: "#016938",
+                    },
+                    {
+                        label: "Nghỉ việc",
+                        data: _y_xValuesforlineChart_VolatilityByMonthValuesOut,
+                        backgroundColor: "#F2B311",
+                        borderColor: "#F2B311",
+                    }
+                ]
+            };
+
+            const config_lineChart_VolatilityByMonth = {
+                type: 'line',
+                data: data_lineChart_VolatilityByMonth,
+                options: {
+                    barValueSpacing: 20,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                            }
+                        }]
+                    }
+                }
+            };
+
+            const lineChart = new Chart(
+                document.getElementById("divlineChart_VolatilityByMonth"),
+                config_lineChart_VolatilityByMonth
+            );
+
+        }
+        function binChartRegiterByMonth() {
+
+            var ctx_lineChart_RegiterByMonth = document.getElementById("divlineChart_RegiterByMonth")
+
+            var _xValuesforlineChart_RegiterByMonth = [];
+            var _y_xValuesforlineChart_RegiterByMonthValuesRegister = [];
+            var _y_xValuesforlineChart_RegiterByMonthValuesAccepted = [];
+            var _y_xValuesforlineChart_RegiterByMonthValuesReject = [];
+
+
+            _xValuesforlineChart_RegiterByMonth = ctx_lineChart_RegiterByMonth.dataset.key.split(',');
+            _y_xValuesforlineChart_RegiterByMonthValuesRegister = ctx_lineChart_RegiterByMonth.dataset.valueregister.split(',');
+            _y_xValuesforlineChart_RegiterByMonthValuesAccepted = ctx_lineChart_RegiterByMonth.dataset.valueaccepted.split(',');
+            _y_xValuesforlineChart_RegiterByMonthValuesReject = ctx_lineChart_RegiterByMonth.dataset.valuereject.split(',');
+
+
+
+            const data_lineChart_RegiterByMonth = {
+                labels: _xValuesforlineChart_RegiterByMonth,
+                datasets: [
+                    {
+                        label: "Đăng kí",
+                        data: _y_xValuesforlineChart_RegiterByMonthValuesRegister,
+                        backgroundColor: "#0d6efd",
+                        borderColor: "#0d6efd",
+                    },
+                    {
+                        label: "Duyệt",
+                        data: _y_xValuesforlineChart_RegiterByMonthValuesAccepted,
+                        backgroundColor: "#016938",
+                        borderColor: "#016938",
+                    },
+                    {
+                        label: "Không duyệt",
+                        data: _y_xValuesforlineChart_RegiterByMonthValuesReject,
+                        backgroundColor: "#F2B311",
+                        borderColor: "#F2B311",
+                    }
+                ]
+            };
+
+            const config_lineChart_RegiterByMonth = {
+                type: 'bar',
+                data: data_lineChart_RegiterByMonth,
+                options: {
+                    barValueSpacing: 20,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                            }
+                        }]
+                    }
+                }
+            };
+
+            const lineChart = new Chart(
+                document.getElementById("divlineChart_RegiterByMonth"),
+                config_lineChart_RegiterByMonth
+            );
+
+        }
+        function binChartTransactionCountByMonth() {
+
+            var ctx_lineChart_TransactionCountByMonth = document.getElementById("divlineChart_TransactionCountByMonth")
+
+            var _xValuesforlineChart_TransactionCountByMonth = [];
+            var _y_xValuesforlineChart_TransactionCountByMonthValuesCount = [];
+
+
+            _xValuesforlineChart_TransactionCountByMonth = ctx_lineChart_TransactionCountByMonth.dataset.key.split(',');
+            _y_xValuesforlineChart_TransactionCountByMonthValuesCount = ctx_lineChart_TransactionCountByMonth.dataset.valuecount.split(',');
+
+
+
+            const data_lineChart_TransactionCountByMonth = {
+                labels: _xValuesforlineChart_TransactionCountByMonth,
+                datasets: [
+                    {
+                        label: "Tổng đơn",
+                        data: _y_xValuesforlineChart_TransactionCountByMonthValuesCount,
+                        backgroundColor: "#016938",
+                        borderColor: "#016938",
+                    }
+                ]
+            };
+
+            const config_lineChart_TransactionCountByMonth = {
+                type: 'bar',
+                data: data_lineChart_TransactionCountByMonth,
+                options: {
+                    barValueSpacing: 20,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                            }
+                        }]
+                    }
+                }
+            };
+
+            const lineChart = new Chart(
+                document.getElementById("divlineChart_TransactionCountByMonth"),
+                config_lineChart_TransactionCountByMonth
+            );
+
+        }
+        function binChartTransactionMoneyByMonth() {
+
+            var ctx_lineChart_TransactionMoneyByMonth = document.getElementById("divlineChart_TransactionMoneyByMonth")
+
+            var _xValuesforlineChart_TransactionMoneyByMonth = [];
+            var _y_xValuesforlineChart_TransactionMoneyByMonthValuesMoney = [];
+
+
+            _xValuesforlineChart_TransactionMoneyByMonth = ctx_lineChart_TransactionMoneyByMonth.dataset.key.split(',');
+            _y_xValuesforlineChart_TransactionMoneyByMonthValuesMoney = ctx_lineChart_TransactionMoneyByMonth.dataset.valuemoney.split(',');
+
+
+
+            const data_lineChart_TransactionMoneyByMonth = {
+                labels: _xValuesforlineChart_TransactionMoneyByMonth,
+                datasets: [
+                    {
+                        label: "Tổng tiền",
+                        data: _y_xValuesforlineChart_TransactionMoneyByMonthValuesMoney,
+                        backgroundColor: "#F2B311",
+                        borderColor: "#F2B311",
+                    }
+                ]
+            };
+
+            const config_lineChart_TransactionMoneyByMonth = {
+                type: 'bar',
+                data: data_lineChart_TransactionMoneyByMonth,
+                options: {
+                    barValueSpacing: 20,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                            }
+                        }]
+                    }
+                }
+            };
+
+            const lineChart = new Chart(
+                document.getElementById("divlineChart_TransactionMoneyByMonth"),
+                config_lineChart_TransactionMoneyByMonth
+            );
+
+        }
+
+        binChartVolatilityByMonth();
+        binChartRegiterByMonth();
+        binChartTransactionCountByMonth();
+        binChartTransactionMoneyByMonth();
+        function SubmitParam() {
+            var company = document.getElementById("IdCompany").value;
+            var startdate = document.getElementById("startdate").value;
+            var enddate = document.getElementById("enddate").value;
+
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("SearchStatistics", "Statistics")",
+                data: {
+                    IdCompany: company,
+                    StartDate: startdate,
+                    EndDate: enddate
+                },
+                cache: false,
+                async: true,
+                beforeSend: function () {
+                    $('.preloader').show();
+                },
+                success: function (data) {
+                    $('.preloader').hide();
+                    $('#statisticData').html(data);
+
+                    binChartVolatilityByMonth();
+                    binChartRegiterByMonth();
+                    binChartTransactionCountByMonth();
+                    binChartTransactionMoneyByMonth();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+
+        //Setup
+        const data = {
+            labels: ["3/2023", "4/2023", "5/2023", "6/2023", "7/2023", "8/2023"],
+            datasets: [
+                {
+                    label: "Đăng ký",
+                    backgroundColor: "blue",
+                    data: [3, 7, 4, 5, 6, 9]
+                },
+                {
+                    label: "Duyệt",
+                    backgroundColor: "green",
+                    data: [4, 3, 5, 7, 9, 8]
+                },
+                {
+                    label: "Không duyệt",
+                    backgroundColor: "red",
+                    data: [7, 2, 6, 2, 3, 5]
+                }
+            ]
+        };
+
+      
+        const data3 = {
+            labels: ["3/2023", "4/2023", "5/2023", "6/2023", "7/2023", "8/2023"],
+            datasets: [
+                {
+                    label: "Tổng số lượng giao dịch",
+                    data: [3, 7, 4, 5, 6, 9]
+                }
+            ]
+        };
+        const data4 = {
+            labels: ["1/2023", "2/2023", "3/2023", "4/2023", "5/2023", "6/2023", "7/2023", "8/2023", "9/2023", "10/2023", "11/2023", "12/2023"],
+            datasets: [
+                {
+                    label: "Tổng số lượng giao dịch",
+                    data: [3, 7, 4, 5, 6, 9, 3, 7, 4, 5, 6, 9]
+                }
+            ]
+        };
+        // Config
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                barValueSpacing: 20,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                        }
+                    }]
+                }
+            }
+        };
+
+        // Render init block
+        const myChart = new Chart (
+            document.getElementById("myChart"),
+            config
+        );
+
+        // Config
+     
+        // Config
+        const config3 = {
+            type: 'bar',
+            data: data4,
+            options: {
+                barValueSpacing: 20,
+                backgroundColor: "green",
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                        }
+                    }]
+                }
+            }
+        };
+
+
+
+        // Render line chart
+        const lineChart3 = new Chart(
+            document.getElementById("lineChart3"),
+            config3
+        );
+
+
+    </script>
+<script>
+    window.localStorage.setItem("menu-active", "Statistics-item");
+</script>

@@ -1,0 +1,504 @@
+﻿﻿@using NhaDat24h.DataDto.RealEstates;
+@model SearchForm
+
+<div class="d-flex gap-10 s-land">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-6 se-land-pr">
+        <div class="col form-group">
+            <input class="form-control select2" type="text" id="Searchkey" value="@Model.SearchKey" placeholder="Từ khóa">
+        </div>
+        <div class="col form-group location">
+            <input class="bg-none form-control select2 justify-between d-flex align-items-center position-relative"
+                   data-bs-toggle="collapse" data-bs-target="#btn-show" aria-expanded="false" name="areaname_fill" id="areaname_fill"
+                   value="Khu vực">
+            <div class="position-absolute arr-cus">
+                <i class="fas fa-caret-down text-12"></i>
+            </div>
+            <div class="collapse" id="btn-show">
+                <div class="card card-body card-custom">
+                    <ul class="bg-white p-0">
+                        <li>
+                            <div class="form-group">
+                                <div class="simple-input">
+                                    <select class="form-select select2" onchange="changeTinhThanh(this)" id="IdProvince" name="IdProvince">
+                                        <option value="">&nbsp;</option>
+                                        @foreach (var province in Model.Provinces)
+                                        {
+                                            <option value="@province.IdTt">@province.TenTt</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-group">
+                                <div class="simple-input">
+                                    <select class="select2-multiple2" id="district" onchange="changeQuanHuyen(this)" name="IdDistrict" multiple>
+                                    </select>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-group">
+                                <div class="simple-input">
+                                    <select class="select2-multiple2" id="adward" name="IdWard" multiple>
+                                    </select>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-group">
+                                <input type="text" name="Address" id="address" placeholder="Tên đường phố, phường xã, quận huyện, tỉnh thành" class="form-control">
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <button class="primary-bg text-white round-5" onclick="closecollapse('btn-show')">Áp dụng</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col form-group">
+            <div class="simple-input">
+                @if (Model.Style == 1)
+                {
+                    <select class="form-select select2" name="IdType" id="IdType">
+                        <option value="">&nbsp;</option>
+                        <option value="1">Căn hộ chung cư</option>
+                        <option value="2">Nhà biệt thự, liền kề</option>
+                        <option value="20">Nhà hàng, khách sạn, resort</option>
+                        <option value="21">ShopHouse</option>
+                        <option value="22">Condotel</option>
+                        <option value="24">Officetel</option>
+                    </select>
+                }
+                else
+                {
+                    <select class="form-select select2" name="IdType" id="IdType">
+                        <option value="">&nbsp;</option>
+                        <option value="1">Căn hộ chung cư</option>
+                        <option value="26">Chung cư mini (BĐS dòng tiền)</option>
+                        <option value="5">Nhà riêng</option>
+                        <option value="2">Nhà biệt thự, Liền kề</option>
+                        <option value="10">Nhà mặt phố</option>
+                        <option value="21">Shophouse, Nhà phố thương mại</option>
+                        <option value="6">Đất nền dự án</option>
+                        <option value="8">Bán đất</option>
+                        <option value="16">Trang trại, Khu nghỉ dưỡng</option>
+                        <option value="22">Condotel</option>
+                        <option value="17">Kho nhà xưởng</option>
+                        <option value="99">Nhà tập thể</option>
+                    </select>
+                }
+            </div>
+        </div>
+        <div class="col form-group">
+            <div class="simple-input">
+                <select class="form-select select2" name="Status" id="IdStatus">
+                    <option value="">&nbsp;</option>
+                    <option value="0">Đang cập nhật</option>
+                    <option value="20">Đã duyệt</option>
+                    <option value="15">Chưa duyệt</option>
+                    <option value="30">Đã khóa</option>
+                </select>
+            </div>
+        </div>
+        <div class="col form-group">
+            <div class="dropdown dropdown222 dropdown-select-price">
+                <button id="btn-select-price" class="bg-none dropdown-toggle d-flex justify-between align-items-center p-10 text-14 color-gray" data-bs-toggle="dropdown" aria-expanded="false">
+                    Mức giá
+                </button>
+                <ul class="dropdown-menu dropdown-menu-white p-10 range-slider">
+                    <li>
+                        <div class="d-flex gap-10 align-items-baseline">
+                            <input id="PriceFrom" class="form-control" oninput="TextPrice()" type="text" placeholder="Từ">
+                            <i class="fas fa-long-arrow-alt-right"></i>
+                            <input id="PriceTo" class="form-control" oninput="TextPrice()" type="text" placeholder="Đến">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="range-group">
+                            <input class="range-input" value="0" min="0" max="60000" step="1000" id="rangFrom" name="PriceMin" type="range" onmousemove="changePrice()" />
+                            <input class="range-input" value="60000" min="0" max="60000" step="1000" id="rangTo" name="PriceMax" type="range" onmousemove="changePrice()" />
+                        </div>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" data-from="Tất cả" data-to="Tất cả" href="#">Tất cả mức giá</a></li>
+                    <li><a class="dropdown-item" data-from="0" data-to="500" href="#">Dưới 500 triệu</a></li>
+                    <li><a class="dropdown-item" data-from="500" data-to="800" href="#">500 - 800 triệu</a></li>
+                    <li><a class="dropdown-item" data-from="800" data-to="1000" href="#">800 triệu - 1 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="1000" data-to="2000" href="#">1 tỷ - 2 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="2000" data-to="3000" href="#">2 tỷ - 3 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="3000" data-to="5000" href="#">3 tỷ - 5 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="5000" data-to="7000" href="#">5 tỷ - 7 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="7000" data-to="10000" href="#">7 tỷ - 10 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="10000" data-to="20000" href="#">10 tỷ - 20 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="30000" data-to="40000" href="#">30 tỷ - 40 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="40000" data-to="60000" href="#">40 tỷ - 60 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="60000" data-to="500000" href="#">Trên 60 tỷ</a></li>
+                    <li><a class="dropdown-item" data-from="Thỏa thuận" data-to="Thỏa thuận" href="#">Thỏa thuận</a></li>
+                    <li>
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <button onclick="RefreshPrice()" class="d-flex align-items-center">
+                                    <i class="fas fa-sync"></i>
+                                    Đặt lại
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button class="primary-bg text-white">
+                                    Áp dụng
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col form-group">
+            <div class="dropdown dropdown222 dropdown-select-acreage">
+                <button id="btn-select-acreage" class="bg-none dropdown-toggle d-flex justify-between align-items-center p-10 text-14 color-gray" data-bs-toggle="dropdown" aria-expanded="false">
+                    Diện tích
+                </button>
+                <ul class="dropdown-menu dropdown-menu-white p-10 range-slider">
+                    <li>
+                        <div class="d-flex gap-10 align-items-baseline">
+                            <input id="AcreageFrom" class="form-control" oninput="TextAcreage()" type="text" placeholder="Từ">
+                            <i class="fas fa-long-arrow-alt-right"></i>
+                            <input id="AcreageTo" class="form-control" oninput="TextAcreage()" type="text" placeholder="Đến">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="range-group">
+                            <input class="range-input" value="0" min="0" max="500" step="10" id="rangeTo" name="AcreageMin" type="range" onmousemove="changeAcreage()" />
+                            <input class="range-input" value="500" min="0" max="500" step="10" id="rangeFrom" name="AcreageMax" type="range" onmousemove="changeAcreage()" />
+                        </div>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" data-from="All" data-to="All" href="#">Tất cả diện tích</a></li>
+                    <li><a class="dropdown-item" data-from="0" data-to="30" href="#">Dưới 30 m2</a></li>
+                    <li><a class="dropdown-item" data-from="30" data-to="50" href="#">30 - 50 m2</a></li>
+                    <li><a class="dropdown-item" data-from="50" data-to="80" href="#">50 - 80 m2</a></li>
+                    <li><a class="dropdown-item" data-from="80" data-to="100" href="#">80 - 100 m2</a></li>
+                    <li><a class="dropdown-item" data-from="100" data-to="150" href="#">100 - 150 m2</a></li>
+                    <li><a class="dropdown-item" data-from="150" data-to="200" href="#">150 - 200 m2</a></li>
+                    <li><a class="dropdown-item" data-from="200" data-to="250" href="#">200 - 250 m2</a></li>
+                    <li><a class="dropdown-item" data-from="250" data-to="300" href="#">250 - 300 m2</a></li>
+                    <li><a class="dropdown-item" data-from="300" data-to="500" href="#">300 - 500 m2</a></li>
+                    <li><a class="dropdown-item" data-from="500" data-to="..." href="#">Trên 500 m2</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <button onclick="RefreshAcreage()" class="d-flex align-items-center">
+                                    <i class="fas fa-sync"></i>
+                                    Đặt lại
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button class="primary-bg text-white">
+                                    Áp dụng
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <button class="primary-bg p-10 text-white round-5 btn-search-form-land" onclick="SubmitSearchRE('10', '1',@Model.Style)">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <div class="hidden-lg-bt">Tìm kiếm</div>
+    </button>
+</div>
+
+
+<script>
+    jQuery(function ($) {
+        $.fn.select2.amd.require([
+            'select2/selection/single',
+            'select2/selection/placeholder',
+            'select2/selection/allowClear',
+            'select2/dropdown',
+            'select2/dropdown/search',
+            'select2/dropdown/attachBody',
+            'select2/utils'
+        ], function (SingleSelection, Placeholder, AllowClear, Dropdown, DropdownSearch, AttachBody, Utils) {
+
+            var SelectionAdapter = Utils.Decorate(
+                SingleSelection,
+                Placeholder
+            );
+
+            SelectionAdapter = Utils.Decorate(
+                SelectionAdapter,
+                AllowClear
+            );
+
+            var DropdownAdapter = Utils.Decorate(
+                Utils.Decorate(
+                    Dropdown,
+                    DropdownSearch
+                ),
+                AttachBody
+            );
+
+            var MultisecQuan = $('#district')
+            var MultisecPhuong = $('#adward')
+
+            binMultiseclected(MultisecQuan, 'Chọn Quận Huyện');
+            binMultiseclected(MultisecPhuong, 'Chọn Phường Xã');
+
+            function binMultiseclected(base_element, place) {
+                $(base_element).select2({
+                    placeholder: place,
+                    selectionAdapter: SelectionAdapter,
+                    dropdownAdapter: DropdownAdapter,
+                    allowClear: true,
+                    templateResult: function (data) {
+
+                        if (!data.id) { return data.text; }
+
+                        var $res = $('<div></div>');
+
+                        $res.text(data.text);
+                        $res.addClass('wrap');
+
+                        return $res;
+                    },
+
+                    templateSelection: function (data) {
+                        if (!data.id) { return data.text; }
+                        var multi_select = $(base_element).find('option:selected').text();
+                        console.log(multi_select);
+                        return multi_select;
+                    }
+
+                })
+            }
+
+
+        });
+
+    });
+</script>
+<script>
+    var UrlrequestCombodata = '@Url.Action("binDropdownAjax","Users", new { area="Partner"})';
+
+    function SubmitSearchRE(_pageSize, _pageIndex, _style) {
+        debugger
+        var IdProvince = document.getElementById("IdProvince").value;
+        var IdDistrict = $("#district").val();
+        var IdWards = $("#adward").val();
+        var Address = document.getElementById("address").value;
+        var IdType = document.getElementById("IdType").value;
+        var Searchkey = document.getElementById("Searchkey").value;
+        var Status = document.getElementById("IdStatus").value;
+        let MinPrice = null;
+        if ($.isNumeric($("#PriceFrom").val())) {
+            MinPrice = $("#PriceFrom").val();
+        };
+
+        let MaxPrice = null;
+        if ($.isNumeric($("#PriceTo").val())) {
+            MaxPrice = $("#PriceTo").val();
+        };
+
+        let MinArg = null;
+        if ($.isNumeric($("#AcreageFrom").val())) {
+            MinArg = $("#AcreageFrom").val();
+        };
+
+        let MaxArg = null;
+        if ($.isNumeric($("#AcreageTo").val())) {
+            MaxArg = $("#AcreageTo").val();
+        };
+
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("SearchREPj", "Land")",
+            data: {
+                IdProvince: IdProvince,
+                strlistdistrict: IdDistrict ? IdDistrict.join(',') : null,
+                strlistwards: IdWards ? IdWards.join(',') : null,
+                IdType: IdType,
+                Address: Address,
+                Searchkey: Searchkey,
+                IdProvince: IdProvince,
+                pageSize: _pageSize,
+                pageIndex: _pageIndex,
+                Style: _style,
+                MinPrice: MinPrice,
+                MaxPrice: MaxPrice,
+                MinArg: MinArg,
+                MaxArg: MaxArg,
+                Status: Status
+            },
+            // datatype: "json",
+            cache: false,
+            async: true,
+            beforeSend: function () {
+                $('.preloader').show();
+            },
+            success: function (data) {
+                closecollapse('btn-show');
+                $('.preloader').hide();
+                $('#ListREData').html(data);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+
+    function changeTinhThanh(selectOS) {
+        var tinh = $('#IdProvince :selected').text();
+        var _IdProvince = $('#IdProvince').val();
+        // console.log(UrlrequestCombodata);
+        $.ajax({
+            type: "GET",
+            url: UrlrequestCombodata,
+            data: { obj: _IdProvince, style: 3 },
+            cache: false,
+            async: true,
+            success: function (data) {
+                $('#district').html(data);
+                if (_IdProvince != "") {
+                    $('#areaname_fill').val(tinh);
+                } else {
+                    $('#areaname_fill').val("Khu vực");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                // hideSearchLoader();
+                alert(xhr + ajaxOptions + thrownError);
+            }
+        })
+    }
+
+    function changeQuanHuyen(selectOS) {
+        var _Iddistrict = $('#district').val();
+        if (_Iddistrict) {
+
+            $.ajax({
+                type: "GET",
+                url: UrlrequestCombodata,
+                data: { obj: _Iddistrict.join(','), style: 7 },
+                cache: false,
+                async: true,
+                success: function (data) {
+                    $('#adward').html(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    // hideSearchLoader();
+                    alert(xhr + ajaxOptions + thrownError);
+                }
+            })
+        }
+
+    }
+
+    $('.dropdown-select-price a.dropdown-item').on('click', function (e) {
+        e.preventDefault()
+        let from = $(this).attr('data-from');
+        let to = $(this).attr('data-to');
+        $("#PriceFrom").val(from);
+        $("#PriceTo").val(to);
+        if (from >= 1000 && to >= 1000) {
+            $("#btn-select-price").html((from / 1000) + " Tỷ - " + (to / 1000) + " Tỷ");
+        } else if (from <= 1000 && to >= 1000) {
+            $("#btn-select-price").html(from + " Triệu - " + (to / 1000) + " Tỷ");
+        } else if (from >= 1000 && to <= 1000) {
+            $("#btn-select-price").html((from / 1000) + " Tỷ - " + to + " Triệu");
+        } else if (from <= 1000 && to <= 1000) {
+            $("#btn-select-price").html(from + " Triệu - " + to + " Triệu");
+        } else {
+            $("#btn-select-price").html(from + " - " + to);
+        }
+    });
+    $('.dropdown-select-acreage a.dropdown-item').on('click', function (e) {
+        e.preventDefault()
+        let from = $(this).attr('data-from');
+        let to = $(this).attr('data-to');
+        $("#AcreageFrom").val(from);
+        $("#AcreageTo").val(to);
+        $("#btn-select-acreage").html(from + " - " + to);
+    });
+
+    const changePrice = () => {
+        let max = parseInt($("#rangTo").val());
+        let min = parseInt($("#rangFrom").val());
+        if (max < min) {
+            min = parseInt($("#rangTo").val())
+            max = parseInt($("#rangFrom").val())
+        }
+        $("#PriceTo").val(max);
+        $("#PriceFrom").val(min);
+        let html = ''
+        if (min >= 1000) {
+            html += min / 1000 + " Tỷ - "
+        } else {
+            html += min + " Triệu - "
+        }
+        if (max >= 1000) {
+            html += max / 1000 + " Tỷ "
+        } else {
+            html += max + " Triệu "
+        }
+        $("#btn-select-price").html(html)
+    };
+
+    const changeAcreage = () => {
+        let max = parseInt($("#rangeTo").val());
+        let min = parseInt($("#rangeFrom").val());
+        if (max < min) {
+            min = parseInt($("#rangeTo").val())
+            max = parseInt($("#rangeFrom").val())
+        }
+        $("#AcreageTo").val(max);
+        $("#AcreageFrom").val(min);
+        $("#btn-select-acreage").html(min + " - " + max)
+    };
+    function closecollapse(id) {
+        $('#' + id).collapse('hide')
+    }
+
+    function TextPrice() {
+        var _From = $('#PriceFrom').val();
+        var _To = $('#PriceTo').val();
+        if (_From >= 1000 && _To >= 1000) {
+            $("#btn-select-price").html((_From / 1000) + " Tỷ - " + (_To / 1000) + " Tỷ");
+        } else if (_From <= 1000 && _To >= 1000) {
+            $("#btn-select-price").html(_From + " Triệu - " + (_To / 1000) + " Tỷ");
+        } else if (_From >= 1000 && _To <= 1000) {
+            $("#btn-select-price").html((_From / 1000) + " Tỷ - " + _To + " Triệu");
+        } else if (_From <= 1000 && _To <= 1000) {
+            $("#btn-select-price").html(_From + " Triệu - " + _To + " Triệu");
+        }
+    }
+    function TextAcreage() {
+        var _From = $('#AcreageFrom').val();
+        var _To = $('#AcreageTo').val();
+        $("#btn-select-acreage").html(_From + " - " + _To);
+    }
+
+    function RefreshAcreage() {
+        $("#AcreageFrom").val("");
+        $("#AcreageTo").val("");
+        $("#rangeFrom").val(500);
+        $("#rangeTo").val(0);
+        $("#btn-select-acreage").html("Diện tích");
+    }
+
+    function RefreshPrice() {
+        $("#PriceFrom").val("");
+        $("#PriceTo").val("");
+        $("#rangFrom").val(0);
+        $("#rangTo").val(60000);
+        $("#btn-select-price").html("Mức giá");
+    }
+</script>

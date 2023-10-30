@@ -1,0 +1,68 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using NhaDat24h.DataDto.Authen
+@model AuthorityModel;
+
+<div class="modal-header">
+    <h5 class="modal-title">Phân quyền cho ID: @Model.IdCtv</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="d-flex flex-column gap-10 form-approve">
+        <input type="hidden" asp-for="IdCtv" />
+        <div class="d-flex align-items-center gap-10">
+            <select multiple class="form-select" asp-for="listpermissionSelected">
+                <option disabled value="0">Chọn vị trí</option>
+
+                @foreach (var item in Model.ListPermission)
+                {
+                    <option value="@item.Id">@item.Description</option>
+                }
+
+            </select>
+            <label><span class="text-danger f-20">*</span></label>
+        </div>
+        <div class="d-flex align-items-center gap-10">
+            <button class="primary-bg p-10 border-none text-white round-5" style="width:97%;" onclick="Authority()">
+                Duyệt
+            </button>
+            <label><span class="text-danger f-20"></span></label>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(function () {
+
+        $('#listpermissionSelected').select2({
+            placeholder: "Chọn quyền",
+            dropdownParent: $('#authority'),
+            allowClear: true
+        });
+        //$('.select22').select2().on('select2:open', function (e) {
+        //    $('.select2-search__field').attr('placeholder', 'Nhập vào tên công ty');
+        //})
+    });
+    function Authority() {
+        var Url = '@Url.Action("BrowerPermission","Users", new { area="Partner"})';
+        var _ListIDViTri = $('#listpermissionSelected').val();
+        if (_ListIDViTri == '') {
+            //alert('Bạn cần chọn vị trí trước khi duyệt.');
+        }
+        else {
+            var _IdCtv = $('#IdCtv').val();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { listID: _ListIDViTri.join(','), idCTV: _IdCtv },
+                cache: false,
+                async: true,
+                success: function (data) {
+                    swal("Thông báo","Phân quyền thành công","success");
+                    $('.modal').modal('hide');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            })
+        }
+    }
+</script>

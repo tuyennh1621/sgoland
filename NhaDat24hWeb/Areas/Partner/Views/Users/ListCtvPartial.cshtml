@@ -1,0 +1,550 @@
+﻿@using NhaDat24h.DataDto.Users;
+@model ModelListCtv;
+
+@{
+
+
+    int totalPage = (Model != null && Model.ListCtv.Count > 0 && Model.ListCtv.FirstOrDefault().Total > 0) ? ((Model.ListCtv.FirstOrDefault().Total - 1) / Model.PageSize + 1) : 0;
+    int pageNumber = Model.PageIndex;
+    int pageSize = Model.PageSize;
+    int FromIndex = pageNumber == 1 ? 1 : (pageNumber - 1) * pageSize + 1;
+    int totalCount = (Model.ListCtv.Count > 0) ? Model.ListCtv.FirstOrDefault().Total : 0;
+    int EndIndex = pageNumber == totalPage ? totalCount : pageNumber * pageSize;
+}
+<style>
+
+    .statusDepartmentId-999999999999 .select2-selection.select2-selection--single, .statusDepartmentId-1000000000000 .select2-selection.select2-selection--single {
+        background-color: white !important;
+        color: black;
+    }
+</style>
+<div class="d-flex align-items-center mb-10 justify-between us-action-header">
+    <div class="d-flex flex-sm-row align-items-center gap-10">
+        <span>Hiển thị</span>
+        <div class="dropdown dropdown-showpage">
+            <a class="btn dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @pageSize
+            </a>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" onclick="SubmitSearch('10', '1')">10</button></li>
+                <li><button class="dropdown-item" onclick="SubmitSearch('20', '1')">20</button></li>
+                <li><button class="dropdown-item" onclick="SubmitSearch('50', '1')">50</button></li>
+            </ul>
+        </div>
+        <span>bản ghi</span>
+    </div>
+    <div class="export-file-btn2 text-white">
+        <a href="#" onclick="ExportListCtvReportExcell()">
+            <i class="fas fa-file-export"></i>
+            Xuất File
+        </a>
+    </div>
+</div>
+
+<div>
+    <table class="property-table-wrap table-2 table-266">
+        <tbody>
+            <tr style="white-space: nowrap;">
+                <th>Ảnh đại diện</th>
+                <th>Họ và tên</th>
+                <th>Công ty</th>
+                <th>Phòng ban</th>
+                <th>Chức vụ</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model.ListCtv)
+            {
+
+                <!-- Item #1 -->
+                <tr style="white-space: nowrap;">
+                    <td class="dashboard_propert_wrapper" style="width:150px;">
+                        <div class="position-relative text-center" style="width:100px;">
+                            <a class="swipebox" title="@item.FullName" href="https://cdn.realtech.com.vn/@item.Avatar">
+                                <img src="https://cdn.realtech.com.vn/@item.Avatar" id="Avt_@item.Id" alt="">
+                            </a>
+                            <div class="position-absolute status-@item.reIsOnline">
+                                <div class="circle"></div>
+                            </div>
+                            <p class="text-12 color-gray d-flex flex-column">
+                                @if (item.Status == 0)
+                                {
+                                    <label>Đăng ký:</label>
+                                }
+                                else
+                                {
+                                    <label>Đăng nhập:</label>
+                                }
+                                <span>@item.strLastVisited</span>
+                            </p>
+
+                        </div>
+                    </td>
+                    <td class="dashboard_propert_wrapper1 hide">
+                        <a class="swipebox" title="@item.FullName" href="https://cdn.realtech.com.vn/@item.FrontImgId">
+                        </a>
+                    </td>
+                    <td class="dashboard_propert_wrapper2 hide">
+                        <a class="swipebox" title="@item.FullName" href="https://cdn.realtech.com.vn/@item.BackImgId">
+
+                        </a>
+                        <a class="swipebox" title="@item.FullName" href="https://cdn.realtech.com.vn/@item.Avatar2">
+
+                        </a>
+                    </td>
+                    <td style="white-space: nowrap; width:250px; ">
+                        <div class="title">
+                            <h5><a href="#">@item.FullName</a></h5>
+                            <div class="d-flex flex-column">
+                                @* <span class="text-12">Công ty: </span> *@
+                                @*<p class="text-12">Vị trí: @item.Position </p>*@
+                                <span class="text-12">ID: @item.Id</span>
+                                <span class="text-12">Mã giới thiệu: @item.RefId</span>
+
+                                <span class="text-12">Quyền: <span style="color:red">@item.CtvPermission</span> </span>
+                                @if (!string.IsNullOrEmpty(@item.CvUrl))
+                                {
+                                    <a class="text-12" href="/viewiframe?a=https://cdn.realtech.com.vn/@item.CvUrl">
+                                        Xem CV <i class="far fa-eye"></i>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                    <td style="white-space: normal; width:250px; ">
+                        <div class="title">
+                            <ul>
+                                @foreach (var im in item.CompanyName.Distinct())
+                                {
+                                    <li><h5>@im</h5></li>
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                    <td style="white-space:normal;width:250px;">
+                        <div class="title">
+                            <ul>
+                                @foreach (var im in item.DepartmentName.Distinct())
+                                {
+                                    <li><h5>@im</h5></li>
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                    <td style="white-space:normal;width:250px;">
+                        <div class="title">
+                            <ul>
+                                @foreach (var im in item.PositionName.Distinct())
+                                {
+                                    if (im.Split("-").Count() > 2)
+                                    {
+                                        <li><h5>@im.Split("-")[0]</h5></li>
+                                    }
+                                    else
+                                    {
+                                        <li><h5>@im</h5></li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        @if (item.Status < 3)
+                        {
+                            <select class="border-solid btn-rounded p-x-10 p-y-5 status-@item.Status" id="status_@item.Id" name="Status" data-idctv="@item.Id" onchange="ChangeStatus(@item.Id)">
+                                <option selected="@item.Selected(0)" value="0">Chờ Duyệt</option>
+                                <option selected="@item.Selected(1)" value="1">Đã Duyệt</option>
+                                <option selected="@item.Selected(2)" value="2">Đã Khóa</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <span>Đã xóa</span>
+                        }
+
+
+                    </td>
+
+                    <td class="action action333">
+                        <div class="dropdown dropdown33">
+                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="f-30 fas fa-ellipsis-h"></i>
+                            </button>
+                            <ul class="dropdown-menu action_btn">
+                                <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#Modelduyetvitri" onclick="showModelDuyetViTri('@item.Id','@string.Join( ",", item.CompanyId.Distinct())','@string.Join( ",", item.DepartmentId.Distinct())','@string.Join( ",", item.PoDepId.Distinct())')">
+                                        <i class="fa-solid fa-check"></i>
+                                        Duyệt vị trí
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" onclick="ResendMatKhau(@item.Id)">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Gửi lại mật khẩu
+                                    </a>
+                                </li>
+                                @if (Model.isAdmin)
+                                {
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("EditUser", "Users", new { area = "Partner",IdCtv=item.Id})">
+                                            <i class="fa-solid fa-pencil"></i>
+                                            Sửa thông tin thành viên
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view_user_@item.Id">
+                                        <span>
+                                            <i class="fa-solid fa-eye"></i>
+                                        </span>
+                                        Xem nhanh thông tin thành viên
+                                    </a>
+                                </li>
+                                @if (Model.isAdmin)
+                                {
+                                    <li>
+                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete_user" onclick="DeleteCtv(@item.Id)">
+                                            <span>
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </span>
+                                            Xóa thành viên
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#list_partner_user" onclick="ListPartner(@item.Id)">
+                                        <span>
+                                            <i class="fa-solid fa-user"></i>
+                                        </span>
+                                        Xem danh sách các thành viên đã giới thiệu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#authority" onclick="Authority(@item.Id,'@item.FullName')">
+                                        <span>
+                                            <i class="fa-solid fa-user"></i>
+                                        </span>
+                                        Phân quyền tài khoản
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#list_user_statistics">
+                                        <span>
+                                            <i class="fas fa-donate"></i>
+                                        </span>
+                                        Thống kê
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="modal-divider"></tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (Model != null && Model.ListCtv.Count > 0 && Model.ListCtv.FirstOrDefault().Total > 0)
+{
+        <div class="pagintion-table col-lg-12 col-md-12 col-sm-12">
+            <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row">
+                <p class="mb-sm-0">
+                    Hiển thị từ
+                    <span>@FromIndex</span>
+                    đến
+                    <span>@EndIndex</span>
+                    của @Model.ListCtv.FirstOrDefault().Total bản ghi
+                </p>
+                <div class="pagination1">
+                    <ul class="pagination text-center">
+                        <li class="page-item ">
+                            <button class="page-link" onclick="SubmitSearch(@Model.PageSize.ToString(), '1')" aria-label="Previous">
+                                <span><i class="fa-solid fa-arrow-left"></i></span>
+                                <span class="sr-only">Previous</span>
+                            </button>
+                        </li>
+
+                        @for (int i = 1; i <= totalPage; i++)
+                        {
+                            string active = "";
+                            if (i == pageNumber) active = "active";
+                            if (pageNumber <= 3 && i <= 5)
+                            {
+                                <li class="page-item "><button onclick="SubmitSearch(@Model.PageSize.ToString(), @i.ToString())" class="page-link @active"> @i </button></li>
+
+                            }
+                            else if (pageNumber > 3 && i >= pageNumber - 2 && i <= pageNumber + 2)
+                            {
+                                <li class="page-item "><button onclick="SubmitSearch(@Model.PageSize.ToString(), @i.ToString())" class="page-link @active"> @i </button></li>
+
+                            }
+
+                        }
+                        <li class="page-item ">
+                            <button class="page-link" onclick="SubmitSearch(@Model.PageSize.ToString(), @totalPage.ToString())" tabindex="-1" aria-label="Next">
+                                <span><i class="fa-solid fa-arrow-right"></i></span>
+                                <span class="sr-only">Next</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+}
+<div class="modal" tabindex="-1" id="Modelduyetvitri">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="bodyModelduyetvitri">
+        </div>
+    </div>
+</div>
+@foreach (var item in Model.ListCtv)
+{
+    <div class="modal" id="view_user_@item.Id" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin thành viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="AddUser" class="form-simple needs-validation" enctype="multipart/form-data" novalidate>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label>Mã giới thiệu</label>
+                                    <input type="text" value="@item.RefId" asp-for="Refid" class="form-control simple" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label>Họ tên</label>
+                                    <input type="text" asp-for="Fullname" value="@item.FullName" class="form-control simple" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-12">
+                                <div class="form-group">
+                                    <label>Ngày sinh</label>
+                                    <input type="text" value="@item.DateOfBirth" asp-for="DateOfBirth" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label>CMTND/CCCD</label>
+                                    <input type="number" min="0" asp-for="CCCD" class="form-control simple hide-number-arrows" value="@item.NumberId" required disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" value="@item.Email" asp-for="Email" class="form-control simple" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label>Điện thoại</label>
+                                    <input asp-for="Mobile" value="@item.Mobile" type="number" min="0" class="form-control simple hide-number-arrows" required data-msg-number="Số điện thoại chưa hợp lệ" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group select-gender">
+                                    <label>Giới tính</label>
+                                    @if (item.Sex == 1)
+                                    {
+                                        <input value="Nam" class="form-control simple hide-number-arrows" disabled>
+                                    }
+                                    else
+                                    {
+                                        <input value="Nữ" class="form-control simple hide-number-arrows" disabled>
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label>Địa chỉ</label>
+                                    <input type="text" asp-for="Address" value="@item.Address" class="form-control simple" required disabled>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group select-gender">
+                                    <label for="company">Công ty quản lý </label>
+                                    <input asp-for="IdCongty" value="@string.Join(";",item.CompanyName)" class="form-control simple hide-number-arrows" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group select-gender">
+                                    <label for="company">Ngày tham gia </label>
+                                    <input asp-for="DateIn" value="@item.DateIn" class="form-control simple hide-number-arrows" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Link CV</label>
+                                    <div class="form-group btn-upload2" style="height:35px; font-size:14px;">
+                                        <a target="_blank" href="https://cdn.realtech.com.vn/@item.CvUrl">
+                                            @item.CvUrl
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Vị trí</label>
+                                    <textarea style="height:80px" class="form-control simple hide-number-arrows" disabled>@string.Join(";",item.PositionName)</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Giới thiệu</label>
+                                    <textarea style="height:80px" class="form-control simple hide-number-arrows" disabled>@item.GIOITHIEU</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row partner-avatar-parent align-items-center">
+                            <div class="col-xxl-6 col-6">
+                                <div class="partner-avatar form-group">
+                                    <label>Ảnh đại diện</label>
+                                    <div class="d-flex gap-10 align-items-center">
+                                        <img id="img-filesAvatar1" class="upload__img-wrap" src="https://cdn.realtech.com.vn/@item.Avatar">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-6">
+                                <div class="partner-avatar form-group">
+                                    <label>Ảnh chân dung</label>
+                                    <div class="d-flex gap-10 align-items-center">
+                                        <img id="img-filesAvatar2" class="upload__img-wrap" src="https://cdn.realtech.com.vn/@item.Avatar2">
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="col-xxl-12 col-12 note-avatar">
+                        <p>Lưu ý: Ảnh đại diện không vượt quá 200Kb.</p>
+                        </div>*@
+                        </div>
+                        <div class="row">
+                            <div class="col-xxl-6 col-lg-6 col-12">
+                                <div class="partner-id form-group">
+                                    <label>Ảnh CMT/CCCD Mặt trước</label>
+                                    <img id="img-filesCMT1" src="https://cdn.realtech.com.vn/@item.FrontImgId">
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-lg-6 col-12">
+                                <div class="partner-id form-group">
+                                    <label>Ảnh CMT/CCCD Mặt sau</label>
+                                    <img id="img-filesCMT2" src="https://cdn.realtech.com.vn/@item.BackImgId">
+                                </div>
+                            </div>
+                        </div>
+                        @if (item.Status == 0)
+                        {
+                            <p>Vui lòng phê duyệt thành viên hoặc không phê duyệt vui lòng ghi lý do</p>
+                            <div class="form-group mt-10">
+                                <textarea class="form-control" placeholder="Tin nhắn..." id="floatingTextarea2" style="height: 100px"></textarea>
+                            </div>
+                        }
+                    </form>
+                </div>
+                @if (item.Status == 0)
+                {
+                    <div class="modal-footer">
+                        <button type="button" onclick="BtnChangeStatus(@item.Id)" class="btn bg-primary2 text-white">Phê duyệt thành viên</button>
+                        <button type="button" class="btn bg-cancel text-white">Không đồng ý</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="lock_user" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Khóa tài khoản thành viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="AddUser" class="form-simple needs-validation" enctype="multipart/form-data" novalidate>
+                        <p>Vui lòng ghi lý do khóa tài khoản</p>
+                        <div class="form-group mt-10">
+                            <textarea class="form-control" placeholder="Tin nhắn..." id="floatingTextarea2" style="height: 100px"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn bg-danger text-white">Khóa vĩnh viễn</button>
+                    <button type="button" class="btn bg-cancel text-white">Khóa tạm thời</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="list_user_statistics" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thống kê đặt cọc</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="overflow-scroll scroll-bar-1">
+                        <table class="property-table-wrap table-2">
+                            <tbody>
+                                <tr style="white-space: nowrap;">
+                                    <th>Mã đặt cọc</th>
+                                    <th>Tên dự án</th>
+                                    <th>Số lượng đặt cọc</th>
+                                    <th>Giá trị bất động sản giao dịch</th>
+                                    <th>Hoa hồng</th>
+                                    
+                                </tr>
+                                <!-- Item #1 -->
+                                <tr style="white-space: nowrap;" class="dashboard_property_list">
+                                    <td style="text-align:center">
+                                        ABCF125456
+                                    </td>
+                                    <td style="white-space: normal;">
+                                        SGO La Emera Phú Yên
+                                    </td>
+                                    <td style="text-align:center">2</td>
+                                    <td style="text-align:center">680,000,000</td>
+                                    <td style="text-align:center">68,000,000</td>
+                                </tr>
+                                <!-- Item #2 -->
+                                <tr style="white-space: nowrap;" class="dashboard_property_list">
+                                    <td style="text-align:center">
+                                        BRG1224665
+                                    </td>
+                                    <td style="white-space: normal;">
+                                        BRG Diamond Residence
+                                    </td>
+                                    <td style="text-align:center">1</td>
+                                    <td style="text-align:center">280,000,000</td>
+                                    <td style="text-align:center">28,000,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+
+</script>

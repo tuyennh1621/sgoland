@@ -1,0 +1,181 @@
+﻿@using NhaDat24h.DataAccess.Entities;
+@using NhaDat24h.DataDto.RealEstates;
+@model ModelListRE;
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="dashboard-content dashboard-content-0">
+    <div>
+        <!-- Bookmark Property -->
+        <div class="frm_submit_block2 mb-3 d-flex align-items-center justify-between">
+            <h5 class="text-bold">Kho hàng dự án</h5>
+            <a class="primary-bg p-10 text-white round-5" href="@Url.Action("AddNewLandPj", "Land", new { area = "Partner"})">
+                <i class="fa-solid fa-circle-plus"></i>
+                Thêm mới
+            </a>
+        </div>
+        <div class="search-box search-box-2">
+             @await Html.PartialAsync("~/Areas/Partner/Views/Land/searchForm.cshtml",new SearchForm(){
+             Style=1,Provinces = Model.Provinces,Permission=Model.Permission,
+             })
+        </div>
+        <div class="list-partner mb-30">
+            <div id="ListREData">
+                 @await Html.PartialAsync("~/Areas/Partner/Views/Land/ListREPartial.cshtml", Model)
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.localStorage.setItem("menu-active", "Land-item");
+    function Landparent(evt, cityName) {
+        var i, tabcontent, tablinks1;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks1 = document.getElementsByClassName("tablinks1");
+        for (i = 0; i < tablinks1.length; i++) {
+            tablinks1[i].className = tablinks1[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    function myFunction() {
+        var dots = document.getElementById("dots2");
+        var moreText = document.getElementById("more2");
+        var btnText = document.getElementById("myBtn");
+
+        if (dots.style.display === "none") {
+            dots.style.display = "inline";
+            btnText.innerHTML = "Xem thêm";
+            moreText.style.display = "none";
+        } else {
+            dots.style.display = "none";
+            btnText.innerHTML = "Ẩn bớt";
+            moreText.style.display = "inline";
+        }
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    function DeleteRE(_idRE) {
+
+        if (confirm("Bạn thực sự muốn xóa ID căn: " + _idRE) == true) {
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("DeleteRE", "Land",new { area="Partner"})",
+                data:
+                {
+                    IdRE: _idRE
+
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                },
+                success: function (result) {
+                    swal("Thông báo!", "Xóa dự án thành công", "success");
+                    $("#item-" + _idRE).fadeOut();
+                },
+                error: function () {
+                    // alert('Failed to receive the Data');
+                }
+            })
+        }
+    }
+
+    function LikeRE(idRe) {
+        debugger
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("SaveReSubmit", "Land")",
+            data: {
+                IdRE: idRe,
+            },
+            cache: false,
+            async: false,
+            success: function (data) {
+                swal("Thông báo!", "Thêm mới bất động sản yêu thích thành công.", "success");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+            }
+        })
+
+    }
+
+    function ChangeStatusRE(idRe, idUserDuan) {
+        var status = document.getElementById("status_" + idRe).value;
+        if (status == '15') {
+            swal("Nhập lý do chưa được duyệt:", {
+                content: "input",
+                button: {
+                    text: "Đồng ý",
+                    closeModal: true,
+                },
+            }).then((value) => {
+                updatestatus(idRe, 15, value, idUserDuan);
+            });
+            return;
+        }
+        else if (status == '20') {
+            updatestatus(idRe, status, '', idUserDuan);
+        }
+        else if (status == '30') {
+            swal("Nhập lý do dự án bị khóa:", {
+                content: "input",
+                button: {
+                    text: "Đồng ý",
+                    closeModal: true,
+                },
+            }).then((value) => {
+                updatestatus(idRe, 30, value, idUserDuan);
+            });
+            return;
+        }
+
+    }
+
+    function updatestatus(idRe, status, descriptions, idUserDuan) {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("UpdateStatusRE2", "Land")",
+            data: {
+                IdRE: idRe,
+                Status: status,
+                Descriptions: descriptions,
+                idUserDuan: idUserDuan
+            },
+            // datatype: "json",
+            cache: false,
+            async: false,
+            beforeSend: function () {
+            },
+            success: function (result) {
+                if (result == "0") {
+                    if (status == '20') {
+                        swal("Thông báo!", "Phê duyệt dự án thành công.", "success");
+                    }
+                    else if (status == '15') {
+                        swal("Thông báo!", "Chưa phê duyệt dự án thành công.", "success");
+                    }
+                    else if (status == '30') {
+                        swal("Thông báo!", "Khóa dự án thành công.", "success");
+                    }
+                }
+                else {
+                    swal("Thông báo!", "Lỗi: " + result, "success");
+                }
+
+            },
+            error: function () {
+                alert('Failed to receive the Data');
+            }
+        })
+    }
+</script>
+

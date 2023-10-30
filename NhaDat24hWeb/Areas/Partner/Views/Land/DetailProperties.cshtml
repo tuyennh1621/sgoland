@@ -1,0 +1,296 @@
+﻿@using NhaDat24h.DataDto.RealEstates;
+@model RealEstateGetOneDto;
+@{
+    var ExtensionsIMG = new string[] { ".jpg", ".png", ".jpeg" };
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.4/css/lightgallery.min.css">
+
+<style>
+    .linkbds a {
+        color: #666;
+        text-decoration: none;
+        font-style: italic;
+        font-size: 14px;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+</style>
+
+<div class="dashboard-content">
+    <div class="page-detail">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 col-md-offset-3">
+                    <div class="slider-for" id="aniimated-thumbnials">
+                        @foreach (var item in ViewBag.ListImage as List<DocumentDto>)
+                        {
+                            <a class="gallery-item" data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=1500,quality=80/@item.Url">
+                                <div class="img-zoomer-box">
+                                    <img class="img-1" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=1500,quality=80/@item.Url" />
+                                    <div style="background-image:url('https://cdn.realtech.com.vn/cdn-cgi/image/@item.Url'); background-repeat: no-repeat;" class="img-2"></div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                    <div class="slider-nav">
+                        @foreach (var item in ViewBag.ListImage as List<DocumentDto>)
+                        {
+                            <div class="item-slick">
+                                <img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,quality=80/@item.Url" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================ Property Detail Start ================================== -->
+    <section class="pts-0">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- property main detail -->
+                <div class="col-lg-12 col-md-12 col-sm-12 order-lg-2 order-md-2 order-1 prt_5th">
+
+                    <!-- Single Block Wrap -->
+                    <div class="property_block_wrap detail-land2 style-2 p-30">
+                        <div id="project-title">
+                            <h4>@Model.Name</h4>
+                            <div>@Model.Type</div>
+                            <div class="d-flex gap-10 mt-10 align-items-center">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>@Model.Address</span>
+                            </div>
+                            <div class="modal-divider"></div>
+                            <div class="project-price pt-20 align-items-center">
+                                <div class="project-price-left">
+                                    <div class="d-flex gap-10 align-items-center justify-between">
+                                        <span class="text-red text-bold f-20">
+                                            @Model.StringOfferPrice
+                                        </span>
+                                        @*@foreach (var item in ViewBag.Banghang as List<DocumentDto>)
+                                        {
+                                        <a style="text-decoration: none;" class="bd-none bg-none text-14" title="@item.Name" href="@item.Url" target="_blank">
+                                        <i class="far fa-file-excel f-18 text-blue"></i> @item.Name
+                                        </a>
+                                        }*@
+                                    </div>
+                                </div>
+                                <div class="project-price-right">
+                                    <a class="btn-share1" href="#">
+                                        <i class="fas fa-share-alt"></i>
+                                    </a>
+                                    <a class="btn-save-post" href="#">
+                                        <i class="far fa-heart"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="modal-divider"></div>
+                        </div>
+                        <div id="project-description">
+                            <h6 class="property_block_title mt-30 text-bold">Thông tin mô tả</h6>
+                            <p>@Html.Raw(Model.Detail)</p>
+                            <h6 class="property_block_title mt-30 text-bold">Liên hệ</h6>
+                            <div class="d-flex align-items-center gap-30 mt-20">
+                                <a class="avtland"><img src="https://cdn.realtech.com.vn/@Model.CtvInfor.Avatar" alt=""></a>
+                                <div class="d-flex flex-column">
+                                    <span class="f-18">@Model.CtvInfor.Name</span>
+                                    <span class="text-12 color-gray">@Model.CtvInfor.Company</span>
+                                    <span class="color-primary"><i class="fas fa-phone-volume"></i> @Model.CtvInfor.Mobile</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-divider"></div>
+                        <div id="project-size">
+                            <h6 class="property_block_title mt-50 text-bold">Đặc điểm bất động sản</h6>
+                            <div class="project-size justify-between">
+                                <ul class="deatil_features">
+                                    <li>
+                                        <i class="fas fa-vector-square"></i>
+                                        <strong>Diện tích:</strong>@Model.S m<sup>2</sup>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-home"></i>
+                                        <strong>Mặt tiền:</strong>@Model.FrontLenght m
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-house-damage"></i>
+                                        <strong>Loại BĐS:</strong>@Model.Type
+                                    </li>
+                                </ul>
+                                <ul class="deatil_features">
+                                    <li>
+                                        <i class="fas fa-dollar-sign"></i>
+                                        <strong>Mức giá:</strong>@Model.StringOfferPrice
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-road"></i>
+                                        <strong>Đường vào:</strong>@Model.EntranceLenght m
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-ruler"></i>
+                                        <strong>Chiều dài:</strong>@Model.Lenght m
+                                    </li>
+                                </ul>
+                                <ul class="deatil_features">
+                                    <li>
+                                        <i class="fas fa-warehouse"></i>
+                                        <strong>Số tầng:</strong>@Model.NumberFloor
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-bed"></i>
+                                        <strong>Số phòng ngủ:</strong>@Model.NumberBedRoom
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-restroom"></i>
+                                        <strong>Số WC:</strong>@Model.NumberWc
+                                    </li>
+                                </ul>
+                                <ul class="deatil_features">
+                                    <li>
+                                        <i class="fas fa-compass"></i>
+                                        <strong>Hướng nhà:</strong>@Model.DirectionHouseChar
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-door-open"></i>
+                                        <strong>Số ban công:</strong>@Model.NumberBalcony
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-donate"></i>
+                                        <strong>% Hoa hồng:</strong>@Model.BonusPercent %
+                                    </li>
+                                </ul>
+                                <ul class="deatil_features">
+                                    <li>
+                                        <i class="fas fa-house-user"></i>
+                                        <strong>Nguồn đầu chủ:</strong>@Model.SourceChar
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-phone-square-alt"></i>
+                                        <strong>Điện thoại đầu chủ:</strong>@Model.Phone
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-user-edit"></i>
+                                        <strong>Người tạo:</strong>@Model.Manager
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="modal-divider mt-30"></div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="d-flex gap-10 align-items-center img22 mb-10 mt-20">
+                                        <img src="~/assets/img/flame.png">
+                                        <h5 class="property_block_title">Thông tin chủ đất / nhà:</h5>
+                                    </div>
+                                    <ul class="deatil_features">
+                                        <li>
+                                            <i class="fas fa-id-card-alt"></i>
+                                            <strong>Tên chủ nhà:</strong>@Model.OwnerName
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-phone-alt"></i>
+                                            <strong>Số điện thoại chủ nhà:</strong>@Model.SourcePhone
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-id-card"></i>
+                                            <strong>CCCD:</strong>@Model.OwnerCCCD
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-10 align-items-center img22 mb-10">
+                                <img src="~/assets/img/flame.png">
+                                <h5 class="property_block_title">Ảnh hợp đồng / Sổ đỏ:</h5>
+                            </div>
+                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",ViewBag.ListImageSD as List<DocumentDto>)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.4/js/lightgallery-all.min.js"></script>
+<script>
+    window.localStorage.setItem("menu-active", "Properties-item");
+    async function copyContent(content) {
+        try {
+            await navigator.clipboard.writeText(content);
+            console.log('Content copied to clipboard');
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    }
+
+    $(function () {
+
+        $('#aniimated-thumbnials').lightGallery({
+            thumbnail: true,
+        });
+        // Card's slider
+        var $carousel = $('.slider-for');
+
+        $carousel
+            .slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                fade: true,
+                adaptiveHeight: true,
+                asNavFor: '.slider-nav'
+            });
+        $('.slider-nav').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: '.slider-for',
+            dots: false,
+            centerMode: false,
+            focusOnSelect: true,
+            variableWidth: true
+        });
+    });
+
+    let zoomer = function () {
+
+        const img = document.querySelectorAll(".img-zoomer-box");
+
+        for (let i = 0; i < img.length; i++) {
+
+            img[i].addEventListener('mousemove', function (e) {
+
+                let original = img[i].querySelector('.img-1'),
+                    magnified = img[i].querySelector('.img-2'),
+                    style = magnified.style,
+                    x = e.pageX - this.offsetLeft - 340,
+                    y = e.pageY - this.offsetTop - 138,
+                    imgWidth = original.offsetWidth,
+                    imgHeight = original.offsetHeight,
+                    xperc = ((x / imgWidth) * 100),
+                    yperc = ((y / imgHeight) * 100);
+
+                //lets user scroll past right edge of image
+                if (x > (.01 * imgWidth)) {
+                    xperc += (.15 * xperc);
+                };
+
+                //lets user scroll past bottom edge of image
+                if (y >= (.01 * imgHeight)) {
+                    yperc += (.15 * yperc);
+                };
+
+                style.backgroundPositionX = (xperc - 9) + '%';
+                style.backgroundPositionY = (yperc - 9) + '%';
+
+                style.left = (x - 180) + 'px';
+                style.top = (y - 180) + 'px';
+
+            }, false);
+        }
+    }();
+</script>

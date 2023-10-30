@@ -1,0 +1,235 @@
+@using Newtonsoft.Json;
+@using NhaDat24h.Common.Configuration;
+@using NhaDat24h.DataAccess.Entities;
+@inject IHttpContextAccessor sessonContext
+@{
+    TbUser user = null;
+    string position = "";
+    if (sessonContext != null && sessonContext.HttpContext != null)
+    {
+        var cookieValue = sessonContext.HttpContext.Session.GetString(AppConfigs.CurrentUserAdmin);
+        var positionValue = sessonContext.HttpContext.Session.GetString("Position");
+
+        if (!string.IsNullOrEmpty(cookieValue))
+        {
+            user = JsonConvert.DeserializeObject<TbUser>(cookieValue);
+            position = JsonConvert.DeserializeObject<string>(positionValue);
+        }
+    }
+}
+
+<div class="header2 header-light head-border header-dashboard fixed-top">
+    <div class="container">
+        <nav id="navigation" class="navigation nav22 navigation-landscape">
+            <div class="nav-child">
+                <div class="nav-header">
+                    <a class="nav-brand" href="@Url.Action("Index", "Home")">
+                        <img src="~/assets/img/logo-sgoland-new.png" class="logo" alt="" />
+                    </a>
+                    <a data-x-click="dashboard" class="dashboard_btnn mb-hiden">
+                        <i class="fa-solid fa-bars-staggered ic-20"></i>
+                    </a>
+                </div>
+                <div class="mb-show2 desk-hidden mb-dash">
+                    <a data-x-click="dashboard" class="dashboard_btnn1">
+                        <i class="fa-solid fa-bars-staggered ic-20"></i>
+                    </a>
+                </div>
+                <div style="margin-left:20px;" class="mb-hiden">
+                    <div class="nav-menus-wrapper" style="transition-property: none;">
+                        <div class="nav-menu">
+                            <div class="align-to-right d-flex align-items-center gap-20">
+                                <div class="notification_header">
+                                    <button type="button" class="btn3456" data-bs-toggle="offcanvas" href="#notification_parent" role="button" aria-controls="notification_parent">
+                                        <i class="fas fa-bell"></i>
+                                        <span class="btn354566"></span>
+                                        Thông báo
+                                    </button>
+                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="notification_parent" aria-labelledby="notification_parent">
+                                        <div class="offcanvas-header">
+                                            <h5 class="offcanvas-title" id="notification_parent">Thông báo</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-divider m-0"></div>
+                                        <div class="offcanvas-body">
+                                            <div class="tab-noti">
+                                                <button class="tab_noti_1" onclick="openCity(event, 'tab_project')" id="defaultOpen">Dự án</button>
+                                                <button class="tab_noti_1" onclick="openCity(event, 'tab_mess')">Tin nhắn</button>
+                                                <button class="tab_noti_1" onclick="openCity(event, 'tab_user')">Nhân sự</button>
+                                            </div>
+                                            <div id="tab_project" class="tabcontent">
+                                                <div class="d-flex flex-column">
+                                                    <a href="#">
+                                                        <div class="noti_submit_edit_land">
+                                                            <div class="noti_submit_edit_land_img">
+                                                                <img src="~/assets/img/royal-riverside-city1.jpg" />
+                                                            </div>
+                                                            <div class="noti_submit_edit_land_info">
+                                                                <div class="title text-left">
+                                                                    <div class="">
+                                                                        <span class="text-14 text-black">Đoàn Công</span>
+                                                                        <span class="text-14 text-black">vừa Đăng dự án</span>
+                                                                        <span class="text-bold text-14 text-black">Hồ Gươm Plaza</span>
+                                                                    </div>
+                                                                    <span class="text-12 color-blue">20 phút trước</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="text-12 color-blue">
+                                                                <i class="fa-solid fa-circle"></i>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <a href="#">
+                                                        <div class="noti_submit_edit_land">
+                                                            <div class="noti_submit_edit_land_img">
+                                                                <img src="~/assets/img/phoi-canh-tien-hai-star-city1.jpg" />
+                                                            </div>
+                                                            <div class="noti_submit_edit_land_info">
+                                                                <div class="title text-left">
+                                                                    <div class="">
+                                                                        <span class="text-14 color-gray">Ngát Lee</span>
+                                                                        <span class="text-14 color-gray">vừa Sửa dự án</span>
+                                                                        <span class="text-14 font-medium color-gray">BRG Diamond Residence</span>
+                                                                    </div>
+                                                                    <span class="text-12 color-gray">Khoảng 5 giờ trước</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div id="tab_mess" class="tabcontent">
+                                                <div class="d-flex flex-column">
+                                                    <a href="#">
+                                                        <div class="noti_chat_items_land">
+                                                            <div class="noti_chat_items_land_img">
+                                                                <img src="~/assets/img/QuanlyTTTM1.jpg" />
+                                                            </div>
+                                                            <div class="noti_submit_edit_land_info">
+                                                                <div class="title text-left">
+                                                                    <div class="">
+                                                                        <span class="text-14 color-gray">Chat Group </span>
+                                                                        <span class="font-medium text-14 color-gray">Hồ Gươm Plaza</span>
+                                                                    </div>
+                                                                    <div class="d-flex gap-10 align-items-end text-12 color-gray">
+                                                                        <div class="">
+                                                                            <span>Ngát Lee:</span>
+                                                                            <span class="inf-chat">Vâng chị bảng hàng dự án này có ạ</span>
+                                                                        </div>
+                                                                        <span><i class="fa-solid fa-circle f-5"></i></span>
+                                                                        <span>5 phút trước</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div id="tab_user" class="tabcontent">
+                                                <div class="d-flex flex-column">
+                                                    <a href="#">
+                                                        <div class="noti_chat_items_land">
+                                                            <div class="noti_chat_items_land_img">
+                                                                <img src="~/assets/img/testimonial/trananhtuan.jpg" />
+                                                            </div>
+                                                            <div class="noti_submit_edit_land_info">
+                                                                <div class="title text-left">
+                                                                    <div class="">
+                                                                        <span class="font-medium text-14 color-gray">Đức Vũ</span>
+                                                                        <span class="text-14 color-gray">vừa đăng ký thành viên thành công </span>
+                                                                    </div>
+                                                                    <div class="d-flex gap-10 align-items-center text-12 color-gray">
+                                                                        <span>5 phút trước</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="nav-menu nav-menu-social dhsbrd">
+                                    <div class="btn-group account-drop">
+                                        <button type="button" class="btn btn-order-by-filt" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            @{
+                                                @if (user != null && user.Id > 0)
+                                                {
+                                                    <img src="https://cdn.realtech.com.vn/@user.Avatar" class="avater-img" alt="">
+                                                    <div class="user-text">
+                                                        <p>Xin chào, @user.Fullname</p>
+                                                        <p id="idchucvu">@position?.Replace(";","")</p>
+                                                    </div>
+                                                }
+                                            }
+                                        </button>
+                                        <div class="dropdown-menu pull-right animated flipInX">
+                                            <ul style="padding-left:0px !important;">
+                                                <li>
+                                                    <a href="/account"><i class="fa-solid fa-user"></i>Tài khoản của tôi</a>
+                                                </li>
+                                                <li>
+                                                    <a href="account/changePassword"><i class="fa-solid fa-unlock-keyhole"></i>Đổi mật khẩu</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i>Thoát tài khoản</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-show23 text-end" tabindex="-1" data-bs-toggle="offcanvas" href="#user_mobile">
+                    <i class="fa-solid fa-user ic-20"></i>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="offcanvas offcanvas-end" id="user_mobile" aria-labelledby="user_mobile" tabindex="-1">
+    <div class="offcanvas-header">
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul style="padding-left:0px !important;">
+            <li>
+                <a href="/account">
+                    <i class="fas fa-bell"></i>
+                    Thông báo
+                </a>
+            </li>
+            <li>
+                <a href="/account"><i class="fa-solid fa-user"></i>Tài khoản của tôi</a>
+            </li>
+            <li>
+                <a href="account/changePassword"><i class="fa-solid fa-unlock-keyhole"></i>Đổi mật khẩu</a>
+            </li>
+            <li>
+                <a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i>Thoát tài khoản</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function openCity(evt, cityName) {
+        var i, tabcontent, tab_noti_1;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tab_noti_1 = document.getElementsByClassName("tab_noti_1");
+        for (i = 0; i < tab_noti_1.length; i++) {
+            tab_noti_1[i].className = tab_noti_1[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+</script>

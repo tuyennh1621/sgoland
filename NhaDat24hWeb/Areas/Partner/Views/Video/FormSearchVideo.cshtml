@@ -1,0 +1,39 @@
+﻿﻿@using NhaDat24h.DataDto.RealEstates;
+@model SearchForm
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-4 row-cols-xxl-4 mb-10 align-items-end">
+    <div class="col-auto">
+        <div class="form">
+            <label class="text-bold mb-10">Từ khóa</label>
+            <input placeholder="Từ khóa" class="form-control select2" type="text" id="hashtag" value="">
+        </div>
+    </div>
+    <div class="col-auto">
+        <div class="form">
+            <label class="text-bold mb-10">Trạng thái</label>
+            <select id="status" class="form-select select2">
+                <option selected disabled value="">Chọn trạng thái</option>
+                <option value="2">Chờ Duyệt</option>
+                <option value="3">Đã Duyệt</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-auto">
+        <div class="form">
+            <label class="text-bold mb-10">Loại Video</label>
+            <select id="type" class="form-select select2">
+                <option selected disabled value="">Chọn danh mục </option>
+                <option value="1">Đào tạo hội nhập</option>
+                <option value="2">Đào tạo chuyên sâu</option>
+                <option value="3">Đào tạo phần mềm</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-auto">
+        <button class="mt-10 primary-bg p-10 text-white round-5 d-flex align-items-center justify-center" onclick="SubmitSearchVideo('1', '10')">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <div class="hidden-lg-bt">Tìm kiếm</div>
+        </button>
+    </div>
+</div>
+

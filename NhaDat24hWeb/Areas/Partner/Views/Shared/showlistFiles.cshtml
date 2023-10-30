@@ -1,0 +1,98 @@
+﻿@using NhaDat24h.DataDto.RealEstates;
+@model List<DocumentDto>
+@if (Model!=null && Model.Count > 0)
+{
+    var ExtensionsIMG = new string[] { ".jpg", ".png", ".jpeg" };
+    <div width="100%">
+            <div style="white-space: nowrap;">
+                <span colspan="3">@Model[0].NameType (<span id="countFile">@Model.Count</span> Files)</span>
+            </div>
+            <!-- Item #1 -->
+            @foreach (var iteam in Model)
+            {
+                <div id="item-@iteam.Id" class="mt-10">
+                    <div class="row align-items-center">
+                        <div class="col-2">
+                        @if (ExtensionsIMG.Contains(@iteam.FileType))
+                        {
+                            <img style="width:40px; height:40px; object-fit:cover; border-radius:5px;"  src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=50,height=50,quality=80/@iteam.Url" alt="" />
+                        }
+                        else
+                        {
+                            <i id="icon_list_modal" class="fa fa-file-@iteam.FileType?.Replace(".","")"></i>
+                        }
+
+                        </div>
+                        <div class="col-8" id="name_file_modal">
+                            @if (@iteam.Url.Contains("https://"))
+                            {
+                                <a style="overflow: hidden; display: -webkit-box; font-size:14px; color:#666;text-decoration:none;" href="@Url.Action("viewIframe", "Dashboard" , new { a=@iteam.Url})" title="@iteam.Name">@iteam.Name</a>
+                            }
+                            else
+                            {
+                                <a style="overflow: hidden; display: -webkit-box; font-size:14px; color:#666;text-decoration:none;" href="https://cdn.realtech.com.vn/@iteam.Url" target="_blank" title="@iteam.Name">@iteam.Name</a>
+                            }
+                        </div>
+                        <div class="col-2">
+
+                            @if (@iteam.isShowAction)
+                            {
+                                <div class="showFile">
+                                    <a onclick="removeDoc(@iteam.Id,'@iteam.Url','@iteam.FileType')" class="text-gray">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                   
+            }
+    </div>
+}
+else
+{
+    <p>Chưa có bản ghi nào</p>
+}
+
+<script>
+    function removeDoc(id,link,type){
+        $.ajax({
+                type: 'GET',
+                url: "@Url.Action("ClientDeleteFiles", "Upload",new { area="Partner"})",
+                data: {
+                fileID: id,
+                fileType: type,
+                url: link,
+
+            },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                },
+                success: function (result) {
+
+                    $("#item-" + id).fadeOut();
+                    var _count = $("#countFile").text();
+                    _count -=1;
+                    $("#countFile").text(_count)
+
+                   @* if (result=="0")
+                    {
+                        swal("Thông báo!", "Link bảng hàng đã tồn tại. Vui lòng kiểm tra lại.", "error");
+                    }
+                    else{
+                        $('#showlistbanghang').html(result);
+                        $("#tenbanghang").val('');
+                        $("#linkbanghang").val('');
+                        swal("Thông báo!", "Thành công", "success");
+                    }*@
+                    
+                },
+                error: function () {
+                   // alert('Failed to receive the Data');
+                }
+            })
+    }
+</script>

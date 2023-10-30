@@ -1,0 +1,39 @@
+﻿
+@using NhaDat24h.DataDto.User;
+@model GetReportBusinessData;
+
+@if (Model != null && Model.Value.Count>0)
+{
+        int i = Model.i;
+
+        @foreach (var item in Model.Value)
+        {
+        <tr style="white-space: nowrap;">
+            <td style="text-align:center;">@i</td>
+            <td style="text-align:center;">@item.Id</td>
+            <td style="text-align:center; width:180px;">@item.ReferralCode</td>
+            <td>@item.FullName</td>
+            <td style="white-space:normal; width:400px;">@item.Position</td>
+            <td style="text-align:center;">@item.NumberTransactions</td>
+            <td style="text-align:center;">@item.TransactionValue</td>
+            <td style="text-align:center;">@item.Rating</td>
+            <td style="white-space:normal; width:300px;">@item.Note</td>
+        </tr>
+            i++;
+        }
+
+        <tr>
+            <th colspan="12" class="text-center">
+                <input type="hidden" value="2" id="curentIndex_@Model.Key.IdCompany">
+                <button id="btnloadmore_@Model.Key.IdCompany" onclick="LoadmoreNhansu('@Model.Key.IdCompany')"
+                class="border-none primary-bg p-x-15 p-y-10 round-10 text-white">
+                    Xem thêm
+                </button>
+            </th>
+        </tr>
+
+}
+
+
+
+

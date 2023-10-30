@@ -1,0 +1,243 @@
+﻿
+@using NhaDat24h.DataDto.User;
+﻿
+@model HrReportSynthesisModel;
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+<div class="dashboard-content dashboard-content-0">
+    <h4 class="text-bold">Báo cáo tổng hợp nhân sự hệ thống</h4>
+    <div class="row search-box align-items-end">
+        <div class="col-xxl-3 col-12">
+            <label class="text-bold mb-10">Đơn vị</label>
+            <select class="form-select select2" id="IdCompany">
+                @if (Model.ListCompany.Count() > 4)
+                {
+                    <option selected disabled value="">Chọn</option>
+                    <option value="0">Tất cả Sgo Group</option>
+                }
+                @foreach (var company in Model.ListCompany)
+                {
+                    <option value="@company.Id">@company.Name</option>
+                }
+
+            </select>
+
+        </div>
+        <div class="col-xxl-3 col-12">
+            <label class="text-bold mb-10">Từ ngày</label>
+            <input type="date" id="startdate" name="StartDate" value="2023-06-01"  class="form-control" placeholder="Ngày bắt đầu">
+        </div>
+        <div class="col-xxl-3 col-12">
+            <label class="text-bold mb-10">Đến ngày</label>
+            <input type="date" id="enddate" name="EndDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="Ngày kết thúc">
+        </div>
+        <div class="col-xxl-3 col-12">
+            <label></label>
+            <button class="primary-bg p-10 text-white round-5" href="#" onclick="SubmitParam()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Tìm kiếm
+            </button>
+        </div>
+    </div>
+    <div class="list-partner" id="system_user_report">
+        <div class="export-page-content" style="font-family:'Times New Roman', Times, serif !important;">
+            <div class="ex-header">
+                <div class="ex-header-left">
+                    <h5 class="company-name">Công ty cp đầu tư & kinh doanh bất động sản sgo</h5>
+                    <p class="room-name">Ban hành chính nhân sự</p>
+                    <div class="ex-header-left-line align-items-center">
+                        <hr />
+                        <span>o0o</span>
+                        <hr />
+                    </div>
+                </div>
+                <div class="ex-header-right">
+                    <h5>Cộng hòa xã hội chủ nghĩa việt nam </h5>
+                    <h6>Độc Lập - Tự do - Hạnh Phúc</h6>
+                    <div class="ex-header-left-line align-items-center">
+                        <hr />
+                        <span>o0o</span>
+                        <hr />
+                    </div>
+                    <div class="date-export">
+                        Hà Nội, Ngày @DateTime.Now.Day tháng @DateTime.Now.Month năm @DateTime.Now.Year
+                    </div>
+                </div>
+            </div>
+            <div class="ex-content mt-30" id="maincontent">
+
+                @await Html.PartialAsync("~/Areas/Partner/Views/Statistics/ExportSummaryListReportPartial.cshtml",Model)
+
+            </div>
+        </div>
+        <div class="d-flex justify-between align-items-center">
+            @*<div class="pagintion-table">
+                <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row gap-10">
+                    <p class="mb-3 mb-sm-0">
+                        Hiển thị từ
+                        <span>1</span>
+                        đến
+                        <span>20</span>
+                        của 222 bản ghi
+                    </p>
+                    <div class="pagination1 pagination1222">
+                        <ul class="pagination text-center">
+                            <li class="page-item ">
+                                <button class="page-link" onclick="SubmitSearch()" aria-label="Previous">
+                                    <span><i class="fa-solid fa-arrow-left"></i></span>
+                                    <span class="sr-only">Previous</span>
+                                </button>
+                            </li>
+                            <li class="page-item "><button onclick="SubmitSearch()" class="page-link active"> 1 </button></li>
+                            <li class="page-item ">
+                                <button class="page-link" onclick="SubmitSearch()" tabindex="-1" aria-label="Next">
+                                    <span><i class="fa-solid fa-arrow-right"></i></span>
+                                    <span class="sr-only">Next</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>*@
+@*            <div class="export-file-btn">
+                <a class="d-flex align-items-center gap-10" href="@Url.Action("ExportSummaryListReportExcell", "Statistics",
+                    new RouteValueDictionary(new { id = $('#txtValue').val()$('#txtValue').val(), }))">
+                    <i class="fas fa-file-export"></i>
+                    Xuất File
+                </a>
+            </div>*@
+            <div class="export-file-btn">
+                <a class="d-flex align-items-center gap-10" href="#" onclick="ExportSummaryListReportExcell()">
+                    <i class="fas fa-file-export"></i>
+                    Xuất File
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    window.localStorage.setItem("menu-active", "Statistics-item", "Manager-item");
+    function ExportSummaryListReportExcell() {
+        debugger
+        var IdCompany = document.getElementById("IdCompany").value;
+        var startdate = document.getElementById("startdate").value;
+        var enddate = document.getElementById("enddate").value;
+
+        $.ajax({
+            type: "GET",
+            url: '',
+            success: function (data) {
+                window.location = '/export-Summary-list-report-excell?IdCompany=' + IdCompany
+                    + '&startdate=' + startdate + '&enddate=' + enddate;
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+    function SubmitParam() {
+        debugger
+        var IdCompany = document.getElementById("IdCompany").value;
+        var startdate = document.getElementById("startdate").value;
+        var enddate = document.getElementById("enddate").value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("SearchExportSummaryListReport", "Statistics")",
+            data: {
+                IdCompany: IdCompany,
+                startDate: startdate,
+                endDate: enddate,
+                pageIndex: 1
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                
+                $('#maincontent').html(data);
+                //$('#loadmorecontent_'+IdCompany).html(data);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    function LoadmoreNhansu(idcongty) {
+
+        //var tbodyRef = document.getElementById('loadmorecontent_' + idcongty);
+        var startdate = document.getElementById("startdate").value;
+        var enddate = document.getElementById("enddate").value;
+        var currentIndex = $('#curentIndex_' + idcongty).val();
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("LoadmoreSummaryReport", "Statistics")",
+            data: {
+                IdCompany: idcongty,
+                startDate: startdate,
+                endDate: enddate,
+                pageIndex: currentIndex
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                currentIndex = parseInt(currentIndex) +1; 
+
+                $('#curentIndex_' + idcongty).val(currentIndex);
+
+                $('#loadmorecontent_' + idcongty).append(data);
+            }
+        })
+
+
+        //// Insert a row at the end of table
+        //var newRow = tbodyRef.insertRow();
+
+        //// Insert a cell at the end of the row
+        //var newCell1 = newRow.insertCell();
+        //var newCell2 = newRow.insertCell();
+        //var newCell3 = newRow.insertCell();
+        //var newCell4 = newRow.insertCell();
+
+
+        //// Append a text node to the cell
+        //var newText1 = document.createTextNode('i');
+        //var newText2 = document.createTextNode('i');
+        //var newText3 = document.createTextNode('i');
+        //var newText4 = document.createTextNode('i');
+        //newCell1.appendChild(newText1);
+        //newCell2.appendChild(newText2);
+        //newCell3.appendChild(newText3);
+        //newCell4.appendChild(newText4);
+
+        //$('#loadmorecontent_' + idcongty).append('<td>i</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>id</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>ReferralCode</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+        //$('#loadmorecontent_' + idcongty).append('<td>content</td>');
+
+    }
+</script>

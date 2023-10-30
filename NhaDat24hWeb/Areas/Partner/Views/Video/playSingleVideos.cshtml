@@ -1,0 +1,213 @@
+﻿@using NhaDat24h.DataDto.Video;
+@model VideoPlaySingle;
+
+@if (Model.UrlVideoCached != null)
+{
+    <iframe src="@Model.UrlVideoCached" class="video-list-items3" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" ></iframe>
+}
+else
+{
+    <video class="video-list-items3" poster="https://cdn.realtech.com.vn/@Model.UrlImage"
+       autoPlay
+       playsInline
+       controls="" onplaying="CountView('@Model.Id')">
+        <source src="https://cdn.realtech.com.vn/@Model.UrlVideo" type="video/mp4">
+    </video>
+}
+<h1 class="text-white mt-20">@Model.Title</h1>
+<div class="text-14 text-white">@Model.LastUpdate</div>
+<div class="avatar d-flex align-items-center">
+    <div class="d-flex align-items-center">
+        <img src="https://cdn.realtech.com.vn/@Model.Avatar" />
+        <div class="avatar-info">
+            <h3 class="text-white">@Model.FullName</h3>
+            <span class="text-white">@Model.Position?.Replace(";","")</span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-10 av-right">
+        <button type="button" class="count-view border-none primary-bg" data-bs-toggle="tooltip" data-bs-placement="top" title="@Model.CountView lượt xem" data-bs-custom-class="custom-tooltip" fdprocessedid="q52rw">
+            <span class="text-14-primary">@Model.CountView</span>
+            <span>lượt xem</span>
+        </button>
+        <div class="blog-social-share mt-0">
+            <span class="text-white">Chia sẻ:</span>
+            <div class="social-share-btn">
+                <a class="fb-button-share" href="#" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Chia sẻ lên Facebook" target="_blank">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a class="linkedin-button-share" href="#" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Chia sẻ lên Linked In" target="_blank">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                </a>
+                <a class="twitter-button-share" href="#" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Chia sẻ lên Twitter" target="_blank">
+                    <i class="fa-brands fa-twitter"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-video-info2">
+    <p>@Model.Detail</p>
+    <div class="modal-divider"></div>
+    <div class="comment mt-30">
+        <div class="count-sort-by d-flex gap-10">
+            <p>8,077 Nhận xét</p>
+            <div class="drop-down">
+                <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-arrow-up-wide-short"></i>
+                    <span>Sắp xếp theo</span>
+                </div>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Mới nhất</a></li>
+                    <li><a class="dropdown-item" href="#">Bình luận hàng đầu</a></li>
+                </ul>
+            </div>
+        </div>
+        @*<div class="user-comment">
+            <div class="write-comment mb-30">
+                <img src="https://placehold.jp/150x150.png" />
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Viết nhận xét của bạn...">
+                <button class="btn-send1">Gửi nhận xét</button>
+            </div>
+            <div class="user-comment-child mb-20 d-flex">
+                <img src="https://cdn.realtech.com.vn/@Model.Avatar" />
+                <div class="user-comment-child-info">
+                    <div class="user-comment-child-title">
+                        <button>@Model.FullName</button>
+                        <span>1 năm trước</span>
+                    </div>
+                    <div class="user-comment-content">
+                        Bài hát viết về cuộc đời của người phụ nữ thật hay và ý nghĩa . Nghe đi nghe lại mà thấy thấm ❤️❤️ . Nhiều ca sĩ đã thể hiện bài hát này nhưng mình thấy Phương Ý là người duy nhất thể hiện có hồn và đúng với tâm trạng của người phụ nữ
+                    </div>
+                    <div class="accordion3" id="accordionExample">
+                        <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <i class="fa-solid fa-reply"></i>
+                            Trả lời
+                        </button>
+                        <button class="btn-more-reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <i class="fa-solid fa-angle-down"></i>
+                            1 Phản hồi
+                        </button>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseOne">Hủy</a>
+                                <button class="btn-send mt-10">Gửi đi</button>
+                            </div>
+                        </div>
+                        <div id="collapseTwo" class="accordion-collapse collapse mt-10" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="user-comment-child d-flex">
+                                    <img src="https://img.freepik.com/free-photo/beauty-woman-asian-cute-girl-feel-happy-holding-flower-red-rose-white-rose-pink-background_1150-10225.jpg?w=1380&t=st=1681870758~exp=1681871358~hmac=06b326096eaf86511c89fe6dc78cbb8696296a4435b2a511fb2132999401373f" />
+                                    <div class="user-comment-child-info">
+                                        <div class="user-comment-child-title">
+                                            <a>Nguyễn Thị Mộng Mơ</a>
+                                            <div class="vertical-line"></div>
+                                            <span>3 tháng trước</span>
+                                        </div>
+                                        <div class="user-comment-content">
+                                            Cố gắng lên đừng gục ngã, đôi khi cuộc sống có đôi chút áp lực, đôi chút bất công thôi mà. Cứ sống thật tốt trời xanh tự khắc an bài...!!!!
+                                        </div>
+                                        <div class="accordion3" id="accordionExample1">
+                                            <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                <i class="fa-solid fa-reply"></i>
+                                                Trả lời
+                                            </button>
+                                        </div>
+                                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample1">
+                                            <div class="accordion-body">
+                                                <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                                <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseThree">Hủy</a>
+                                                <button class="btn-send mt-10">Gửi đi</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-comment-child mb-20 d-flex">
+                <img src="https://img.freepik.com/free-photo/beautiful-attractive-elegance-asian-woman-blue-dress-hand-touch-face-model-pose-studio-photo-shoot-isolate-white-background_609648-1705.jpg?w=1380&t=st=1681873129~exp=1681873729~hmac=70a48c7ff6df3d657bcb37f0437b47a9c9bfa860fa30701a8c73970c6244a693" />
+                <div class="user-comment-child-info">
+                    <div class="user-comment-child-title d-flex align-items-center">
+                        <a>Nông Thị Diệu Hằng</a>
+                        <div class="vertical-line"></div>
+                        <span>1 ngày trước</span>
+                    </div>
+                    <div class="user-comment-content">
+                        Bằng giọng hát thật trầm ấm, êm nhẹ và sâu lắng, với lối diễn đạt thơ mộng trong khung cảnh thính phòng, Phương Ý đã mang nhạc phẩm này lên một tầng cao nghệ thuật khác biệt rất tuyệt vời.
+                    </div>
+                    <div class="accordion3" id="accordionExample1">
+                        <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            <i class="fa-solid fa-reply"></i>
+                            Trả lời
+                        </button>
+                    </div>
+                    <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample1">
+                        <div class="accordion-body">
+                            <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                            <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseFive">Hủy</a>
+                            <button class="btn-send mt-10">Gửi đi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-comment-child mb-20 d-flex">
+                <img src="https://img.freepik.com/free-photo/girl-smelling-flowers-standing-street_1304-4185.jpg?w=1060&t=st=1681873519~exp=1681874119~hmac=33f83f11e500d09a52cdb04b62d7cca008a78eba0cac17651f18731b087c3e4d" />
+                <div class="user-comment-child-info">
+                    <div class="user-comment-child-title d-flex align-items-center">
+                        <a>Tống Thị Ngọc Hường</a>
+                        <div class="vertical-line"></div>
+                        <span>2 ngày trước</span>
+                    </div>
+                    <div class="user-comment-content">
+                        Hay ! Càng nghe càng cuống ... giọng hát đặc biệt ko lẩn vào đâu được
+                        <div class="accordion3" id="accordionExample2">
+                            <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <i class="fa-solid fa-reply"></i>
+                                Trả lời
+                            </button>
+                        </div>
+                        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+                            <div class="accordion-body">
+                                <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseFour">Hủy</a>
+                                <button class="btn-send mt-10">Gửi đi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-comment-child mb-20 d-flex">
+                <img src="https://img.freepik.com/free-photo/joyful-korean-woman-posing-with-hand-hip-studio-shot-stunning-asian-young-lady-playing-with-curly-hair_197531-14619.jpg?w=1380&t=st=1681898214~exp=1681898814~hmac=66f7b77db00e03b4609a45e06bacb932ed6169fba40152aa67d83b22a02eab09" />
+                <div class="user-comment-child-info">
+                    <div class="user-comment-child-title">
+                        <a>Giáp Thị Ngọc Lý</a>
+                        <div class="vertical-line"></div>
+                        <span>2 ngày trước</span>
+                    </div>
+                    <div class="user-comment-content">
+                        Một bản nhạc thật sâu lắng. Chúc chị thành công với MV này. Em chưa bao giờ bỏ qua một ca khúc nào của chị.
+                        <div class="accordion3" id="accordionExample2">
+                            <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                <i class="fa-solid fa-reply"></i>
+                                Trả lời
+                            </button>
+                        </div>
+                        <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+                            <div class="accordion-body">
+                                <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseSix">Hủy</a>
+                                <button class="btn-send mt-10">Gửi đi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>*@
+    </div>
+</div>
+
+<label></label>

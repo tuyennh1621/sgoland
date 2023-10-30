@@ -1,0 +1,531 @@
+﻿@using NhaDat24h.DataDto.Ctv
+@using NhaDat24h.DataDto.Users;
+@model ModelListCtv;
+
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-content dashboard-content-0">
+    <div class="mb-3">
+        <h4 class="text-bold">Danh sách thành viên</h4>
+    </div>
+    <div class="search-box">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-5 mb-10 align-items-end">
+            <div class="col-auto">
+                <div class="s-member1">
+                    <div class="form s-mem-id">
+                        <label class="text-bold mb-10">ID</label>
+                        <input placeholder="ID" class="form-control select2 w-60-px" type="text" id="idctv" value="">
+                    </div>
+                    <div class="form">
+                        <label class="text-bold mb-10">
+                            Tên/Số điện thoại
+                        </label>
+                        <input class="form-control select2" type="text" id="searchkey" value="" placeholder="Họ tên, Email, Điện thoại">
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form s-me-status">
+                    <label class="text-bold mb-10">Trạng thái</label>
+                    <select id="ctvstatus" class="form-select select2">
+                        <option selected disabled value="">Chọn trạng thái</option>
+                        @* <option value="10"></option> *@
+                        <option value="0">Chờ Duyệt</option>
+                        <option value="1">Đã Duyệt</option>
+                        <option value="2">Đã Khóa</option>
+                        @if (Model.Permission.Contains(1))
+                        {
+                            <option value="3">Đã Xóa</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form">
+                    <label class="text-bold mb-10">Công ty</label>
+                    <select id="companyid" class="form-select select2" onchange="changeCompany(this)">
+                        <option selected disabled value="">Công ty</option>
+                        if( @Model.ListCompany == null)
+                        return;
+                        @foreach (var company in Model.ListCompany)
+                        {
+                            <option value="@company.Id">@company.Name</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form">
+                    <label class="text-bold mb-10">Phòng ban</label>
+                    <select id="department" class="form-select select2">
+                        @*<option value="">Tất cả</option>
+                        @foreach (var dep in ViewBag.listDepartment as List<DepartmentCtvDto>)
+                        {
+                        if (dep != null)
+                        {
+                        <option value="@dep.Id">@dep.Name</option>
+                        }
+
+
+                        }*@
+                    </select>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="s-member1">
+                    <div class="form">
+                        <label class="text-bold mb-10">Số ngày offline </label>
+                        <select id="numdayoff" class="form-select select2">
+                            <option selected disabled value="">Chọn số ngày offline</option>
+                            <option value="-1">Quá 1 ngày</option>
+                            <option value="-3">Quá 3 ngày</option>
+                            <option value="-7">Quá 7 ngày</option>
+                            <option value="-30">Quá 30 ngày</option>
+                            <option value="-60">Quá 60 ngày</option>
+                            <option value="-90">Quá 90 ngày</option>
+                        </select>
+                    </div>
+                    <div class="form">
+                        <button class="primary-bg p-10 text-white round-5" onclick="SubmitSearch(10, 1)" fdprocessedid="5pgved">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list-partner list-partner23">
+        <div class="table-user-primary" id="MainDataSection">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Users/ListCtvPartial.cshtml", Model)
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="list_partner_user">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Danh sách TV đã giới thiệu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="list_partner_user_data">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="authority">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body" id="authority_user_data">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.localStorage.setItem("menu-active", "Users-item");
+
+    let rotation = 0;
+    const angle = 90;
+    function rotateImage(rotated) {
+        rotation = (rotation + angle) % 360;
+        rotated.style.transform = `rotate(${rotation}deg)`;
+    }
+
+
+    function SubmitSearch(_pageSize, _pageIndex) {
+        debugger
+        var idctv = document.getElementById("idctv").value;
+        var searchkey = document.getElementById("searchkey").value;
+        var status = document.getElementById("ctvstatus").value;
+        var companyid = document.getElementById("companyid").value;
+        var department = document.getElementById("department").value;
+        var numdayoff = document.getElementById("numdayoff").value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ListCtv", "Users")",
+            data: {
+                idctv: idctv,
+                searchkey: searchkey,
+                status: status,
+                idCompany: companyid,
+                department: department,
+                numdayoff: numdayoff,
+                pageSize: _pageSize,
+                pageIndex: _pageIndex
+            },
+            cache: false,
+            async: true,
+            beforeSend: function () {
+                $('.preloader').show();
+            },
+            success: function (data) {
+                $('.preloader').hide();
+                $('#MainDataSection').html(data);
+
+                $('.select22').select2({
+                    placeholder: "Chọn công ty",
+                    allowClear: true
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+    function ChangeStatus(_idCtv) {
+        debugger
+        var status = document.getElementById("status_" + _idCtv).value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ChangeCtvStatus", "Users")",
+            data: {
+                IdCtv: _idCtv,
+                Status: status
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                if (data == '0') {
+                    swal("Thông báo", "Bạn không có quyền thay đổi tài khoản này", "fail");
+                }
+                else {
+                    if (status == '1') {
+                        swal("Thông báo", "Phê duyệt thành công!", "success");
+                    }
+                    else {
+                        swal("Thông báo", "Hủy phê duyệt thành công!", "success");
+                    }
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    function ChangePermission(_idCtv) {
+        debugger
+        var permission = document.getElementById("permission_" + _idCtv).value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ChangeCtvPermission", "Users")",
+            data: {
+                IdCtv: _idCtv,
+                Permission: permission
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                if (status == '1') {
+                    swal("Thông báo", "Thêm thành công!", "success");
+                }
+                else {
+                    swal("Thông báo", "Hủy thành công!", "success");
+                }
+                $('#select2-companyid-container').addClass('bg-accept');
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    function ResendMatKhau(_idCtv) {
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("reSendEmail", "Users")",
+            data: {
+                IdCtv: _idCtv
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                swal("Thông báo", "Gửi lại mật khẩu thành công!", "success");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+
+    function DeleteCtv(_idCtv) {
+
+        if (confirm("Bạn thực sự muốn xóa ID thành viên: " + _idCtv) == true) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("DeleteCtv", "Users")",
+                data: {
+                    IdCtv: _idCtv
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data == '0') {
+                        swal("Thông báo", "Bạn không có quyền thay đổi tài khoản này", "fail");
+                    }
+                    else {
+                        swal("Thông báo", "Xóa thành công", "success");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("An error occured. Please try again!");
+                }
+            })
+        } else {
+
+        }
+
+
+    }
+    function LockCtv(_idCtv) {
+        debugger
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("LockCtv", "Users")",
+            data: {
+                IdCtv: _idCtv
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                if (data == '0') {
+                    swal("Thông báo", "Bạn không có quyền thay đổi tài khoản này", "fail");
+                }
+                else {
+                    swal("Thông báo", "Khóa tài khoản thành công!", "success");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+
+    function BtnChangeStatus(_idCtv) {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ChangeCtvStatus", "Users")",
+            data: {
+                IdCtv: _idCtv,
+                Status: 1
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('.modal').modal('hide');
+                swal("Thông báo", "Phê duyệt thành công! ấn F5 để tải lại tình trạng mới nhất!", "success");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    function ChangeDepartment(_idCtv, _departmentOld) {
+        debugger
+        var department = document.getElementById("department_" + _idCtv).value;
+        var _chucvu = $("#department_" + _idCtv + " option:selected").text();
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ChangeCtvDepartment", "Users")",
+            data: {
+                IdCtv: _idCtv,
+                departmentIdNew: department,
+                departmentIdOld: _departmentOld,
+                chucvu: _chucvu
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                if (department == '999999999999') {
+                    swal("Thông báo", "Hủy Phê duyệt thành công!", "success");
+                }
+                else {
+                    swal("Thông báo", "Phê duyệt chức vụ thành công!", "success");
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+
+    function changeCompany(selectOS) {
+
+        var Url = '@Url.Action("binDropdownAjax","Users", new { area="Partner"})';
+
+        var _idCompany = $('#companyid').val();
+        $.ajax({
+            type: "GET",
+            url: Url,
+            data: { obj: _idCompany, style: 1 },
+            cache: false,
+            async: false,
+            success: function (data) {
+
+                //  hideSearchLoader();
+                $('#department').html(data);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                // hideSearchLoader();
+                alert(xhr + ajaxOptions + thrownError);
+            }
+        })
+    }
+
+    function ListPartner(_idCtv) {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetListPartner", "Users",new { area="Partner"})",
+            data: {
+                IdCtv: _idCtv
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#list_partner_user_data').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    function Authority(_idCtv, _nameCtv) {
+        debugger
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetListPermission", "Users",new { area="Partner"})",
+            data: {
+                IdCtv: _idCtv,
+                NameCtv: _nameCtv
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#authority_user_data').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    function showModelDuyetViTri(_idCtv, _listcongty, _listphongban, _listvitri) {
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("getModelDuyetViTri", "Users",new { area="Partner"})",
+            data: {
+                IdCtv: _idCtv,
+                ListcongtySelected: _listcongty,
+                ListphongbanSelected: _listphongban,
+                ListVitriSelected: _listvitri
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#bodyModelduyetvitri').html(data);
+                $('.select22').select2({
+                    placeholder: "Chọn công ty",
+                    dropdownParent: $('.modal'),
+                    allowClear: true
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    // function changeSTT() {
+    //     var element = document.getElementsById("ctvstatus");
+    //     element[0].classList.add("bg-accept");
+    // }
+
+    $(function () {
+        //$('.select22').select2({
+        //    placeholder: "Chọn công ty",
+        //    dropdownParent: $('.modal'),
+        //    allowClear: true
+        //});
+
+        //$('.select22').select2().on('select2:open', function (e) {
+        //    $('.select2-search__field').attr('placeholder', 'Nhập vào tên công ty');
+        //})
+
+
+    });
+    function ExportListCtvReportExcell() {
+        debugger
+        var idctv = document.getElementById("idctv").value;
+        var searchkey = document.getElementById("searchkey").value;
+        var status = document.getElementById("ctvstatus").value;
+        var companyid = document.getElementById("companyid").value;
+        var department = document.getElementById("department").value;
+        var numdayoff = document.getElementById("numdayoff").value;
+
+        $.ajax({
+            type: "GET",
+            url: '',
+            success: function (data) {
+                window.location = '/export-list-ctv-report-excell?idctv=' + idctv
+                    + '&searchkey=' + searchkey + '&status=' + status + '&companyid=' + companyid 
+                    + '&department=' + department + '&numdayoff=' + numdayoff;
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+</script>

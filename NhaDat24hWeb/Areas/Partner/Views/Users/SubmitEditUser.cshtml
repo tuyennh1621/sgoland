@@ -1,0 +1,359 @@
+﻿@using NhaDat24h.DataDto.Ctv;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model CtvEditDto
+<div id="form-register-partner" class="table-user-primary">
+    @using (Html.BeginForm("SubmitEditUser", "Users", FormMethod.Post, new { area = "Partner", @id = "SubmitEditUser", enctype = "multipart/form-data" }))
+    {
+        <input hidden name="Id" value="@Model.Id" />
+        <input hidden name="IdUser" value="@Model.IdUser" />
+        <input hidden name="DepartmentId" value="@Model.DepartmentId" />
+        <input hidden name="Status" value="@Model.Status" />
+        <div class="list-partner">
+            <div class="row">
+                <div class="form_left col-xxl-6 col-lg-6 col-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group">
+                                <label>Mã giới thiệu</label>
+                                <input type="text" id="refid" name="Refid" value="@Model.Refid" class="form-control simple" disabled>
+                                <input type="hidden" name="Refid" value="@Model.Refid">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group">
+                                <label>Họ tên</label>
+                                @if (Model.isAdmin == true)
+                                {
+                                    <input type="text" id="fullname" name="FullName" class="form-control" value="@Model.FullName" required>
+
+                                }
+                                else
+                                {
+                                    <input type="text" id="fullname" name="FullName" class="form-control simple" value="@Model.FullName" disabled>
+                                    <input name="FullName" type="hidden" value="@Model.FullName">
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="form-group">
+                                <label>Ngày sinh</label>
+                                @if (Model.isAdmin == true)
+                                {
+                                    <input type="text" id="dateofbirth" name="Ngaysinh" class="form-control" value="@Model.Ngaysinh" required>
+
+                                }
+                                else
+                                {
+                                    <input type="text" id="dateofbirth" name="Ngaysinh" class="form-control" value="@Model.Ngaysinh" disabled>
+                                    <input name="Ngaysinh" type="hidden" value="@Model.Ngaysinh">
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group">
+                                <label>CMTND/CCCD</label>
+                                @if (Model.isAdmin == true)
+                                {
+                                    <input type="text" id="idnumber" name="Socmtnd" class="form-control" value="@Model.Socmtnd" required>
+                                }
+                                else
+                                {
+                                    <input type="text" id="idnumber" name="Socmtnd" class="form-control simple" value="@Model.Socmtnd" disabled>
+                                    <input name="Socmtnd" type="hidden" value="@Model.Socmtnd">
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group">
+                                <label>Email</label>
+                                @if (Model.isAdmin == true)
+                                {
+                                    <input type="email" id="email" name="Email" value="@Model.Email" class="form-control simple" required>
+                                }
+                                else
+                                {
+                                    <input type="email" id="email" name="Email" value="@Model.Email" class="form-control simple" disabled>
+                                    <input name="Email" value="@Model.Email" type="hidden">
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group">
+                                <label>Điện thoại</label>
+                                @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                                {
+                                    <input id="mobile" name="Mobile" type="number" value="@Model.Mobile" class="form-control simple" required data-msg-number="Số điện thoại không hợp lệ">
+                                }
+                                else
+                                {
+                                    <input id="mobile" name="Mobile" type="number" value="@Model.Mobile" class="form-control simple" disabled>
+                                    <input name="Mobile" type="hidden" value="@Model.Mobile">
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group select-gender">
+                                <label for="sex">Giới tính</label>
+                                @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                                {
+                                    <select asp-for="GioiTinh" class="form-select select2" required>
+                                        <option value="1">Nam</option>
+                                        <option value="2">Nữ</option>
+                                        <option value="3">Unisex</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select asp-for="GioiTinh" class="form-select select2" disabled>
+                                        <option value="1">Nam</option>
+                                        <option value="2">Nữ</option>
+                                        <option value="3">Unisex</option>
+                                    </select>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group select-gender">
+                                <label for="company">Công ty</label>
+                                <input name="company" hidden id="company" value="@Model.IdcongTy" />
+                                @if (Model.isAdmin == true)
+                                {
+                                    <select class="form-select" id="IdCongty" name="IdCongty" required>
+                                        @if (Model.ListCongty != null)
+                                        {
+                                            @foreach (var item in Model.ListCongty)
+                                            {
+                                                <option selected="@Model.SelectedCompany(item.Id)" value="@item.Id">@item.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-select" id="IdCongty" name="IdCongty" disabled>
+                                        @if (Model.ListCongty != null)
+                                        {
+                                            @foreach (var item in Model.ListCongty)
+                                            {
+                                                <option selected="@Model.SelectedCompany(item.Id)" value="@item.Id">@item.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="form-group select-gender">
+                                <label for="company">Vị trí ứng tuyển</label>
+                                @if (Model.isAdmin == true)
+                                {
+                                    <input type="text" id="position" name="Position" value="@Model.Position" class="form-control simple">
+
+                                }
+                                else
+                                {
+                                    <input type="text" id="position" name="Position" value="@Model.Position" class="form-control simple" disabled>
+                                    <input name="Position" type="hidden" value="@Model.Position">
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="form-group">
+                                <label>Địa chỉ</label>
+                                @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                                {
+                                    <input type="text" id="address" name="Diachi" class="form-control simple" value="@Model.Diachi" required>
+                                }
+                                else
+                                {
+                                    <input type="text" id="address" name="Diachi" class="form-control simple" value="@Model.Diachi" disabled>
+                                    <input type="hidden" name="Diachi" value="@Model.Diachi">
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row partner-avatar-parent">
+                        <div class="col-xxl-6 col-lg-6 col-12">
+                            <div class="partner-avatar">
+                                <label>Ảnh đại diện</label>
+                                <div class="d-flex gap-10 align-items-center">
+                                    <a class="swipebox" href="https://cdn.realtech.com.vn/@Model.Avatar">
+                                        <img id="img-avatar" src="https://cdn.realtech.com.vn/@Model.Avatar">
+                                    </a>
+                                    <input type="hidden" name="Avatar" value="@Model.Avatar" />
+                                    <div class="form-group btn-upload-img ms-3">
+                                        @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                                        {
+                                            <label for="avatar" data-id="avatar" class="change-image">Upload ảnh</label>
+                                            <input class="upload__inputfile" id="avatar" style="visibility:hidden;" data-id="avatar" type="file" name="AvtEdit">
+                                        }
+                                        else
+                                        {
+                                            <label for="avatar" data-id="avatar" class="change-image">Upload ảnh</label>
+                                            <input class="upload__inputfile" id="avatar" style="visibility:hidden;" data-id="avatar" type="file" name="AvtEdit" disabled>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-lg-6 col-12">
+                            <div class="partner-avatar">
+                                <label>Ảnh chân dung</label>
+                                <div class="d-flex gap-10 align-items-center">
+                                    <a class="swipebox" href="https://cdn.realtech.com.vn/@Model.Avatar2">
+                                        <img id="img-avatar2" src="https://cdn.realtech.com.vn/@Model.Avatar2">
+                                    </a>
+                                    <input type="hidden" name="Avatar2" value="@Model.Avatar2" />
+                                    <div class="form-group btn-upload-img ms-3">
+                                        @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                                        {
+                                            <label for="avatar2" data-id="avatar2" class="change-image">Upload ảnh</label>
+                                            <input class="upload__inputfile" id="avatar2" style="visibility:hidden;" data-id="avatar2" type="file" name="Avt2Edit">
+                                        }
+                                        else
+                                        {
+                                            <label for="avatar2" data-id="avatar2" class="change-image">Upload ảnh</label>
+                                            <input class="upload__inputfile" id="avatar2" style="visibility:hidden;" data-id="avatar2" type="file" name="Avt2Edit" disabled>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Lưu ý: Ảnh đại diện không vượt quá 200Kb.</p>
+                </div>
+                <div class="form_right col-xxl-6 col-lg-6 col-12">
+                    <div class="row">
+                        <div class="col-xxl-6 col-lg-6 col-12">
+                            <div class="partner-id mt-30" id="partner-id-edit">
+                                <label>Ảnh CMT/CCCD Mặt trước</label>
+                                <a class="swipebox" href="https://cdn.realtech.com.vn/@Model.Frontimageid">
+                                    <img id="img-frontimageid" src="https://cdn.realtech.com.vn/@Model.Frontimageid">
+                                </a>
+
+                                <input type="hidden" name="Frontimageid" value="@Model.Frontimageid" />
+                                <div class="mt-10">
+                                    @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                                    {
+                                        <label for="frontimageid" class="change-image">Upload ảnh</label>
+                                        <input class="upload__inputfile" style="visibility:hidden;" type="file" id="frontimageid" name="FrontIdEdit">
+                                    }
+                                    else
+                                    {
+                                        <label for="frontimageid" class="change-image">Upload ảnh</label>
+                                        <input class="upload__inputfile" style="visibility:hidden;" type="file" id="frontimageid" name="FrontIdEdit" disabled>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-lg-6 col-12">
+                            <div class="partner-id mt-30" id="partner-id-edit">
+                                <label>Ảnh CMT/CCCD Mặt sau</label>
+                                <a class="swipebox" href="https://cdn.realtech.com.vn/@Model.Backimageid">
+                                    <img id="img-backimageid" src="https://cdn.realtech.com.vn/@Model.Backimageid">
+                                </a>
+                                <input type="hidden" name="Backimageid" value="@Model.Backimageid" />
+                                <div class="mt-10">
+                                    @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                                    {
+                                        <label for="backimageid" class="change-image">Upload ảnh</label>
+                                        <input class="upload__inputfile" style="visibility:hidden;" type="file" id="backimageid" name="BackIdEdit">
+                                    }
+                                    else
+                                    {
+                                        <label for="backimageid" class="change-image">Upload ảnh</label>
+                                        <input class="upload__inputfile" style="visibility:hidden;" type="file" id="backimageid" name="BackIdEdit" disabled>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="upload-cv1">
+                        <div class="col-lg-12 col-md-12 form-group">
+                            <label>Upload CV</label>
+                            <input type="hidden" name="CvUrl" value="@Model.CvUrl" />
+                            @if (!string.IsNullOrEmpty(@Model.CvUrl))
+                            {
+                                <a class="text-12" href="https://cdn.realtech.com.vn/@Model.CvUrl">
+                                    Xem CV <i class="far fa-eye"></i>
+                                </a>
+                            }
+
+                            <div class="form-group btn-upload2">
+                                @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                                {
+                                    <label for="CVEdit" data-id="CVEdit" class="change-image">Upload file CV định dạng .pdf hoặc file ảnh scan</label>
+
+                                    <label id="linkfile" style="position: absolute;padding: 2px;padding-left: 10px;"></label>
+                                    <input class="upload__cv" placeholder="Chọn file .pdf" id="CVEdit" style="visibility:hidden;" data-id="CVEdit" type="file" name="CVEdit">
+                                }
+                                else
+                                {
+                                    <label for="CVEdit" data-id="CVEdit" class="change-image">Upload file CV định dạng .pdf hoặc file ảnh scan</label>
+
+                                    <label id="linkfile" style="position: absolute;padding: 2px;padding-left: 10px;"></label>
+                                    <input disabled class="upload__cv" placeholder="Chọn file .pdf" id="CVEdit" style="visibility:hidden;" data-id="CVEdit" type="file" name="CVEdit">
+                                }
+                            </div>
+                            @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                            {
+                                <textarea name="Gioithieu" id="Gioithieu" placeholder="Giới thiệu sơ qua về bản thân: Đã có hoặc chưa kinh nghiệm, năm kinh nghiệm, đã từng bán các dự án nào, công tác tại đơn vị nào, câu nói mà bạn thích nhất là gì? Dùng một từ mô tả đúng nhất về bản thân vv...
+" style="width:100%;font-size:14px" rows="4" maxlength="300">@Model.Gioithieu</textarea>
+                            }
+                            else
+                            {
+                                <textarea disabled name="Gioithieu" id="Gioithieu" placeholder="Giới thiệu sơ qua về bản thân: Đã có hoặc chưa kinh nghiệm, năm kinh nghiệm, đã từng bán các dự án nào, công tác tại đơn vị nào, câu nói mà bạn thích nhất là gì? Dùng một từ mô tả đúng nhất về bản thân vv...
+" style="width:100%;font-size:14px" rows="4" maxlength="300">@Model.Gioithieu</textarea>
+                            }
+                            <span>Lưu ý: Vui lòng nhập không quá 300 ký tự</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-30 list-partner">
+            <h4>Tài khoản mạng xã hội</h4>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Facebook</label>
+                    @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                    {
+                        <input name="FaceBook" maxlength="100" id="FaceBook" type="text" class="form-control" value="@Model.FaceBook" placeholder="Link Facebook (tối đa 100 ký tự)">
+                    }
+                    else
+                    {
+                        <input disabled name="FaceBook" maxlength="100" id="FaceBook" type="text" class="form-control" value="@Model.FaceBook" placeholder="Link Facebook (tối đa 100 ký tự)">
+                    }
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Twitter</label>
+                    @if (Model.isAdmin == true || Model.Id == Model.IdUser)
+                    {
+                        <input name="Twitter" maxlength="100" id="Twitter" type="text" class="form-control simple" value="@Model.Twitter" placeholder="Link Twitter (tối đa 100 ký tự)">
+                    }
+                    else
+                    {
+                        <input disabled name="Twitter" maxlength="100" id="Twitter" type="text" class="form-control simple" value="@Model.Twitter" placeholder="Link Twitter (tối đa 100 ký tự)">
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="form-group btn-register2">
+            <button class="btn bg-primary2" type="submit">Xác nhận</button>
+        </div>
+    }
+</div>

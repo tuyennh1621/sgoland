@@ -1,0 +1,89 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using NhaDat24h.DataDto.Video;
+@model PlayListVideoDto;
+@*@inject IViewLocalizer Localizer*@
+@*@{
+     var count = (Model.ListByType.Count > 0) ? Model.ListType.Count : 0;
+}*@
+
+
+<style type="text/css">
+    .modal-content iframe {
+        margin: 0 auto;
+        display: block;
+    }
+</style>
+
+
+<div class="videos-page mt-20">
+    <div class="container">
+        <div class="row">
+            <div class="main-videos col-xxl-9 col-xl-9 col-12" id="singeVideo">
+                @await Html.PartialAsync("~/Areas/Partner/Views/Video/playSingleVideos.cshtml", Model.Video)
+            </div>
+            <div class="col-xxl-3 col-xl-3 col-12" id="side-bar-video">
+                <div class="tab-related">
+                    @if(Model.ListType!=null){
+                        foreach (var item in Model.ListType)
+                        {
+                            <a class="tablinks1" onclick="TabComment('@item.IdType')" id="Open_Tab_@item.IdType">
+                                @item.NameType
+                            </a>
+                        }
+                    }
+                </div>
+                <div>
+                    <div id="tabright_main"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    TabComment(0);
+
+    function TabComment(_idtype) {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetListVideoByType", "Video")",
+            data: {
+                IdType: _idtype
+            },
+            cache: false,
+            async: false,
+            success: function (data) {
+                $('#tabright_main').html(data);
+                $(".tablinks1").removeClass("active");
+                $("#Open_Tab_" + _idtype).addClass("active");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("TabComment lỗi");
+            }
+        })
+       
+        //
+    }
+    function CountView(_idVideo) {
+        debugger
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("SetCountViewVideo", "Video")",
+            data: {
+                idVideo: _idVideo
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+            }
+        })
+    }
+</script>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NhaDat24h.Common\NhaDat24h.Common.csproj" />
+    <ProjectReference Include="..\NhaDat24h.DataAccess\NhaDat24h.DataAccess.csproj" />
+    <ProjectReference Include="..\NhaDat24h.DataDto\NhaDat24h.DataDto.csproj" />
+    <ProjectReference Include="..\NhaDat24h.Repository\NhaDat24h.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

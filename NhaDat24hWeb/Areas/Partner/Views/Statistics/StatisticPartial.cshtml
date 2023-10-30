@@ -1,0 +1,177 @@
+﻿@using NhaDat24h.DataDto.Company
+@using NhaDat24h.DataDto.Ctv
+@using NhaDat24h.DataDto.Statistics
+@model StatisticDto;
+@{
+    Layout = null ;
+}
+
+<div class="row">
+    <div class="report-header-23 mb-20">
+        <h3>Báo cáo nhân sự</h3>
+        <div class="export-btn-header">
+            <div class="export-page">
+                <a class="d-flex align-items-center gap-10" href="@Url.Action("ExportListUserReport", "Statistics")">
+                    <i class="fas fa-file-export"></i>
+                    Báo cáo danh sách nhân sự
+                </a>
+            </div>
+            <div class="export-page">
+                <a class="d-flex align-items-center gap-10" href="@Url.Action("ExportSummaryListReport", "Statistics")">
+                    <i class="fas fa-file-export"></i>
+                    Báo cáo tổng hợp nhân sự
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-3 col-xl-4 col-lg-6 col-12 report-count">
+            <div class="bg-white p-30">
+                <div class="text-center">
+                    <p class="text-14">Tổng nhân sự</p>
+                    <p class="f-40">@Model.HrReport.Total</p>
+
+                </div>
+            </div>
+        </div>
+    <div class="col-xxl-3 col-xl-4 col-lg-6 col-12 report-count">
+                <div class="bg-white p-30">
+                    <div class="text-center">
+                        <p class="text-14">Đăng ký mới</p>
+                        <p class="f-40">@Model.HrReport.NewRegister</p>
+                </div>
+                </div>
+            </div>
+    <div class="col-xxl-3 col-xl-4 col-lg-6 col-12 report-count">
+                <div class="bg-white p-30">
+                    <div class="text-center">
+                    <p class="text-14">Đang online</p>
+                    <p class="f-40">@Model.HrReport.Online</p>
+                </div>
+                </div>
+            </div>
+    <div class="col-xxl-3 col-xl-4 col-lg-6 col-12 report-count">
+            <div class="bg-white p-30">
+                <div class="text-center">
+                    <p class="text-14">Quá 3 ngày không online</p>
+                <p class="f-40">@Model.HrReport.Offline3DaysAgo</p>
+                </div>
+            </div>
+        </div>
+</div>
+<div class="row">
+    <div class="col-xxl-6 col-12">
+        <div class="bg-white round-5 p-30">
+            <div class="d-flex justify-between items-center mb-30">
+                <h5 class="text-18 fw-500">Biến động nhân sự</h5>
+            </div>
+            <!--  row -->
+            <div>
+                <canvas id="divlineChart_VolatilityByMonth" data-valueout="@string.Join(",", Model.HrReport.VolatilityByMonth.Select(kv => kv.Value.StaffOut))"
+                        data-valuein="@string.Join(",", Model.HrReport.VolatilityByMonth.Select(kv => kv.Value.StaffIn))"
+                        data-key="@string.Join(",", Model.HrReport.VolatilityByMonth.Select(kv =>  kv.Key.Month))">
+            </canvas>
+@*                      
+                <canvas id="Chart2" data-key="@string.Join(",", Model.chartPrice1.Select(kv => kv.Key))" 
+                data-value="@string.Join(",", Model.chartPrice1.Select(kv => kv.Value))" 
+                data-value1="@string.Join(",", Model.chartPrice2.Select(kv => kv.Value))" 
+                data-value2="@string.Join(",", Model.chartPrice3.Select(kv => kv.Value))" 
+                style="width:100%;"></canvas>
+*@
+            </div>
+            <!-- row -->
+        </div>
+    </div>
+    <div class="col-xxl-6 col-12">
+        <div class="bg-white round-5 p-30">
+            <div class="d-flex justify-between items-center mb-30">
+                <h5 class="text-18 fw-500">Đăng ký thành viên</h5>
+            </div>
+            <!--  row -->
+            <div>
+                @*<canvas id="myChart"></canvas>*@
+                <canvas id="divlineChart_RegiterByMonth" data-valueregister="@string.Join(",", Model.HrReport.RegiterByMonth.Select(kv => kv.Value.Register))"
+                        data-valueaccepted="@string.Join(",", Model.HrReport.RegiterByMonth.Select(kv => kv.Value.Accepted))"
+                        data-valuereject="@string.Join(",", Model.HrReport.RegiterByMonth.Select(kv => kv.Value.Reject))"
+                        data-key="@string.Join(",", Model.HrReport.RegiterByMonth.Select(kv =>  kv.Key.Month))">
+            </canvas>
+            </div>
+            <!-- row -->
+        </div>
+    </div>
+</div>
+<div class="row mt-60">
+    <div class="report-header-23 mb-20">
+        <h3>Thống kê kho hàng</h3>
+        <div class="export-page">
+            <a class="d-flex align-items-center gap-10" href="@Url.Action("ExportBusinessReport", "Statistics")">
+                <i class="fas fa-file-export"></i>
+                Báo cáo kết quả kinh doanh
+             </a>
+        </div>
+    </div>
+    <div class="col-xxl-4 col-12 report-count">
+        <div class="bg-white p-30">
+            <div class="text-center">
+                <p class="text-14">Tổng BĐS dự án</p>
+                <p class="f-40">@Model.REReport.TotalRE</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-4 col-12 report-count">
+        <div class="bg-white p-30">
+            <div class="text-center">
+                <p class="text-14">Tổng số lượng giao dịch</p>
+                <p class="f-40">@Model.REReport.NumTransaction</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-4 col-12 report-count">
+        <div class="bg-white p-30">
+            <div class="text-center">
+                <p class="text-14">Tổng giá trị đơn hàng</p>
+                <p class="f-40">@Model.REReport.TotalValue</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-30 mb-30">
+    <div class="col-xxl-6 col-12">
+        <div class="bg-white round-5 p-30">
+            <div class="d-flex justify-between items-center mb-30">
+                <h5 class="text-18 fw-500">Thống kê số lượng giao dịch</h5>
+            </div>
+            <!--  row -->
+            <div>
+                @*<canvas id="lineChart3" maxHeight="200px"></canvas>*@
+                <canvas maxHeight="200px" id="divlineChart_TransactionCountByMonth" data-valuecount="@string.Join(",", Model.REReport.Statistics.Select(kv => kv.Value.Count))"
+                        
+                        data-key="@string.Join(",", Model.REReport.Statistics.Select(kv =>  kv.Key.Month))">
+                </canvas>
+            </div>
+            <!-- row -->
+        </div>
+    </div>
+    <div class="col-xxl-6 col-12">
+        <div class="bg-white round-5 p-30">
+            <div class="d-flex justify-between items-center mb-30">
+                <h5 class="text-18 fw-500">Thống kê số tiền giao dịch</h5>
+            </div>
+            <!--  row -->
+            <div>
+                @*<canvas id="lineChart3" maxHeight="200px"></canvas>*@
+                <canvas maxHeight="200px" id="divlineChart_TransactionMoneyByMonth"
+                        data-valuemoney="@string.Join(",", Model.REReport.Statistics.Select(kv => kv.Value.Money))"
+                        data-key="@string.Join(",", Model.REReport.Statistics.Select(kv =>  kv.Key.Month))">
+                </canvas>
+            </div>
+            <!-- row -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+    window.localStorage.setItem("menu-active", "Statistics-item");
+</script>
+
+

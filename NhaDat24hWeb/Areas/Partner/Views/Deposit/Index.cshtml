@@ -1,0 +1,247 @@
+﻿@using NhaDat24h.Common.Configuration
+@using NhaDat24h.DataAccess.Entities
+@using NhaDat24h.DataDto.RealEstates
+@model DepositIndexModel;
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-content dashboard-content-0">
+    <div class="frm_submit_block2 mb-3 d-flex align-items-center justify-between">
+        <h4 class="text-bold">Danh sách đặt cọc bất động sản</h4>
+        <a class="primary-bg p-10 text-white round-5" data-bs-toggle="offcanvas" onclick="AddDeposit()" href="#upload-contract" role="button" aria-controls="upload-contract">
+            <i class="fa-solid fa-circle-plus"></i>
+            Thêm bất động sản đã đặt cọc
+        </a>
+    </div>
+    <div class="row search-box align-items-end mb-10">
+        <div class="col-xxl-2 col-lg-2 col-12">
+            <div class="form">
+                <label class="text-bold mb-10">
+                    Tên
+                </label>
+                <input class="form-control select2" type="text" id="Name" value="">
+            </div>
+        </div>
+        <div class="col-xxl-2 col-lg-2 col-12">
+            <label class="text-bold mb-10">Loại dự án</label>
+            <select class="form-select" id="IdType">
+                <option selected="" disabled="" value="">Loại dự án</option>
+                    <option value="1">Căn hộ chung cư</option>
+                    <option value="2">Nhà biệt thự, liền kề</option>
+                    <option value="5">Nhà trong ngõ</option>
+                    <option value="6">Đất nền dự án</option>
+                    <option value="8">Nhà đất thổ cư</option>
+                    <option value="10">Nhà mặt phố</option>
+                    <option value="12">Nhà trọ, phòng trọ</option>
+                    <option value="13">Văn phòng, TTTM, Cửa hàng, Kiot</option>
+                    <option value="16">Đất trang trại</option>
+                    <option value="17">Nhà xưởng, mặt bằng, kho bãi</option>
+                    <option value="19">Đất dịch vụ, đền bù</option>
+                    <option value="20">Nhà hàng, khách sạn, resort</option>
+                    <option value="21">ShopHouse</option>
+                    <option value="22">Condotel</option>
+                    <option value="24">Officetel</option>
+                    <option value="25">Đất nông nghiệp, đất vườn</option>
+                    <option value="26">Chung cư Mini</option>
+            </select>
+        </div>
+        <div class="col-xxl-2 col-lg-2 col-12">
+            <label class="text-bold mb-10">Trạng thái</label>
+            <select id="status" class="form-select">
+                <option selected value="">Chọn trạng thái</option>
+                <option value="1">Chờ thanh toán</option>
+                <option value="2">Đã thanh toán</option>
+                <option value="3">Đã hủy</option>
+            </select>
+        </div>
+        <div class="col-xxl-2 col-lg-2 col-12">
+            <label class="text-bold mb-10">Từ ngày</label>
+            <input type="date" id="StartDate" name="dateofbirth" class="form-control" placeholder="Ngày đặt cọc">
+        </div>
+        <div class="col-xxl-2 col-lg-2 col-12">
+            <label class="text-bold mb-10">Đến ngày</label>
+            <input type="date" id="EndDate" name="dateofbirth" class="form-control" placeholder="Ngày đặt cọc">
+        </div>
+        <div class="col-xxl-2 col-lg-2 col-12">
+            <label></label>
+            <button class="primary-bg p-10 text-white round-5 mt-10" onclick="SubmitSearchDeposit(1, 4)">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Tìm kiếm
+            </button>
+        </div>
+    </div>
+    <div class="list-partner">
+        <div id="DepositDataSection">
+            @await Html.PartialAsync("~/Areas/Partner/Views/Deposit/ListDepositPartial.cshtml",new ModelDeposit()
+            {
+                ListDeposit = Model.ListDeposit, PageIndex= 1, PageSize=5
+            })
+        </div>
+    </div>
+</div>
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="upload-contract" aria-labelledby="upload-contract">
+    @await Html.PartialAsync("~/Areas/Partner/Views/Deposit/AddDepositPartial.cshtml",new AddDepositForm(){
+        ListRE = @Model.ListRE,
+    })
+</div>
+
+<script>
+    window.localStorage.setItem("menu-active", "Deposit-item");
+    $(function () {
+        $('#status').select2({
+            placeholder: "Chọn trạng thái",
+            allowClear: true
+        });
+        $('#IdType').select2({
+            placeholder: "Chọn loại dự án",
+            allowClear: true
+        });
+    });
+
+    function AddDeposit() {
+        debugger
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("InsertDefaulDeposit", "Deposit")",
+            data: {
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $('#upload-contract').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    function EditDeposit(_IdDeposit) {
+        debugger
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetDeposit", "Deposit")",
+            data: {
+                IdDeposit: _IdDeposit
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#upload-contract').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    function SubmitSearchDeposit(_pageIndex, _pageSize) {
+        debugger
+        var Name = document.getElementById("Name").value;
+        var IdType = document.getElementById("IdType").value;
+        var Status = document.getElementById("status").value;
+        var StartDate = document.getElementById("StartDate").value;
+        var EndDate = document.getElementById("EndDate").value;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("SearchDeposit", "Deposit")",
+            data: {
+                Name: Name, 
+                IdType: IdType,
+                Status: Status,
+                StartDate: StartDate,
+                EndDate: EndDate,
+                PageSize: _pageSize,
+                PageIndex: _pageIndex
+            },
+            cache: false,
+            async: true,
+            beforeSend: function () {
+                $('.preloader').show();
+            },
+            success: function (data) {
+                $('.preloader').hide();
+                $('#DepositDataSection').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+    function DeleteDepositRE(_idDeposit) {
+        if (confirm("Bạn thực sự muốn xóa đặt cọc ID căn: " + _idDeposit) == true) {
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("DeleteDepositRE", "Deposit",new { area="Partner"})",
+                data:
+                {
+                    IdDeposit: _idDeposit
+
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                },
+                success: function (result) {
+                    swal("Thông báo", "Xóa đặt cọc dự án " + _idDeposit + " thành công", "success");
+                    $("#item-" + _idDeposit).fadeOut();
+                },
+                error: function () {
+                    // alert('Failed to receive the Data');
+                }
+            })
+        }
+    }
+    
+   
+
+    function ChangeStatusDeposit(_id) {
+        var status = document.getElementById("status_" + _id).value;
+        debugger
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("UpdateStatusDepositRE", "Deposit")",
+            data: {
+                Id: _id,
+                Status: status
+            },
+            // datatype: "json",
+            cache: false,
+            async: false,
+            beforeSend: function () {
+            },
+            success: function (data) {
+                if (data == '0') {
+                    swal("Thông báo", "Bạn không có quyền thay đổi tài khoản này", "fail");
+                }
+                else {
+                    if (status == '1') {
+                        swal("Thông báo!", "Cập nhật trạng thái thành công", "success");
+                    }
+                    else if (status == '2') {
+                        swal("Thông báo!", "Cập nhật trạng thái thành công", "success");
+                    }
+                    else if (status == '3') {
+                        swal("Thông báo!", "Hủy thành công", "success");
+                    }
+                }
+            },
+            error: function () {
+                alert('Failed to receive the Data');
+            }
+        })
+    }
+</script>
+

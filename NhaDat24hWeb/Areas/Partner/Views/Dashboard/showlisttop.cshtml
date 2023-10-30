@@ -1,0 +1,89 @@
+﻿@using NhaDat24h.DataDto.RealEstates;
+@model List<RealEstateDto>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var bds in Model)
+    {
+        <div class="item col-auto position-relative" id="bds-@bds.Id">
+            <div class="property_location">
+                <div class="property_location_thumb">
+                    @if (bds.Style == 1)
+                    {
+                        <a href="@Url.Action("Detail", "Land", new { area = "Partner", IdRE = bds.Id})"><img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,height=400,quality=80/@bds.Avatar" class="img-fluid" alt="" /></a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("DetailProperties", "Land", new { area = "Partner", IdRE = bds.Id})"><img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,height=400,quality=80/@bds.Avatar" class="img-fluid" alt="" /></a>
+                    }
+
+                </div>
+                <div class="property_location_caption">
+                    <div class="property_location__first land-title68">
+                        <div class="d-flex gap-10 justify-between title-land align-items-baseline">
+                            @if (bds.Style == 1)
+                            {
+                                <h4><a href="@Url.Action("Detail", "Land", new { area = "Partner", IdRE = bds.Id})">@bds.Name</a></h4>
+                            }
+                            else
+                            {
+                                <h4><a href="@Url.Action("DetailProperties", "Land", new { area = "Partner", IdRE = bds.Id})">@bds.Name</a></h4>
+                            }
+                        </div>
+                        <div class="d-flex gap-10 justify-between price-square-home align-items-center">
+                            <div class="d-flex gap-20 align-items-start">
+                                <div class="d-flex flex-column">
+                                    <div class="text-12 color-gray">Giá</div>
+                                    <span class="text-red text-bold text-16">@bds.StringOfferPrice</span>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <div class="text-12 color-gray">Diện tích</div>
+                                    <span class="text-red text-bold text-16">@Math.Round(@bds.S??0, 2).ToString("G29")m<sup>2</sup></span>
+                                </div>
+                            </div>
+                            <div>
+                                @if (bds.Style == 1)
+                                {
+                                    <button class="bd-none bg-none btn-show-sheet" onclick="showListFiles(15,@bds.Id)" data-bs-target="#list_media_from_land" data-bs-toggle="offcanvas">
+                                        <span class="text-12 d-flex gap-10 align-items-center" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Bảng hàng">
+                                            <i class="far fa-file-excel f-18 text-blue"></i>
+                                            <span>
+                                                Bảng hàng
+                                            </span>
+                                        </span>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-15 align-items-center justify-between mt-5px action-btn-land">
+                            <div class="d-flex g-5 align-items-center ac-btn-hover justify-center" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lượt xem">
+                                <span class="text-16">@bds.CountView</span>
+                                <span class="text-16"><i class="far fa-eye"></i></span>
+                            </div>
+                            @if (!bds.isYeuthich)
+                            {
+                                <a class="ac-btn-hover text-center" onclick="LikeRE(@bds.Id)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lưu bất động sản này vào danh sách yêu thích">
+                                    <i class="far fa-heart"></i>
+                                </a>
+                            }
+                            <div class="ac-btn-hover binchat" data-topicid="@bds.Id" data-topicname="@bds.Name" data-topicthumbnai="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,height=400,quality=80/@bds.Avatar">
+                                <button type="button" class="bg-none border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Chat Group: Nơi các thành viên trao đổi thông tin công khai về dự án này">
+                                    <i class="fa-regular fa-comment"></i>
+                                </button>
+                            </div>
+                            <div></div>
+                        </div>
+
+                    </div>
+                </div>
+                @if (bds.isYeuthich)
+                {
+                    <div class="del-land" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Xóa" onclick="UnLikeRE(@bds.IdUser, @bds.Id)"><i class="fas fa-times"></i></div>
+                }
+            </div>
+        </div>
+    }
+}
+@*
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>*@

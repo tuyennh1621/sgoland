@@ -1,0 +1,139 @@
+﻿@using NhaDat24h.DataDto.Video;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Kendo.Mvc
+@model VideoAddModel
+
+@{
+    var kendoVersion = "2022.2.510";
+}
+
+
+<link href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.material-main.min.css" rel="stylesheet" type="text/css" />
+
+<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jszip.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.aspnetmvc.min.js"></script>
+<link rel="stylesheet" href="~/kendoui/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/kendoui/css/site.css" />
+
+<div id="form-register-partner" class="table-user-primary">
+    <form action="submit" enctype="multipart/form-data" novalidate>
+        <input hidden asp-for="Video.Id" value="@Model.Video.Id" />
+
+        <div class="list-partner">
+            <div class="row">
+                <div class="form_left col-xxl-12 col-lg-12 col-12">
+                    <div class="row mt-10">
+                        <div class="col-xl-6 col-12">
+                            <div class="d-flex flex-column">
+                                <label class="mb-0">Ảnh minh họa</label>
+                                <span class="text-12 color-gray f-w-400 text-italic">File ảnh (max:4M/file)</span>
+                            </div>
+                            <kendo-upload id="image"  multiple="false" drop-zone=".dropZoneElement" name="files" on-success="onSuccessvideo" data-type="7">
+                                <async auto-upload="false"
+                                       save-url="@Url.Action("UploadFile_Video", "Video",
+                                        new {IdUser = Model.IdUser, IdVideo=Model.Video.Id, Style=0})"
+
+                                       remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser})"
+                                       chunk-size="110000" />
+                                <validation allowed-extensions="@Model.ImgAllowedExtensions" max-file-size="4444000" />
+                            </kendo-upload>
+                           
+
+                            @*<input type="text" id="urlImage" class="form-control" asp-for="UrlImage" value="@Model.UrlImage">*@
+                        </div>
+                        <div class="col-xl-6 col-12">
+                            <div class="d-flex flex-column">
+                                <label class="mb-0">Video</label>
+                                <span class="text-12 color-gray f-w-400 text-italic">Videos (max:500M/file)</span>
+                            </div>
+                            <kendo-upload id="video" multiple="false" drop-zone=".dropZoneElement" name="files" on-success="onSuccessvideo" data-type="8">
+                                <async auto-upload="false" save-url="@Url.Action("UploadFile_Video", "Video",
+                                    new {IdUser = Model.IdUser, IdVideo=Model.Video.Id, Style=1})"
+                                       remove-url="@Url.Action("Chunk_Upload_Remove", "Upload", new {IdUser = Model.IdUser})"
+                                       chunk-size="110000" />
+                                <validation allowed-extensions="@Model.VideoAllowedExtensions" max-file-size="512000000" />
+                            </kendo-upload>
+                        </div>
+
+                    </div>
+
+                    <div class="video-edu mt-20">
+                        <div class="blog-list-images">
+                            <video class="video-list-items" poster="https://cdn.realtech.com.vn/@Model.Video.UrlImage" preload="none" controls="">
+                                <source src="https://cdn.realtech.com.vn/@Model.Video.UrlVideo" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="row mt-10">
+                        <div class="col-xxl-6 col-12">
+                            <label>Tiêu đề</label>
+                            <input type="text" class="form-control" asp-for="Video.Title">
+                        </div>
+
+                        <div class="col-xxl-6 col-12">
+                            <label>Danh mục</label>
+                         @*   <select id="type" class="form-select select2">
+                                <option selected disabled  value="">Chọn danh mục </option>
+                                <option value="1">Đào tạo hội nhập</option>
+                                <option value="2">Đào tạo chuyên sâu</option>
+                                <option value="3">Đào tạo phần mềm</option>
+                            </select>*@
+
+                            <select class="form-select select2 status-@Model.Video.Type" asp-for="Video.Type">
+                                <option selected="@Model.Video.Selected(1)" value="1">Đào tạo hội nhập</option>
+                                <option selected="@Model.Video.Selected(2)" value="2">Đào tạo chuyên sâu</option>
+                                <option selected="@Model.Video.Selected(3)" value="3">Đào tạo phần mềm</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row mt-10">
+                        <div class="col-xxl-6 col-12">
+                            <label>Nội dung</label>
+                            <textarea asp-for="Video.Detail" rows="4" cols="50" placeholder="Nội dung"></textarea>
+                        </div>
+                        <div class="col-xxl-6 col-12">
+                            <label>Từ khóa</label>
+                            <input type="text" class="form-control" asp-for="Video.Hashtag">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group btn-register2">
+            <button class="btn bg-primary2" type="submit">Xác nhận</button>
+        </div>
+    </form>
+</div>
+
+
+<script>
+  debugger
+    const myListCount = [];
+    function onChange() {
+        $("form").submit();
+    }
+    $("#limitUploadSize").change(function () {
+        $("form").submit();
+    })
+
+    function onSuccessvideo(e) {
+        var id = e.sender.element[0].getAttribute("id");
+        var type = e.sender.element[0].getAttribute("data-type");
+
+        if (e.operation == 'upload') {
+
+            myListCount[type] += 1;
+        }
+        else if (e.operation == 'remove') {
+            myListCount[type] -= 1;
+        }
+        $('#count-' + id + '-' + type).text(myListCount[type]);
+    }
+   
+
+</script>

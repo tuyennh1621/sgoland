@@ -1,0 +1,24 @@
+﻿@using NhaDat24h.DataDto.RealEstates;
+@using NhaDat24h.DataDto.Video
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Kendo.Mvc
+@model VideoAddModel;
+@{
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+    var kendoVersion = "2022.2.510";
+}
+
+
+<style>
+    #mobile::-webkit-outer-spin-button,
+    #mobile::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+<div class="dashboard-content dashboard-content-0">
+    <!-- Basic Information -->
+    <h4 class="text-bold">Chỉnh sửa thông tin video</h4>
+    @await Html.PartialAsync("~/Areas/Partner/Views/Video/SubmitEditVideo.cshtml", Model)
+</div>
+

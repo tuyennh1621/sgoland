@@ -1,0 +1,722 @@
+﻿@using NhaDat24h.Common.Configuration;
+@using NhaDat24h.DataDto.RealEstates;
+@model RealEstateGetOneDto;
+@{
+    var ExtensionsIMG = new string[] { ".jpg", ".png", ".jpeg" };
+    Layout = "~/Areas/Partner/Views/Shared/_Layout.cshtml";
+    string strThumbnai = "";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.4/css/lightgallery.min.css">
+
+<div class="dashboard-content dashboard-content-0">
+    <!-- ============================ Page Title Start================================== -->
+    <div class="page-detail sw-img">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 col-md-offset-3">
+                    <div class="slider-for" id="aniimated-thumbnials">
+                        @foreach (var item in Model.DictionaryDocs.SingleOrDefault(x => x.Key == 16).Value as List<DocumentDto>)
+                        {
+                            <a class="gallery-item" data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=1500,quality=80/@item.Url">
+                                <div class="img-zoomer-box">
+                                    <img class="img-1" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=1500,quality=80/@item.Url" />
+                                    <div style="background-image:url('https://cdn.realtech.com.vn/cdn-cgi/image/@item.Url'); background-repeat: no-repeat;" class="img-2"></div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                    <div class="slider-nav">
+                        @foreach (var item in Model.DictionaryDocs.SingleOrDefault(x => x.Key == 16).Value as List<DocumentDto>)
+                        {
+                            <div class="item-slick">
+                                <img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,quality=80/@item.Url" />
+                            </div>
+                            strThumbnai = "https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,quality=80/" + @item.Url;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================ Property Detail Start ================================== -->
+    <section class="pts-0">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- property main detail -->
+                <div class="col-lg-12 col-md-12 col-sm-12 order-lg-2 order-md-2 order-1 prt_5th">
+                    <!-- Single Block Wrap -->
+                    <div class="property_block_wrap detail-land2 style-2 p-30">
+                        <div id="project-title">
+                            <h4>@Model.Name</h4>
+                            <div>@Model.Type</div>
+                            <div class="d-flex gap-10 mt-10 align-items-center">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>@Model.Address</span>
+                            </div>
+                            <div class="modal-divider"></div>
+                            <div class="project-price pt-20 align-items-center">
+                                <div class="project-price-left">
+                                    <div class="d-flex gap-10 align-items-center justify-between">
+                                        <span class="text-red text-bold f-20">
+                                            @Model.StringOfferPrice
+                                        </span>
+                                        <div class="d-flex flex-column">
+                                            @foreach (var item in Model.DictionaryDocs.SingleOrDefault(x => x.Key == 15).Value as List<DocumentDto>)
+                                            {
+                                                <a style="text-decoration: none;" class="bd-none bg-none text-14" title="@item.Name" href="@Url.Action("viewIframe", "Dashboard" , new { a=@item.Url})">
+                                                    <i class="far fa-file-excel f-18 text-blue"></i> @item.Name
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-price-right">
+                                    <a class="btn-share1" href="#" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Chia sẻ">
+                                        <i class="fas fa-share-alt"></i>
+                                    </a>
+                                    <a class="btn-save-post" href="#" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Thêm vào danh sách yêu thích">
+                                        <i class="far fa-heart"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="modal-divider"></div>
+                        </div>
+                        <div id="project-description">
+                            <h6 class="property_block_title mt-30 text-bold">Thông tin mô tả</h6>
+                            <p>@Html.Raw(Model.Detail)</p>
+                            <h6 class="property_block_title mt-30 text-bold">Liên hệ</h6>
+                            <div id="table_0"></div>
+                            <div class="mt-20 contact-land-pr">
+                                <div class="d-flex align-items-center gap-30">
+                                    <a class="avtland"><img src="https://cdn.realtech.com.vn/@Model.CtvInfor.Avatar" alt=""></a>
+                                    <div class="d-flex flex-column">
+                                        <span class="f-18">@Model.CtvInfor.Name</span>
+                                        <span class="text-12 color-gray">
+                                            @Model.CtvInfor.Company
+                                            @*<span> - Ban QLDA</span>
+                                            <span> - Admin</span>*@
+                                        </span>
+                                        <span class="color-primary"><i class="fas fa-phone-volume"></i> @Model.CtvInfor.Mobile</span>
+                                    </div>
+                                </div>
+                                @if (@Model.ListContactCtvRE != null)
+                                {
+                                    foreach (var item in Model.ListContactCtvRE)
+                                    {
+                                        <div class="d-flex align-items-center gap-30">
+                                            <a class="avtland"><img src="https://cdn.realtech.com.vn/@item.Avatar" alt=""></a>
+                                            <div class="d-flex flex-column">
+                                                <span class="f-18">@item.Name</span>
+                                                <span class="text-12 color-gray">
+                                                    @item.Company
+                                                </span>
+                                                <span class="color-primary"><i class="fas fa-phone-volume"></i> @item.Mobile</span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                        <div class="modal-divider"></div>
+                        <div class="tab-detail" id="tab-detail">
+                            <span class="btn-tab-parent" onclick="showtabdetail()">
+                                <i class="fa-solid fa-angles-down" id="test"></i>
+                            </span>
+                            <div id="tab-collapse">
+                                <div class="card card-body" style="padding:0 !important;">
+                                    <div class="d-flex flex-column tab-detail2">
+                                        @if (Model.DictionaryDocs.SingleOrDefault(x => x.Key == 15).Value.Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_0" class="btn-tab" id="btnbanghang" onClick="bg_act('btnbanghang','show_bg_click');">
+                                                    <span class="icon">
+                                                        <i class="far fa-file-excel f-18"></i>
+                                                    </span>
+                                                    <span class="text">Bảng hàng</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 17).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_1" class="btn-tab" id="btncsbh" onClick="bg_act('btncsbh','show_bg_click1');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-file-alt f-18"></i>
+                                                    </span>
+                                                    <span class="text">Chính sách bán hàng</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 7).Count() > 0)
+                                        {
+
+                                            <div class="tab-item">
+                                                <a href="#table_2" class="btn-tab" id="btntraning" onClick="bg_act('btntraning','show_bg_click2');">
+                                                    <span class="icon">
+                                                        <i class="far fa-file-powerpoint f-18"></i>
+                                                    </span>
+                                                    <span class="text">File Tranning</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 6).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_3" class="btn-tab" id="btntailieu" onClick="bg_act('btntailieu','show_bg_click3');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-file-word f-18"></i>
+                                                    </span>
+                                                    <span class="text">Tài liệu MKT</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 8).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_4" class="btn-tab" id="btntvc" onClick="bg_act('btntvc','show_bg_click4');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-file-video f-18"></i>
+                                                    </span>
+                                                    <span class="text">TVC Dự án</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 3).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_5" class="btn-tab" id="btngcnpp" onClick="bg_act('btngcnpp','show_bg_click5');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-file-archive f-18"></i>
+                                                    </span>
+                                                    <span class="text">Giấy chứng nhận phân phối</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 4).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_6" class="btn-tab" id="btnplda" onClick="bg_act('btnplda','show_bg_click6');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-file-signature f-18"></i>
+                                                    </span>
+                                                    <span class="text">Pháp lý dự án</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 5).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_7" class="btn-tab" id="btnmbda" onClick="bg_act('btnmbda','show_bg_click7');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-vector-square f-18"></i>
+                                                    </span>
+                                                    <span class="text">Mặt bằng dự án</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 9).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_8" class="btn-tab" id="btnqa" onClick="bg_act('btnqa','show_bg_click8');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-question-circle f-18"></i>
+                                                    </span>
+                                                    <span class="text">Q & A</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 10).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_9" class="btn-tab" id="btnqtgd" onClick="bg_act('btnqtgd','show_bg_click9');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-file-invoice f-18"></i>
+                                                    </span>
+                                                    <span class="text">Quy trình giao dịch</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 11).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_10" class="btn-tab" id="btnhddc" onClick="bg_act('btnhddc','show_bg_click10');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-file-invoice-dollar f-18"></i>
+                                                    </span>
+                                                    <span class="text">Mẫu hợp đồng đặt cọc</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 12).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_11" class="btn-tab" id="btnmhd" onClick="bg_act('btnmhd','show_bg_click11');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-user-check f-18"></i>
+                                                    </span>
+                                                    <span class="text">Mẫu HĐ CDT ký với khách hàng</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 13).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_12" class="btn-tab" id="btnmttkhbk" onClick="bg_act('btnmttkhbk','show_bg_click12');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-user-edit f-18"></i>
+                                                    </span>
+                                                    <span class="text">Mẫu TT khách hàng book ký</span>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if (Model.ListDocuments.Where(x => x.IdType == 14).Count() > 0)
+                                        {
+                                            <div class="tab-item">
+                                                <a href="#table_13" class="btn-tab" id="btnptg" onClick="bg_act('btnptg','show_bg_click13');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-user-shield f-18"></i>
+                                                    </span>
+                                                    <span class="text">Phiếu tính giá</span>
+                                                </a>
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-divider"></div>
+                        <div class="property_block_wrap44 style-2 pt-20" id="banghang">
+                            <div class="nearby-wrap">
+                                <div class="neary_section_list">
+                                    <div class="neary_section">
+                                        <div class="neary_section_first">
+                                            <div class="folder-style-parent">
+                                                <div class="d-flex gap-10 align-items-center img233 folder-header">
+                                                    <div class="table-title-33">
+                                                        <h5 class="property_block_title">Bảng hàng:</h5>
+                                                    </div>
+                                                    <div id="table_1"></div>
+                                                </div>
+                                                <div class="folder-style">
+                                                    @foreach (var item in Model.DictionaryDocs.SingleOrDefault(x => x.Key == 15).Value as List<DocumentDto>)
+                                                    {
+                                                        <div id="show_bg_click">
+                                                            <ul>
+                                                                <li class="linkbds">
+                                                                    <a class="text-bold f-30 color-red" title="@item.Name" href="@Url.Action("viewIframe", "Dashboard" , new { a=@item.Url})">@item.Name</a>
+                                                                    <button onclick="copyContent('https://sgoland.vn/viewiframe?a=@item.Url')" class="bg-none bd-none text-12 color-gray">
+                                                                        <i class="far fa-copy"></i> Copy link
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            @if (Model.DictionaryDocs.Where(x => x.Key == 17).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title">Chính sách bán hàng:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 17).Value.FirstOrDefault().Url', '17')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_2"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click1">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 17).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 7).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title">File Tranning:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 7).Value.FirstOrDefault().Url', '7')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_3"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click2">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 7).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 6).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title">Tài liệu MKT:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 6).Value.FirstOrDefault().Url', '6')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_4"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click3">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 6).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 8).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title">TVC dự án:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 8).Value.FirstOrDefault().Url', '8')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_5"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click4">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 8).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 3).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title" id="table_6">Giấy chứng nhận phân phối:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 3).Value.FirstOrDefault().Url', '3')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_6"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click5">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 3).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 4).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title" id="table_7">Pháp lý dự án:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 4).Value.FirstOrDefault().Url', '4')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_7"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click6">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 4).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 5).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title" id="table_8">Mặt bằng dự án:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 5).Value.FirstOrDefault().Url', '5')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_8"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click7">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 5).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 9).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title" id="table_9">Q & A:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 9).Value.FirstOrDefault().Url', '9')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_9"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click8">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 9).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 10).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title">Quy trình giao dịch:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 10).Value.FirstOrDefault().Url', '10')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_10"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click9">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 10).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 11).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title" id="table_10">Mẫu hợp đồng đặt cọc:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 11).Value.FirstOrDefault().Url', '11')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_11"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click10">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 11).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 12).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title" id="table_11">Mẫu HĐ CDT ký với khách hàng:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 12).Value.FirstOrDefault().Url', '12')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_12"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click11">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 12).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 13).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title" id="table_12">Mẫu TT khách hàng book ký:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 13).Value.FirstOrDefault().Url', '13')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_13"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click12">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 13).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model.ListDocuments.Where(x => x.IdType == 14).Count() > 0)
+                                            {
+                                                <div class="folder-style-parent">
+                                                    <div class="img22 folder-header">
+                                                        <div class="table-title-33">
+                                                            <h5 class="property_block_title" id="table_13">Phiếu tính giá:</h5>
+                                                        </div>
+                                                        <a href="#" class="copy_" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tải xuống toàn bộ tài liệu trong mục này" onclick="DownloadZipFile('@Model.DictionaryDocs.SingleOrDefault(x => x.Key == 14).Value.FirstOrDefault().Url', '14')">
+                                                            <i class="fas fa-download"></i>
+                                                            <span class="mb-hiden">Tải xuống</span>
+                                                        </a>
+                                                        <div id="table_14"></div>
+                                                    </div>
+                                                    <div class="folder-style">
+                                                        <div id="show_bg_click13">
+                                                            @await Html.PartialAsync("~/Areas/Partner/Views/Land/listfileClient.cshtml",Model.DictionaryDocs.SingleOrDefault(x => x.Key == 14).Value)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- property Sidebar -->
+        </div>
+    </section>
+    <!-- ============================ Property Detail End ================================== -->
+</div>
+
+<a class="chatnow binchat" data-topicid="@Model.Id" data-topicname="@Model.Name" data-topicthumbnai="@strThumbnai">
+    <img src="~/assets/img/chat.png"/>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.4/js/lightgallery-all.min.js"></script>
+<script>
+    window.localStorage.setItem("menu-active", "Land-item");
+    async function copyContent(content) {
+        try {
+            await navigator.clipboard.writeText(content);
+            console.log('Content copied to clipboard');
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    }
+    function showtabdetail() {
+        var x = document.getElementById("tab-collapse");
+
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            $("#test").css("transform", "");
+        } else {
+            x.style.display = "none";
+            $("#test").css("transform", "rotate(180deg)");
+        }
+    }
+
+    $(function () {
+
+        $('#aniimated-thumbnials').lightGallery({
+            thumbnail: true,
+        });
+        // Card's slider
+        var $carousel = $('.slider-for');
+
+        $carousel
+            .slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                fade: true,
+                adaptiveHeight: true,
+                asNavFor: '.slider-nav'
+            });
+        $('.slider-nav').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: '.slider-for',
+            dots: false,
+            centerMode: false,
+            focusOnSelect: true,
+            variableWidth: true
+        });
+    });
+
+    let zoomer = function () {
+
+        const img = document.querySelectorAll(".img-zoomer-box");
+
+        for (let i = 0; i < img.length; i++) {
+
+            img[i].addEventListener('mousemove', function (e) {
+
+                let original = img[i].querySelector('.img-1'),
+                    magnified = img[i].querySelector('.img-2'),
+                    style = magnified.style,
+                    x = e.pageX - this.offsetLeft - 340,
+                    y = e.pageY - this.offsetTop - 138,
+                    imgWidth = original.offsetWidth,
+                    imgHeight = original.offsetHeight,
+                    xperc = ((x / imgWidth) * 100),
+                    yperc = ((y / imgHeight) * 100);
+
+                //lets user scroll past right edge of image
+                if (x > (.01 * imgWidth)) {
+                    xperc += (.15 * xperc);
+                };
+
+                //lets user scroll past bottom edge of image
+                if (y >= (.01 * imgHeight)) {
+                    yperc += (.15 * yperc);
+                };
+
+                style.backgroundPositionX = (xperc - 9) + '%';
+                style.backgroundPositionY = (yperc - 9) + '%';
+
+                style.left = (x - 180) + 'px';
+                style.top = (y - 180) + 'px';
+
+            }, false);
+        }
+    }();
+
+    function DownloadZipFile(_url, _type) {
+        debugger
+        $.ajax({
+            type: "GET",
+            url: '',
+            success: function (data) {
+                window.location = '/download-zipfile?url=' + _url + '&type=' + _type;
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+
+
+    $(document).mouseup(function (e) {
+        var container = $(".btn-tab");
+
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.width("40px");
+        }else{
+            container.width("inherit");
+        }
+    });
+</script>
+<script src="~/assets/js/click_bg.js?v=@AppConfigs.AppVersion"></script>
+
+

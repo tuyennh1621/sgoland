@@ -1,0 +1,52 @@
+﻿@{
+    Layout = null;
+}
+@model string;
+<input id="idtopic" type="hidden" value="@Model" />
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    
+    <main class="mdl-layout__content mdl-color--grey-100">
+        <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
+            <div id="messages-card">
+                <div class="live-chat-parent-1">
+                    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                        <div class="date-time-chat text-center">
+                            @* 22:26, 30 Tháng 09, 2023*@
+                        </div>
+                        <div id="messages">
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-button-footer">
+                    <div class="ts-form-live-chat">
+                        <div class="live-form">
+                            <div class="live-form-icon">
+                                <form id="image-form" action="#">
+                                    <div class="attact-file">
+                                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                                            <input id="mediaCapture" type="file" accept="image/*" capture="camera">
+                                        </div>
+                                        <button class="border-none bg-none" id="submitImage" title="Add an image">
+                                            <i class="fa-solid fa-image"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="live-chat-input">
+                            <form id="message-form" action="#">
+                                <div class="d-flex justify-between">
+                                    <input type="text" id="message" autocomplete="off" placeholder="Tin nhắn...">
+                                    <button class="live-form-send" id="submit" disabled type="submit">
+                                        <i class="fa-regular fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="~/firebase/public/scripts/main.js"></script>

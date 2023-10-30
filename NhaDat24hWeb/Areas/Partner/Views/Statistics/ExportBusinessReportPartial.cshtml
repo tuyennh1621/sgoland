@@ -1,0 +1,36 @@
+﻿@using NhaDat24h.DataDto.User;
+@model HrReportBusinessModel;
+
+<h3 class="text-center">Báo Cáo Kết Quả Kinh Doanh </h3>
+<h4 class="text-center">Từ @Model.StartDate.ToString("dd/MM/yyyy") Đến @Model.EndDate.ToString("dd/MM/yyyy")</h4>
+
+<table class="table table-bordered table-234 mt-20">
+    <thead>
+        <tr style="white-space: nowrap;">
+            <th>STT</th>
+            <th>ID</th>
+            <th>Mã giới thiệu</th>
+            <th>Họ và tên</th>
+            <th>Chức danh</th>
+            <th>Số lượng giao dịch</th>
+            <th>Giá trị giao dịch</th>
+            <th>Xếp hạng</th>
+            <th>Ghi chú</th>
+        </tr>
+    </thead>
+    @foreach (var key in Model.data.Select(x => x.Key))
+    {
+        @if (Model.data.Where(x => x.Key == key).SingleOrDefault().Value.Count > 0)
+        {
+            <tr class="table-primary" style="border: 1px solid var(--bs-border-color) !important;">
+                <th style="border:none !important; font-size:18px;" colspan="9">@key.Company</th>
+            </tr>
+            <tbody id="loadmorecontent_@key.IdCompany">
+                @await Html.PartialAsync("~/Areas/Partner/Views/Statistics/ExportBusinessReportLoadMoreCompanyPartial.cshtml",Model.data.Where(x => x.Key==key).SingleOrDefault())
+            </tbody>
+        }
+    }
+</table>
+
+
+

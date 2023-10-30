@@ -1,0 +1,68 @@
+﻿@using NhaDat24h.DataDto.Video;
+@model ListByTypeVideoModel;
+
+<div class="add-more-video">
+    <div id="listVideo">
+        @await Html.PartialAsync("~/Areas/Partner/Views/Video/ListByTypePartial_content.cshtml", Model)
+    </div>
+    @if (Model.CurentPage < Model.Totalpage)
+    {
+        <button id="btnloadmore" onclick="LoadmoreVideo('@Model.Type','@Model.Totalpage')" class="more-video more-video round-5 primary-bg border-none p-x-10 p-y-5">
+            Xem thêm
+        </button>
+    }
+</div>
+
+<input type="hidden" value="@Model.CurentPage" id="curentPage" />
+<script>
+
+    var currentIndex = parseInt($("#curentPage").val());
+
+    function LoadmoreVideo(_idType,_totalpage) {
+        
+        currentIndex += 1;
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetListVideoByType_content", "Video")",
+            data: {
+                IdType: _idType,
+                curentpage: currentIndex
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                if(data)
+                {
+                    $('#listVideo').append(data);
+                    if (currentIndex >= _totalpage) 
+                    {
+                        $("#btnloadmore").hide();
+                    }
+                }
+
+            }
+        })
+    }
+    function playvideoinModel(id){
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("playSingleVideos", "Video")",
+            data: {
+                IDVideo: id
+            },
+            cache: false,
+            async: false,
+            success: function (data) {
+                $('#singeVideo').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+</script>
+
